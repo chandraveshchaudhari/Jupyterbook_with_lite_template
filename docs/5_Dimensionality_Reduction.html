@@ -1,0 +1,2195 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dimensionality Reduction: PCA &#8212; Machine Learning for Business</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '5_Dimensionality_Reduction';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="K-Means and Clustering" href="6_Clustering.html" />
+    <link rel="prev" title="Logistic Regression (Mathematical Explanation)" href="4_Logistic_Regression.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Machine Learning for Business - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Machine Learning for Business - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">Common Math Symbols and Notations in Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_Linear_regression.html">Linear Regression</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="2_Regularization.html">Generalization, Overfitting, Regularization</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="3_Naive_Bayes.html">Naive Bayes</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="4_Logistic_Regression.html"><strong>Logistic Regression (Mathematical Explanation)</strong></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dimensionality Reduction: PCA</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="6_Clustering.html">K-Means and Clustering</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="7_Gaussian_Mixture_Models.html">Gaussian Mixture Models and EM</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="8_Nearest_Neighbour_Algorithm.html">Nearest Neighbour Algorithm</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="10_Support_Vector_Machines.html">Support Vector Machines</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="11_Decision_Trees.html">Decision Trees</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="12_Ensemble_Methods.html">Ensemble Methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="13_Neural_Networks.html">Neural Networks: From Perceptron to MLP</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="14_Arima.html">ARIMA</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="15_LSTM.html">Advanced DL: ResNets, RNNs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="16_CNN.html">Convolutional Neural Networks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="17_Resnet.html">1D-ResNet (or TCN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_LLM.html">Transformers and LLMs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="19_Reinforcement_Learning.html">Reinforcement Learning</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="20_Multimodal_Learning.html">Multimodal Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generative_Models.html">Generative Models</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Performance_Metrics.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization.html">Visualisation</a></li>
+
+
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/chandraveshchaudhari/BusinessML_web/blob/main/notebooks//./5_Dimensionality_Reduction.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+
+<li>
+  <a href="https://chandraveshchaudhari.github.io/BusinessML_web/jupyterlite/lab/index.html?path=5_Dimensionality_Reduction.ipynb" target="_blank"
+     class="btn btn-sm dropdown-item"
+     title="Launch on JupyterLite"
+     data-bs-placement="left" data-bs-toggle="tooltip">
+    <span class="btn__icon-container" style="display:inline-block; width:20px; height:20px;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+        <circle cx="128" cy="128" r="128" fill="#f37726"/>
+        <ellipse cx="128" cy="128" rx="110" ry="40" fill="white" transform="rotate(-25, 128, 128)"/>
+        <ellipse cx="128" cy="128" rx="110" ry="40" fill="white" transform="rotate(25, 128, 128)"/>
+        <circle cx="200" cy="60" r="18" fill="white"/>
+        <circle cx="60" cy="200" r="18" fill="white"/>
+      </svg>
+    </span>
+    <span class="btn__text-container">JupyterLite</span>
+  </a>
+</li>
+
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web/issues/new?title=Issue%20on%20page%20%2F5_Dimensionality_Reduction.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/5_Dimensionality_Reduction.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Dimensionality Reduction: PCA</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dimensionality Reduction: PCA</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example usage</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#standardize-the-data-mean-0-variance-1">Standardize the data (mean=0, variance=1)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#apply-pca">Apply PCA</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#explained-variance-and-reconstruction-error">Explained variance and reconstruction error</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#singular-value-decomposition">Singular value decomposition</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-analysis-pca-deeper-mathematical-foundations">Principal Component Analysis (PCA): Deeper Mathematical Foundations</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-as-a-quadratic-form">1. Variance as a Quadratic Form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-problem-in-pca">2. Optimization Problem in PCA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometric-interpretation">3. Geometric Interpretation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orthonormality-of-eigenvectors">4. Orthonormality of Eigenvectors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dimensionality-reduction-with-pca">5. Dimensionality Reduction with PCA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruction-from-pca">6. Reconstruction from PCA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#total-variance-and-explained-variance">7. Total Variance and Explained Variance</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dimensionality-reduction-pca">
+<h1>Dimensionality Reduction: PCA<a class="headerlink" href="#dimensionality-reduction-pca" title="Link to this heading">#</a></h1>
+<hr style="height:2px; border-width:0; color:gray; background-color:gray">
+<table width="100%">
+  <tr>
+    <td align="left" width="60%">
+      <h2 style="color: #2c3e50; font-family: Arial, sans-serif;">
+        Machine Learning for Business
+      </h2>
+      <p>
+        <strong>Chandravesh Chaudhari</strong><br>
+        Assistant Professor<br>
+        School of Business and Management<br>
+        <a href="mailto:chandraveshchaudhari@gmail.com" style="color: #2980b9; text-decoration: none;">
+          chandraveshchaudhari@gmail.com
+        </a>
+      </p>
+    </td>
+    <td align="right" width="40%">
+      <img src="logo.jpg" alt="Christ University" width="250">
+    </td>
+  </tr>
+</table>
+<hr style="height:2px; border-width:0; color:gray; background-color:gray">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>• Variance Maximization &amp; Eigen Decomposition
+• Singular Value Decomposition (SVD)
+• Reconstruction Error
+• Python: PCA using SVD
+</pre></div>
+</div>
+<p>Dimensionality Reduction: PCA (Principal Component Analysis)
+PCA is a technique for reducing the dimensionality of a dataset while preserving as much variability (information) as possible. It transforms the data into a new coordinate system where the axes (principal components) are orthogonal and aligned with the directions of maximum variance.</p>
+<ol class="arabic simple">
+<li><p>Variance Maximization &amp; Eigen Decomposition
+Objective: Find the directions (principal components) in which the data has maximum variance.
+•	Steps:
+1	Center the data by subtracting the mean of each feature.
+2	Compute the covariance matrix of the centered data.
+3	Perform eigen decomposition on the covariance matrix to obtain eigenvalues and eigenvectors.
+▪	Eigenvectors: Represent the directions of the principal components.
+▪	Eigenvalues: Represent the amount of variance explained by each principal component.
+4	Sort eigenvectors by their corresponding eigenvalues in descending order.
+5	Select the top ( k ) eigenvectors to form a projection matrix.
+6	Project the data onto the new subspace to reduce dimensionality.
+•	Variance Maximization:
+◦	The first principal component captures the direction of maximum variance.
+◦	Each subsequent component captures the maximum remaining variance, orthogonal to the previous components.
+•	Mathematical Insight: Let ( X ) be the centered data matrix (( n \times p ), where ( n ) is the number of samples and ( p ) is the number of features). The covariance matrix is: [ C = \frac{1}{n-1} X^T X ] Eigen decomposition of ( C ) gives: [ C = V \Lambda V^T ] where ( V ) is the matrix of eigenvectors, and ( \Lambda ) is a diagonal matrix of eigenvalues.</p></li>
+<li><p>Singular Value Decomposition (SVD)
+SVD provides an alternative way to perform PCA, often more numerically stable and efficient, especially for large datasets.
+•	SVD Decomposition: For a centered data matrix ( X ), SVD decomposes it as: [ X = U \Sigma V^T ] where:
+◦	( U ): Left singular vectors (( n \times n )).
+◦	( \Sigma ): Diagonal matrix of singular values (( n \times p )).
+◦	( V ): Right singular vectors (( p \times p )), which correspond to the principal component directions.
+◦	Singular values in ( \Sigma ) are related to the eigenvalues of the covariance matrix: ( \sigma_i^2 / (n-1) = \lambda_i ).
+•	PCA via SVD:
+◦	The principal components are the columns of ( V ).
+◦	The variance of the data along each principal component is given by the squared singular values.
+◦	To reduce dimensionality, select the top ( k ) columns of ( V ) and project the data: [ X_{\text{reduced}} = X V_k ] where ( V_k ) contains the first ( k ) columns of ( V ).
+•	Advantages of SVD:
+◦	Works directly on the data matrix, avoiding the need to compute the covariance matrix.
+◦	Numerically stable for high-dimensional or sparse data.</p></li>
+<li><p>Reconstruction Error
+Reconstruction error measures how much information is lost when reducing the dimensionality of the data.
+•	Reconstruction: After projecting the data onto the top ( k ) principal components, the reconstructed data is: [ \tilde{X} = X_{\text{reduced}} V_k^T = X V_k V_k^T ] where ( V_k ) is the matrix of the top ( k ) eigenvectors.
+•	Reconstruction Error: The error is the difference between the original data ( X ) and the reconstructed data ( \tilde{X} ): [ \text{Error} = | X - \tilde{X} |<em>F^2 ] where ( | \cdot |<em>F ) is the Frobenius norm.
+•	Relation to Variance: The reconstruction error is equal to the sum of the variances of the discarded principal components (i.e., the sum of the eigenvalues corresponding to the discarded eigenvectors): [ \text{Error} = \sum</em>{i=k+1}^p \lambda_i ]
+•	Choosing ( k ): Select ( k ) such that a sufficient percentage of the total variance (e.g., 95%) is retained: [ \text{Explained Variance Ratio} = \frac{\sum</em>{i=1}^k \lambda_i}{\sum_{i=1}^p \lambda_i} ]</p></li>
+<li><p>Python: PCA using SVD
+Below is a Python implementation of PCA using SVD with NumPy and scikit-learn for comparison.
+Implementation from Scratch
+import numpy as np</p></li>
+</ol>
+<p>def pca_svd(X, k):
+# Center the data
+X_centered = X - np.mean(X, axis=0)</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Perform SVD
+U, Sigma, Vt = np.linalg.svd(X_centered, full_matrices=False)
+
+# Select top k components
+V_k = Vt[:k, :]  # Principal component directions
+X_reduced = X_centered @ V_k.T  # Project data onto k components
+
+# Explained variance
+explained_variance = (Sigma**2) / (X.shape[0] - 1)
+explained_variance_ratio = explained_variance / np.sum(explained_variance)
+
+# Reconstruct data
+X_reconstructed = X_reduced @ V_k
+
+# Reconstruction error
+reconstruction_error = np.sum((X_centered - X_reconstructed)**2)
+
+return X_reduced, explained_variance_ratio[:k], reconstruction_error
+</pre></div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="example-usage">
+<h1>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h1>
+<p>np.random.seed(42)
+X = np.random.randn(100, 5)  # 100 samples, 5 features
+k = 2  # Reduce to 2 dimensions
+X_reduced, explained_variance_ratio, reconstruction_error = pca_svd(X, k)</p>
+<p>print(“Reduced Data Shape:”, X_reduced.shape)
+print(“Explained Variance Ratio:”, explained_variance_ratio)
+print(“Reconstruction Error:”, reconstruction_error)
+Using scikit-learn
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="standardize-the-data-mean-0-variance-1">
+<h1>Standardize the data (mean=0, variance=1)<a class="headerlink" href="#standardize-the-data-mean-0-variance-1" title="Link to this heading">#</a></h1>
+<p>scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="apply-pca">
+<h1>Apply PCA<a class="headerlink" href="#apply-pca" title="Link to this heading">#</a></h1>
+<p>pca = PCA(n_components=k)
+X_reduced_sklearn = pca.fit_transform(X_scaled)</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="explained-variance-and-reconstruction-error">
+<h1>Explained variance and reconstruction error<a class="headerlink" href="#explained-variance-and-reconstruction-error" title="Link to this heading">#</a></h1>
+<p>explained_variance_ratio_sklearn = pca.explained_variance_ratio_
+X_reconstructed_sklearn = X_reduced_sklearn &#64; pca.components_ + pca.mean_
+reconstruction_error_sklearn = np.sum((X_scaled - X_reconstructed_sklearn)**2)</p>
+<p>print(“scikit-learn Reduced Data Shape:”, X_reduced_sklearn.shape)
+print(“scikit-learn Explained Variance Ratio:”, explained_variance_ratio_sklearn)
+print(“scikit-learn Reconstruction Error:”, reconstruction_error_sklearn)
+Output Explanation
+•	Reduced Data: The transformed data in the lower-dimensional space (( n \times k )).
+•	Explained Variance Ratio: The proportion of total variance captured by each principal component.
+•	Reconstruction Error: The Frobenius norm of the difference between the original and reconstructed data.
+Notes
+•	Standardizing the data (zero mean, unit variance) is recommended before applying PCA to ensure features are on the same scale.
+•	SVD is more efficient than eigen decomposition for large datasets, as it avoids computing the covariance matrix explicitly.
+•	The scikit-learn implementation is optimized and handles edge cases, making it preferable for production use.</p>
+<p>Summary
+•	Variance Maximization: PCA finds orthogonal directions that maximize variance, computed via eigen decomposition of the covariance matrix.
+•	SVD: An efficient alternative to eigen decomposition, directly decomposing the data matrix.
+•	Reconstruction Error: Measures information loss, minimized by retaining more components.
+•	Python Implementation: SVD-based PCA can be implemented from scratch or using scikit-learn for robustness.
+Let me know if you need further clarification or additional details!</p>
+<p>Here’s your content converted to Markdown with $$ for LaTeX math equations, suitable for use in Jupyter Notebook:</p>
+<p>⸻</p>
+<p>Absolutely! Let’s walk through a simple 2D example to understand:
+•	What vectors are
+•	What eigenvectors and eigenvalues are
+•	How they relate to PCA</p>
+<p>⸻</p>
+<ol class="arabic simple">
+<li><p>What is a Vector?</p></li>
+</ol>
+<p>A vector is just an arrow in space. In 2D:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{v} = \begin{bmatrix} 3 \ 2 \end{bmatrix}
+\]</div>
+<p>This vector goes 3 units right and 2 units up from the origin.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="2">
+<li><p>What is a Matrix Transformation?</p></li>
+</ol>
+<p>A matrix can transform vectors by stretching, rotating, or squashing them.</p>
+<p>Let’s take a matrix:</p>
+<div class="math notranslate nohighlight">
+\[
+A = \begin{bmatrix} 2 &amp; 1 \ 1 &amp; 2 \end{bmatrix}
+\]</div>
+<p>Now apply it to a vector:</p>
+<div class="math notranslate nohighlight">
+\[
+A \cdot \vec{v} = \begin{bmatrix} 2 &amp; 1 \ 1 &amp; 2 \end{bmatrix} \cdot \begin{bmatrix} 3 \ 2 \end{bmatrix}
+= \begin{bmatrix} (2)(3) + (1)(2) \ (1)(3) + (2)(2) \end{bmatrix}
+= \begin{bmatrix} 8 \ 7 \end{bmatrix}
+\]</div>
+<p>So the vector was transformed to a new direction and length.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="3">
+<li><p>What is an Eigenvector?</p></li>
+</ol>
+<p>An eigenvector of a matrix is a special vector that doesn’t change direction when the matrix is applied. It only gets stretched or shrunk.</p>
+<p>In math:</p>
+<div class="math notranslate nohighlight">
+\[
+A \vec{x} = \lambda \vec{x}
+\]</div>
+<p>Where:
+•	<span class="math notranslate nohighlight">\(A\)</span> = matrix
+•	<span class="math notranslate nohighlight">\(\vec{x}\)</span> = eigenvector
+•	<span class="math notranslate nohighlight">\(\lambda\)</span> = eigenvalue (scalar stretch)</p>
+<p>⸻</p>
+<ol class="arabic simple" start="4">
+<li><p>Easy Eigenvector Example</p></li>
+</ol>
+<p>Let’s find the eigenvectors of:</p>
+<div class="math notranslate nohighlight">
+\[
+A = \begin{bmatrix} 2 &amp; 1 \ 1 &amp; 2 \end{bmatrix}
+\]</div>
+<p>Step 1: Solve the characteristic equation</p>
+<div class="math notranslate nohighlight">
+\[
+\text{det}(A - \lambda I) = 0
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\begin{vmatrix} 2 - \lambda &amp; 1 \ 1 &amp; 2 - \lambda \end{vmatrix} = 0
+\Rightarrow (2 - \lambda)^2 - 1 = 0
+\Rightarrow \lambda^2 - 4\lambda + 3 = 0
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\Rightarrow \lambda = 1, 3
+\]</div>
+<p>So the eigenvalues are 1 and 3.</p>
+<p>⸻</p>
+<p>Step 2: Find eigenvectors</p>
+<p>For <span class="math notranslate nohighlight">\(\lambda = 3\)</span>:</p>
+<p>Solve:</p>
+<div class="math notranslate nohighlight">
+\[
+(A - 3I) \vec{x} = 0 \Rightarrow
+\begin{bmatrix} -1 &amp; 1 \ 1 &amp; -1 \end{bmatrix}
+\begin{bmatrix} x \ y \end{bmatrix}
+= \begin{bmatrix} 0 \ 0 \end{bmatrix}
+\Rightarrow x = y
+\]</div>
+<p>So one eigenvector is:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{v}_1 = \begin{bmatrix} 1 \ 1 \end{bmatrix}
+\]</div>
+<p>For <span class="math notranslate nohighlight">\(\lambda = 1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+(A - I) = \begin{bmatrix} 1 &amp; 1 \ 1 &amp; 1 \end{bmatrix}
+\Rightarrow x = -y
+\]</div>
+<p>So another eigenvector is:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{v}_2 = \begin{bmatrix} 1 \ -1 \end{bmatrix}
+\]</div>
+<p>⸻</p>
+<ol class="arabic simple" start="5">
+<li><p>What Does It Mean Visually?
+•	Matrix <span class="math notranslate nohighlight">\(A\)</span> stretches vectors along <span class="math notranslate nohighlight">\([1, 1]\)</span> and <span class="math notranslate nohighlight">\([1, -1]\)</span> directions.
+•	Those directions are the eigenvectors.
+•	It stretches by a factor of 3 along <span class="math notranslate nohighlight">\([1, 1]\)</span>, and 1 along <span class="math notranslate nohighlight">\([1, -1]\)</span>.</p></li>
+</ol>
+<p>⸻</p>
+<p>Why Does PCA Use Eigenvectors?</p>
+<p>PCA finds directions (eigenvectors of the covariance matrix) that:
+•	Capture the most variance
+•	Are uncorrelated (orthogonal)
+•	Reduce dimensions while preserving information</p>
+<p>⸻</p>
+<p>Would you like this visualized in Jupyter using NumPy and Matplotlib?</p>
+<p>⸻</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Define a 2x2 matrix A</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+
+<span class="c1"># Define two eigenvectors of A</span>
+<span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>   <span class="c1"># eigenvector for λ = 3</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span> <span class="c1"># eigenvector for λ = 1</span>
+
+<span class="c1"># Apply the transformation A to each eigenvector</span>
+<span class="n">transformed</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">eigenvectors</span>
+
+<span class="c1"># Plot setup</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot original eigenvectors</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">eigenvectors</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Eigenvector λ=3&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">eigenvectors</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Eigenvector λ=1&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot transformed eigenvectors</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">transformed</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">transformed</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">transformed</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Labels and legend</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Eigenvectors and Their Transformation by Matrix A&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s your content converted to Jupyter Notebook Markdown with properly formatted LaTeX equations using $ signs for rendering:</p>
+<p>⸻</p>
+<p>Orthogonal vs Orthonormal Vectors</p>
+<p>⸻</p>
+<ol class="arabic simple">
+<li><p>Orthogonal Vectors</p></li>
+</ol>
+<p>Two vectors are orthogonal if their dot product is zero:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{u} \cdot \vec{v} = 0
+\]</div>
+<p>Example:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{u} = \begin{bmatrix} 1 \ 2 \end{bmatrix}, \quad
+\vec{v} = \begin{bmatrix} 2 \ -1 \end{bmatrix}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\vec{u} \cdot \vec{v} = 1 \cdot 2 + 2 \cdot (-1) = 2 - 2 = 0
+\]</div>
+<p>So <span class="math notranslate nohighlight">\(\vec{u}\)</span> and <span class="math notranslate nohighlight">\(\vec{v}\)</span> are orthogonal.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="2">
+<li><p>Orthonormal Vectors</p></li>
+</ol>
+<p>Vectors are orthonormal if:
+•	They are orthogonal: dot product <span class="math notranslate nohighlight">\(= 0\)</span>
+•	Each vector has unit length:</p>
+<div class="math notranslate nohighlight">
+\[
+|\vec{u}| = |\vec{v}| = 1
+\]</div>
+<p>Normalize:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{u} = \frac{\vec{u}}{|\vec{u}|}, \quad
+\hat{v} = \frac{\vec{v}}{|\vec{v}|}
+\]</div>
+<p>Then <span class="math notranslate nohighlight">\(\hat{u}\)</span> and <span class="math notranslate nohighlight">\(\hat{v}\)</span> are orthonormal.</p>
+<p>⸻</p>
+<p>Python Code: Visualizing Orthogonal &amp; Orthonormal Vectors</p>
+<p>(You can include a matplotlib-based visualization here if needed)</p>
+<p>⸻</p>
+<p>Summary</p>
+<p>Property	Orthogonal	Orthonormal
+Dot product	<span class="math notranslate nohighlight">\(= 0\)</span>	<span class="math notranslate nohighlight">\(= 0\)</span>
+Length	Can be any	Must be <span class="math notranslate nohighlight">\(1\)</span>
+Use case	PCA bases	Orthonormal basis in QR</p>
+<p>⸻</p>
+<p>Want to see Gram-Schmidt to convert arbitrary vectors into an orthonormal basis?</p>
+<p>⸻</p>
+<p>Let me know if you’d like the visualization code or the Gram-Schmidt process in Markdown too!</p>
+<p>⸻</p>
+<p>Dot Product of Vectors</p>
+<p>The dot product (also called the scalar product) is a way of multiplying two vectors that results in a single number (a scalar).</p>
+<p>⸻</p>
+<p>Definition:</p>
+<p>For two vectors
+<span class="math notranslate nohighlight">\(\vec{a} = [a_1, a_2, \dots, a_n], \quad \vec{b} = [b_1, b_2, \dots, b_n]\)</span>
+the dot product is:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{a} \cdot \vec{b} = a_1b_1 + a_2b_2 + \dots + a_n b_n
+\]</div>
+<p>⸻</p>
+<p>Geometric Interpretation:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{a} \cdot \vec{b} = |\vec{a}| , |\vec{b}| , \cos(\theta)
+\]</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>•	$|\vec{a}|$ and $|\vec{b}|$ are magnitudes (lengths) of the vectors.
+•	$\theta$ is the angle between them.
+</pre></div>
+</div>
+<p>⸻</p>
+<p>Interpretation of the Result:</p>
+<ol class="arabic simple">
+<li><p>If <span class="math notranslate nohighlight">\(\vec{a} \cdot \vec{b} = 0\)</span>:
+•	Vectors are perpendicular (orthogonal), since <span class="math notranslate nohighlight">\(\cos(90^\circ) = 0\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(\vec{a} \cdot \vec{b} &gt; 0\)</span>:
+•	Vectors point in a similar direction (angle <span class="math notranslate nohighlight">\(&lt; 90^\circ\)</span>).</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(\vec{a} \cdot \vec{b} &lt; 0\)</span>:
+•	Vectors point in opposite directions (angle <span class="math notranslate nohighlight">\(&gt; 90^\circ\)</span>).</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(\vec{a} \cdot \vec{b} = 1\)</span>:
+•	This can only happen if both vectors are unit vectors (length = 1) and point in exactly the same direction.</p></li>
+</ol>
+<p>⸻</p>
+<p>Example:</p>
+<p>Let
+<span class="math notranslate nohighlight">\(\vec{a} = [1, 2, 3], \quad \vec{b} = [4, -5, 6]\)</span></p>
+<p>Then:
+$<span class="math notranslate nohighlight">\(
+\vec{a} \cdot \vec{b} = (1)(4) + (2)(-5) + (3)(6) = 4 - 10 + 18 = 12
+\)</span>$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Define orthogonal vectors</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Check orthogonality</span>
+<span class="n">dot_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dot product (should be 0):&quot;</span><span class="p">,</span> <span class="n">dot_product</span><span class="p">)</span>
+
+<span class="c1"># Normalize vectors (make them unit length)</span>
+<span class="n">u_norm</span> <span class="o">=</span> <span class="n">u</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+<span class="n">v_norm</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+<span class="c1"># Plot both sets</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Original orthogonal vectors</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;u (Orthogonal)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;v (Orthogonal)&#39;</span><span class="p">)</span>
+
+<span class="c1"># Orthonormal vectors (unit length), using alpha to distinguish</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">u_norm</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">u_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;u_norm (Orthonormal)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">v_norm</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;v_norm (Orthonormal)&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Orthogonal and Orthonormal Vectors&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>⸻</p>
+<p>What is PCA?</p>
+<p>PCA is a dimensionality reduction technique that:
+1.	Finds directions (called principal components) along which the data varies the most.
+2.	Projects data onto a smaller number of these components, while retaining as much variance (information) as possible.</p>
+<p>⸻</p>
+<p>Steps Involved
+1.	Standardize the data
+Remove the mean (and optionally scale to unit variance).
+2.	Compute the covariance matrix
+Captures how features vary with each other.
+3.	Get eigenvectors and eigenvalues
+These represent principal components and their importance.
+4.	Sort and select top k eigenvectors
+Select directions with the most variance.
+5.	Project data
+Reduce dimensions by projecting onto these top directions.</p>
+<p>⸻</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_iris</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pca</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">num_components</span><span class="p">):</span>
+    <span class="c1"># 1. Standardize</span>
+    <span class="n">X_meaned</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># 2. Covariance matrix</span>
+    <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X_meaned</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># 3. Eigen decomposition</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+
+    <span class="c1"># 4. Sort eigenvalues &amp; eigenvectors</span>
+    <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+    <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="n">sorted_indices</span><span class="p">]</span>
+
+    <span class="c1"># 5. Select top components</span>
+    <span class="n">eigenvectors_subset</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="p">:</span><span class="n">num_components</span><span class="p">]</span>
+
+    <span class="c1"># 6. Project data</span>
+    <span class="n">X_reduced</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X_meaned</span><span class="p">,</span> <span class="n">eigenvectors_subset</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">X_reduced</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">[:</span><span class="n">num_components</span><span class="p">],</span> <span class="n">eigenvectors_subset</span>
+
+<span class="c1"># Load data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">target</span>
+<span class="n">target_names</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">target_names</span>
+
+<span class="c1"># Apply PCA</span>
+<span class="n">X_pca</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">num_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">target_names</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_pca</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">target</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pca</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">target</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Principal Component 1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Principal Component 2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;PCA of Iris Dataset&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Explanation of the Plot
+•	Each point represents an Iris flower, projected from 4D to 2D.
+•	The axes are the top 2 principal components.
+•	The clusters show that PCA captures meaningful variance — e.g., Setosa is clearly separable from others.</p>
+<p>⸻</p>
+<p>Got it! Here’s your PCA explanation converted to Jupyter Notebook Markdown format using LaTeX equations with dollar signs ($) so it renders properly in Jupyter. Just copy and paste it into a Markdown cell:</p>
+<p>⸻</p>
+<p>Principal Component Analysis (PCA) - Mathematical Explanation</p>
+<p>⸻</p>
+<ol class="arabic simple">
+<li><p>Data Representation</p></li>
+</ol>
+<p>Let the dataset have <span class="math notranslate nohighlight">\(n\)</span> samples and <span class="math notranslate nohighlight">\(d\)</span> features.
+We represent the data as a matrix:</p>
+<div class="math notranslate nohighlight">
+\[
+X =
+\begin{bmatrix}
+\uparrow &amp; \uparrow &amp; &amp; \uparrow \
+\mathbf{x}_1 &amp; \mathbf{x}_2 &amp; \cdots &amp; \mathbf{x}_n \
+\downarrow &amp; \downarrow &amp; &amp; \downarrow \
+\end{bmatrix}^\top
+\in \mathbb{R}^{n \times d}
+\]</div>
+<p>Each row <span class="math notranslate nohighlight">\(\mathbf{x}_i \in \mathbb{R}^d\)</span> is a data point (feature vector).</p>
+<p>⸻</p>
+<ol class="arabic simple" start="2">
+<li><p>Centering the Data</p></li>
+</ol>
+<p>PCA requires zero-centered data.</p>
+<p>Let <span class="math notranslate nohighlight">\(\boldsymbol{\mu} \in \mathbb{R}^d\)</span> be the mean vector:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\mu} = \frac{1}{n} \sum_{i=1}^n \mathbf{x}_i
+\]</div>
+<p>Then, we subtract the mean:</p>
+<div class="math notranslate nohighlight">
+\[
+X_{\text{centered}} = X - \boldsymbol{\mu}
+\]</div>
+<p>⸻</p>
+<ol class="arabic simple" start="3">
+<li><p>Covariance Matrix</p></li>
+</ol>
+<p>The covariance matrix <span class="math notranslate nohighlight">\(\Sigma \in \mathbb{R}^{d \times d}\)</span> tells us how features vary with respect to each other:</p>
+<div class="math notranslate nohighlight">
+\[
+\Sigma = \frac{1}{n - 1} X_{\text{centered}}^\top X_{\text{centered}}
+\]</div>
+<p>This is a symmetric and positive semi-definite matrix.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="4">
+<li><p>Eigenvalues and Eigenvectors</p></li>
+</ol>
+<p>We perform eigen decomposition:</p>
+<div class="math notranslate nohighlight">
+\[
+\Sigma \mathbf{v}_i = \lambda_i \mathbf{v}_i
+\]</div>
+<p>Where:
+•	<span class="math notranslate nohighlight">\(\lambda_i \in \mathbb{R}\)</span> is the eigenvalue
+•	<span class="math notranslate nohighlight">\(\mathbf{v}_i \in \mathbb{R}^d\)</span> is the corresponding eigenvector</p>
+<p>Properties:
+•	Eigenvectors <span class="math notranslate nohighlight">\(\mathbf{v}_i\)</span> are orthogonal (can be made orthonormal)
+•	Eigenvalues represent the variance captured along that direction</p>
+<p>⸻</p>
+<ol class="arabic simple" start="5">
+<li><p>Sorting and Selecting Top Components</p></li>
+</ol>
+<p>Sort eigenvalues and eigenvectors in descending order of <span class="math notranslate nohighlight">\(\lambda_i\)</span>.
+Select the top <span class="math notranslate nohighlight">\(k\)</span> eigenvectors:</p>
+<div class="math notranslate nohighlight">
+\[
+W_k = \left[ \mathbf{v}_1 ; \mathbf{v}_2 ; \cdots ; \mathbf{v}_k \right] \in \mathbb{R}^{d \times k}
+\]</div>
+<p>⸻</p>
+<ol class="arabic simple" start="6">
+<li><p>Projecting the Data</p></li>
+</ol>
+<p>Now project the original data to the new <span class="math notranslate nohighlight">\(k\)</span>-dimensional subspace:</p>
+<div class="math notranslate nohighlight">
+\[
+Z = X_{\text{centered}} \cdot W_k, \quad \text{where} \quad Z \in \mathbb{R}^{n \times k}
+\]</div>
+<p>This is the reduced-dimensional representation of the data.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="7">
+<li><p>Summary of PCA Steps</p>
+<ol class="arabic simple">
+<li><p>Standardize the data</p></li>
+<li><p>Compute covariance matrix <span class="math notranslate nohighlight">\(\Sigma\)</span></p></li>
+<li><p>Compute eigenvalues and eigenvectors</p></li>
+<li><p>Sort and select top <span class="math notranslate nohighlight">\(k\)</span> eigenvectors</p></li>
+<li><p>Project data onto new axes</p></li>
+</ol>
+</li>
+</ol>
+<p>⸻</p>
+<p>Let me know if you want a version with accompanying code snippets or visualization examples next.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="singular-value-decomposition">
+<h1>Singular value decomposition<a class="headerlink" href="#singular-value-decomposition" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_eigenvalues</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find eigenvalues by solving the characteristic polynomial det(A - λI) = 0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 1: Find Eigenvalues ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solving det(A - λI) = 0</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Characteristic polynomial coefficients</span>
+    <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># For 2x2 matrix: λ² - (tr(A))λ + det(A) = 0</span>
+        <span class="n">trace</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">det</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Characteristic equation: λ² - </span><span class="si">{</span><span class="n">trace</span><span class="si">}</span><span class="s2">λ + </span><span class="si">{</span><span class="n">det</span><span class="si">}</span><span class="s2"> = 0&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Quadratic formula</span>
+        <span class="n">discriminant</span> <span class="o">=</span> <span class="n">trace</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">det</span>
+        <span class="n">λ1</span> <span class="o">=</span> <span class="p">(</span><span class="n">trace</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">discriminant</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">λ2</span> <span class="o">=</span> <span class="p">(</span><span class="n">trace</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">discriminant</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">eigenvalues</span> <span class="o">=</span> <span class="p">[</span><span class="n">λ1</span><span class="p">,</span> <span class="n">λ2</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># For larger matrices - much more complex (this is simplified)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For larger matrices, we&#39;d typically use iterative methods&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;But we&#39;ll use numpy&#39;s roots for demonstration:&quot;</span><span class="p">)</span>
+        <span class="n">char_poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+        <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roots</span><span class="p">(</span><span class="n">char_poly</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Eigenvalues found:&quot;</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_eigenvectors</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find eigenvectors by solving (A - λI)v = 0 for each eigenvalue</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Step 2: Find Eigenvectors ===&quot;</span><span class="p">)</span>
+    <span class="n">eigenvectors</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">λ</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">For eigenvalue λ</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">λ</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="n">λ</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A - λ</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">I:</span><span class="se">\n</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Find null space (simplified approach)</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">tol</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="c1"># Assume eigenvector is [1, -M[0,0]/M[0,1]]</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Normalize</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Eigenvector v</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">eigenvectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">eigenvectors</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">demonstrate_eigen_calculation</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Original Matrix ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Calculating Determinant ===&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">det</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;det(A) = </span><span class="si">{</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">*</span><span class="si">{</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">*</span><span class="si">{</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">det</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">det</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;det(A) = </span><span class="si">{</span><span class="n">det</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">find_eigenvalues</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">find_eigenvectors</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Verification ===&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">λ</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A @ v</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">A</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;λ</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> * v</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">λ</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">v</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+
+<span class="n">demonstrate_eigen_calculation</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reconstruct_from_eigen</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Original Matrix ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+
+    <span class="c1"># Step 1: Find eigenvalues and eigenvectors</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Step 1: Eigen Decomposition ===&quot;</span><span class="p">)</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eigenvalues (λ):&quot;</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eigenvectors (columns):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Verify Av = λv</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Step 2: Verify Eigenproperties ===&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+        <span class="n">λ</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A @ v</span><span class="si">{</span><span class="n">λ</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">A</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;λ * v</span><span class="si">{</span><span class="n">λ</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">λ</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">v</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: Reconstruct original matrix</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Step 3: Matrix Reconstruction ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using A = V Λ V⁻¹&quot;</span><span class="p">)</span>
+
+    <span class="n">Λ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">eigenvectors</span>
+    <span class="n">V_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Diagonal matrix Λ:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">Λ</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eigenvector matrix V:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inverse of V:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">V_inv</span><span class="p">)</span>
+
+    <span class="n">A_reconstructed</span> <span class="o">=</span> <span class="n">V</span> <span class="o">@</span> <span class="n">Λ</span> <span class="o">@</span> <span class="n">V_inv</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Reconstructed A:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">A_reconstructed</span><span class="p">)</span>
+
+    <span class="c1"># Step 4: Verification</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Verification ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original A:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reconstructed A:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">A_reconstructed</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Reconstruction successful?&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">A_reconstructed</span><span class="p">))</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="n">reconstruct_from_eigen</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">svd</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">demonstrate_svd_calculation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">print_steps</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Demonstrate how U, s, Vt are calculated in SVD decomposition</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Original Matrix ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 1: Compute X^T X and its eigenvalues/vectors</span>
+    <span class="n">XTX</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span>
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 1: Compute X^T X ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X^T X:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">XTX</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape: </span><span class="si">{</span><span class="n">XTX</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Find eigenvalues and eigenvectors of X^T X</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">XTX</span><span class="p">)</span>
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>  <span class="c1"># Keep real part (for numerical stability)</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+    <span class="c1"># Sort eigenvalues in descending order</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 2: Eigen Decomposition of X^T X ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eigenvalues (s^2):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eigenvectors (columns of V):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: Compute singular values (s) and Vt</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>  <span class="c1"># Ensure non-negative</span>
+    <span class="n">Vt</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 3: Compute Singular Values and Vt ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Singular values (s):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vt (transpose of V):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">Vt</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 4: Compute U</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">V</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">:</span>  <span class="c1"># Avoid division by zero</span>
+            <span class="n">U</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 4: Compute U ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;U (before orthogonalization):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">U</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 5: Ensure U is orthogonal (QR decomposition to fix numerical issues)</span>
+    <span class="n">Q</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">Q</span>
+
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 5: Orthogonalize U ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;U (after QR orthogonalization):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">U</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 6: Construct full SVD matrices</span>
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Final SVD Components ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;U:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">U</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;s:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vt:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">Vt</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">U</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">Vt</span>
+
+<span class="c1"># Example usage with a simple matrix</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;==== SVD CALCULATION DEMONSTRATION ====</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create a sample matrix</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># Our implementation</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Our Implementation ===&quot;</span><span class="p">)</span>
+    <span class="n">U_our</span><span class="p">,</span> <span class="n">s_our</span><span class="p">,</span> <span class="n">Vt_our</span> <span class="o">=</span> <span class="n">demonstrate_svd_calculation</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c1"># Compare with scipy&#39;s implementation</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Scipy&#39;s Implementation ===&quot;</span><span class="p">)</span>
+    <span class="n">U_scipy</span><span class="p">,</span> <span class="n">s_scipy</span><span class="p">,</span> <span class="n">Vt_scipy</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;U:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">U_scipy</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;s:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">s_scipy</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vt:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">Vt_scipy</span><span class="p">)</span>
+
+    <span class="c1"># Verification</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Verification ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reconstructed matrix (our):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">U_our</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s_our</span><span class="p">)</span> <span class="o">@</span> <span class="n">Vt_our</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reconstructed matrix (scipy):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">U_scipy</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s_scipy</span><span class="p">)</span> <span class="o">@</span> <span class="n">Vt_scipy</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original matrix:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">svd</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">svd_linear_regression</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">print_steps</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Demonstrate SVD-based linear regression with explanatory print statements</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Step 1: Add bias term (column of ones)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">X</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 1: Design Matrix (with bias column) ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X shape:&quot;</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Show first 3 rows</span>
+
+    <span class="c1"># Step 2: Compute SVD</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">Vt</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 2: Singular Value Decomposition ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;U shape:&quot;</span><span class="p">,</span> <span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Singular values (s):&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vt shape:&quot;</span><span class="p">,</span> <span class="n">Vt</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: Determine numerical rank</span>
+    <span class="n">tol</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+    <span class="n">rank</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">s</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 3: Determine Numerical Rank ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tolerance:&quot;</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Effective rank:&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 4: Compute pseudoinverse</span>
+    <span class="n">s_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">s_inv</span><span class="p">[:</span><span class="n">rank</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">s</span><span class="p">[:</span><span class="n">rank</span><span class="p">]</span>
+    <span class="n">Sigma_pinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s_inv</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 4: Compute Pseudoinverse ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reciprocal of non-zero singular values:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">s_inv</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Σ⁺ (pseudoinverse of diagonal matrix):&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">Sigma_pinv</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 5: Calculate coefficients θ = VΣ⁺Uᵀy</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">Vt</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Sigma_pinv</span> <span class="o">@</span> <span class="n">U</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span>
+    <span class="k">if</span> <span class="n">print_steps</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Step 5: Calculate Coefficients θ ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;θ = VΣ⁺Uᵀy&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final coefficients:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">theta</span>
+
+<span class="c1"># Example usage with simple data</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;==== DEMONSTRATION: SVD FOR LINEAR REGRESSION ====</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Sample data (2 features + noise)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="p">[</span><span class="mi">15</span><span class="p">]])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original data:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X:&quot;</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;y:&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Run our SVD regression</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">svd_linear_regression</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># Compare with numpy&#39;s least squares</span>
+    <span class="n">lstq_solution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">X</span><span class="p">]),</span> <span class="n">y</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Verification ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Our SVD θ:&quot;</span><span class="p">,</span> <span class="n">theta</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy lstsq θ:&quot;</span><span class="p">,</span> <span class="n">lstq_solution</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="principal-component-analysis-pca-deeper-mathematical-foundations">
+<h1>Principal Component Analysis (PCA): Deeper Mathematical Foundations<a class="headerlink" href="#principal-component-analysis-pca-deeper-mathematical-foundations" title="Link to this heading">#</a></h1>
+<hr class="docutils" />
+<section id="variance-as-a-quadratic-form">
+<h2>1. Variance as a Quadratic Form<a class="headerlink" href="#variance-as-a-quadratic-form" title="Link to this heading">#</a></h2>
+<p>The variance of data projected onto a unit vector <span class="math notranslate nohighlight">\(\mathbf{w} \in \mathbb{R}^d\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Var}(\mathbf{w}) = \frac{1}{n-1} \sum_{i=1}^n (\mathbf{w}^\top \mathbf{x}_i)^2 = \mathbf{w}^\top \Sigma \mathbf{w}
+\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\Sigma\)</span> is the covariance matrix.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is a direction vector.</p></li>
+<li><p>We want to find the direction <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> that maximizes the projected variance.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="optimization-problem-in-pca">
+<h2>2. Optimization Problem in PCA<a class="headerlink" href="#optimization-problem-in-pca" title="Link to this heading">#</a></h2>
+<p>PCA can be formulated as a constrained optimization problem:</p>
+<div class="math notranslate nohighlight">
+\[
+\max_{\mathbf{w}} \quad \mathbf{w}^\top \Sigma \mathbf{w} \quad \text{subject to} \quad \|\mathbf{w}\| = 1
+\]</div>
+<p>This constraint ensures we are choosing a unit direction vector.</p>
+<p>We solve this using <strong>Lagrange multipliers</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\mathbf{w}, \lambda) = \mathbf{w}^\top \Sigma \mathbf{w} - \lambda (\mathbf{w}^\top \mathbf{w} - 1)
+\]</div>
+<p>Taking the gradient and setting it to zero:</p>
+<div class="math notranslate nohighlight">
+\[
+\nabla_{\mathbf{w}} \mathcal{L} = 2\Sigma \mathbf{w} - 2\lambda \mathbf{w} = 0
+\Rightarrow \Sigma \mathbf{w} = \lambda \mathbf{w}
+\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> must be an <strong>eigenvector</strong> of <span class="math notranslate nohighlight">\(\Sigma\)</span>, and <span class="math notranslate nohighlight">\(\lambda\)</span> is the corresponding <strong>eigenvalue</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="geometric-interpretation">
+<h2>3. Geometric Interpretation<a class="headerlink" href="#geometric-interpretation" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Each eigenvector of <span class="math notranslate nohighlight">\(\Sigma\)</span> defines a new axis (principal component).</p></li>
+<li><p>The corresponding eigenvalue tells us the <strong>amount of variance</strong> along that direction.</p></li>
+<li><p>PCA finds a <strong>rotated coordinate system</strong> aligned with directions of <strong>maximum variance</strong>.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="orthonormality-of-eigenvectors">
+<h2>4. Orthonormality of Eigenvectors<a class="headerlink" href="#orthonormality-of-eigenvectors" title="Link to this heading">#</a></h2>
+<p>Because <span class="math notranslate nohighlight">\(\Sigma\)</span> is symmetric, all its eigenvectors are:</p>
+<ul class="simple">
+<li><p><strong>Orthogonal</strong>: <span class="math notranslate nohighlight">\(\mathbf{v}_i^\top \mathbf{v}_j = 0\)</span> for <span class="math notranslate nohighlight">\(i \ne j\)</span></p></li>
+<li><p>Can be made <strong>orthonormal</strong>: <span class="math notranslate nohighlight">\(\mathbf{v}_i^\top \mathbf{v}_i = 1\)</span></p></li>
+</ul>
+<p>Let <span class="math notranslate nohighlight">\(V \in \mathbb{R}^{d \times d}\)</span> be the matrix of eigenvectors:</p>
+<div class="math notranslate nohighlight">
+\[
+V^\top V = I \quad \Rightarrow \quad V^{-1} = V^\top
+\]</div>
+<p>This allows diagonalization of <span class="math notranslate nohighlight">\(\Sigma\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\Sigma = V \Lambda V^\top
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\Lambda\)</span> is the diagonal matrix of eigenvalues.</p>
+</section>
+<hr class="docutils" />
+<section id="dimensionality-reduction-with-pca">
+<h2>5. Dimensionality Reduction with PCA<a class="headerlink" href="#dimensionality-reduction-with-pca" title="Link to this heading">#</a></h2>
+<p>Let:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(V_k \in \mathbb{R}^{d \times k}\)</span> be the matrix of top <span class="math notranslate nohighlight">\(k\)</span> eigenvectors.</p></li>
+<li><p><span class="math notranslate nohighlight">\(X_{\text{centered}} \in \mathbb{R}^{n \times d}\)</span> be the mean-centered data.</p></li>
+</ul>
+<p>Then the reduced representation is:</p>
+<div class="math notranslate nohighlight">
+\[
+Z = X_{\text{centered}} V_k \in \mathbb{R}^{n \times k}
+\]</div>
+<p>This reduces the data from <span class="math notranslate nohighlight">\(d\)</span> dimensions to <span class="math notranslate nohighlight">\(k\)</span> dimensions.</p>
+</section>
+<hr class="docutils" />
+<section id="reconstruction-from-pca">
+<h2>6. Reconstruction from PCA<a class="headerlink" href="#reconstruction-from-pca" title="Link to this heading">#</a></h2>
+<p>To reconstruct the original (approximate) data from <span class="math notranslate nohighlight">\(Z\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{X} = Z V_k^\top + \boldsymbol{\mu}
+\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Z\)</span>: compressed data</p></li>
+<li><p><span class="math notranslate nohighlight">\(V_k^\top\)</span>: maps back to original space</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}\)</span>: the mean added back</p></li>
+</ul>
+<p>Note: This reconstruction is <strong>lossy</strong> but preserves the most important structure.</p>
+</section>
+<hr class="docutils" />
+<section id="total-variance-and-explained-variance">
+<h2>7. Total Variance and Explained Variance<a class="headerlink" href="#total-variance-and-explained-variance" title="Link to this heading">#</a></h2>
+<p>Let the eigenvalues be <span class="math notranslate nohighlight">\(\lambda_1, \lambda_2, \dots, \lambda_d\)</span>.</p>
+<ul class="simple">
+<li><p><strong>Total variance</strong> in data:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\text{Total variance} = \sum_{i=1}^d \lambda_i = \text{trace}(\Sigma)
+\]</div>
+<ul class="simple">
+<li><p><strong>Explained variance ratio</strong> for top <span class="math notranslate nohighlight">\(k\)</span> components:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\text{Explained variance ratio} = \frac{\sum_{i=1}^k \lambda_i}{\sum_{j=1}^d \lambda_j}
+\]</div>
+<p>This ratio helps us decide how many principal components to keep.</p>
+<hr class="docutils" />
+<p>Great! Let’s break this down so you can easily explain Lagrange multipliers, differentiation, and optimization in the context of PCA, using simple intuitive examples before diving into the math.</p>
+<p>⸻</p>
+<ol class="arabic simple">
+<li><p>What is an Optimization Problem?</p></li>
+</ol>
+<p>At its core, optimization is about finding the best solution under some constraints.</p>
+<p>Easy example:</p>
+<p>Maximize area of a rectangle with a fixed perimeter of 100 units.</p>
+<p>Let sides be x and y.
+•	Objective: Maximize A = x * y
+•	Constraint: 2x + 2y = 100</p>
+<p>This is a perfect candidate for Lagrange multipliers, where we want to maximize a function under a constraint.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="2">
+<li><p>Lagrange Multipliers Intuition</p></li>
+</ol>
+<p>Visual analogy:</p>
+<p>Imagine you’re on a mountain (height = objective function), but you must walk along a path (constraint curve). The highest point on the path is where the gradient of the mountain is tangent (parallel) to the gradient of the path.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="3">
+<li><p>How Lagrange Multipliers Work</p></li>
+</ol>
+<p>If you want to maximize a function f(x, y) subject to a constraint g(x, y) = c, you define a new function:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(x, y, \lambda) = f(x, y) - \lambda (g(x, y) - c)
+\]</div>
+<p>Then, take partial derivatives and set them equal to zero:</p>
+<div class="math notranslate nohighlight">
+\[
+\nabla_x \mathcal{L} = 0, \quad \nabla_y \mathcal{L} = 0, \quad \nabla_\lambda \mathcal{L} = 0
+\]</div>
+<p>⸻</p>
+<ol class="arabic simple" start="4">
+<li><p>A Simple, Teachable Example</p></li>
+</ol>
+<p>Problem:</p>
+<p>Maximize f(x, y) = xy subject to x + y = 10.</p>
+<p>Step 1: Define Lagrangian</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(x, y, \lambda) = xy - \lambda (x + y - 10)
+\]</div>
+<p>Step 2: Take derivatives and set to zero
+•	\frac{\partial \mathcal{L}}{\partial x} = y - \lambda = 0
+•	\frac{\partial \mathcal{L}}{\partial y} = x - \lambda = 0
+•	\frac{\partial \mathcal{L}}{\partial \lambda} = -(x + y - 10) = 0</p>
+<p>Step 3: Solve</p>
+<p>From first two:
+•	y = \lambda
+•	x = \lambda → So x = y</p>
+<p>Plug into constraint: x + x = 10 \Rightarrow x = 5, y = 5</p>
+<p>So the max value of xy under the constraint is 25, achieved when x = y = 5.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="5">
+<li><p>Applying This to PCA</p></li>
+</ol>
+<p>Now let’s return to PCA:</p>
+<p>We want to maximize variance in the direction of w (projection vector), but we also want w to be a unit vector (length = 1):</p>
+<p>Optimization form:</p>
+<div class="math notranslate nohighlight">
+\[
+\max_{\mathbf{w}} \mathbf{w}^\top \Sigma \mathbf{w} \quad \text{subject to} \quad \mathbf{w}^\top \mathbf{w} = 1
+\]</div>
+<p>This is just like our earlier problem!</p>
+<p>Step 1: Create Lagrangian</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\mathbf{w}, \lambda) = \mathbf{w}^\top \Sigma \mathbf{w} - \lambda (\mathbf{w}^\top \mathbf{w} - 1)
+\]</div>
+<p>Step 2: Take derivative and set to 0</p>
+<p>We use vector calculus:
+•	\nabla_{\mathbf{w}}(\mathbf{w}^\top \Sigma \mathbf{w}) = 2\Sigma \mathbf{w}
+•	\nabla_{\mathbf{w}}(\lambda(\mathbf{w}^\top \mathbf{w})) = 2\lambda \mathbf{w}</p>
+<p>So,</p>
+<div class="math notranslate nohighlight">
+\[
+2\Sigma \mathbf{w} - 2\lambda \mathbf{w} = 0 \Rightarrow \Sigma \mathbf{w} = \lambda \mathbf{w}
+\]</div>
+<p>This tells us: w must be an eigenvector of the covariance matrix Σ, and λ is the corresponding eigenvalue (which also represents variance in that direction).</p>
+<p>⸻</p>
+<ol class="arabic simple" start="6">
+<li><p>Summary for Teaching</p></li>
+</ol>
+<p>Concept	Example	Key Idea
+Optimization	Maximize rectangle area with fixed perimeter	Finding best value under a condition
+Lagrange multipliers	Solve xy with x + y = 10	Introduce a λ to handle constraint
+PCA application	Maximize wᵀΣw with wᵀw = 1	Optimize variance under unit vector constraint
+Result	Eigenvector equation: Σw = λw	Find principal directions (PCA axes)</p>
+<p>⸻</p>
+<p>Would you like me to make this into a visual-friendly Jupyter Notebook or Markdown version for class?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># https://youtu.be/fkf4IBRSeEc?si=rkWEW-W7eZjTxqb0</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Pca 1 Small.png&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_blobs</span>
+
+<span class="c1"># 1. Generate 2D synthetic data</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="p">[[</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]]</span>  <span class="c1"># rotate the blob to make PCA interesting</span>
+
+<span class="c1"># 2. Perform PCA</span>
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pca</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># 3. Plot original data</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data Points&#39;</span><span class="p">)</span>
+
+<span class="c1"># 4. Plot the PCA-1 and PCA-2 directions</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># mean of the data</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">variance</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">pca</span><span class="o">.</span><span class="n">components_</span><span class="p">,</span> <span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_</span><span class="p">)):</span>
+    <span class="n">vector</span> <span class="o">=</span> <span class="n">component</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>  <span class="c1"># scale for visibility</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="o">*</span><span class="n">origin</span><span class="p">,</span> <span class="o">*</span><span class="n">vector</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;PCA-</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;PCA - Showing PCA-1 and PCA-2 directions&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;X2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Variance as a Quadratic Form</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Load your CSV (ensure it&#39;s in the same directory)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;stock_prices_2022_2023.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Mean-center the data</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">values</span>
+<span class="n">X_centered</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Compute the covariance matrix</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X_centered</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Choose a random direction w (unit vector)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">X_centered</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+<span class="c1"># Projected variance along w</span>
+<span class="n">projected_variance</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">w</span>
+<span class="c1"># This value is what PCA tries to maximize</span>
+
+<span class="c1"># Step 2: Optimization Problem (Eigen decomposition)</span>
+<span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+
+<span class="c1"># Sort eigenvectors by descending eigenvalue</span>
+<span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+<span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="n">sorted_indices</span><span class="p">]</span>
+
+<span class="c1"># Top principal component</span>
+<span class="n">principal_vector</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">principal_variance</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Step 3: Geometric Interpretation (Plotting top 2 PCs)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">X_centered</span> <span class="o">@</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># Project to 2D space</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Z</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">Z</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Principal Component 1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Principal Component 2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Projection onto First 2 Principal Components&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Step 4: Orthonormality of Eigenvectors</span>
+<span class="n">orthonormal_check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">eigenvectors</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">eigenvectors</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">eigenvectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="c1"># This should return True</span>
+
+<span class="c1"># Diagonalization</span>
+<span class="n">Sigma_diag</span> <span class="o">=</span> <span class="n">eigenvectors</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span> <span class="o">@</span> <span class="n">eigenvectors</span><span class="o">.</span><span class="n">T</span>
+<span class="n">diagonalization_check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">Sigma_diag</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<span class="c1"># This should return True</span>
+
+<span class="c1"># Step 5: Dimensionality Reduction</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># reduce to 2 dimensions</span>
+<span class="n">V_k</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span>
+<span class="n">Z_k</span> <span class="o">=</span> <span class="n">X_centered</span> <span class="o">@</span> <span class="n">V_k</span>  <span class="c1"># Reduced data (n x k)</span>
+
+<span class="c1"># Step 6: Reconstruction from PCA</span>
+<span class="n">X_approx</span> <span class="o">=</span> <span class="n">Z_k</span> <span class="o">@</span> <span class="n">V_k</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Step 7: Explained Variance</span>
+<span class="n">total_variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+<span class="n">explained_variance_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_variance</span>
+
+<span class="c1"># Plot cumulative explained variance</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">explained_variance_ratio</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">explained_variance_ratio</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Number of Principal Components&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cumulative Explained Variance Ratio&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Explained Variance vs Number of Components&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;95% threshold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Now you&#39;ve implemented and visualized all 7 steps of PCA from scratch.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_iris</span>
+
+<span class="c1"># Load Iris dataset</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span><span class="o">.</span><span class="n">data</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original Data Shape:&quot;</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (150, 4)</span>
+
+<span class="c1"># Step 1: Mean Centering</span>
+<span class="n">mean_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_centered</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">mean_vector</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Mean Vector Shape:&quot;</span><span class="p">,</span> <span class="n">mean_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (4,)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Centered Data Shape:&quot;</span><span class="p">,</span> <span class="n">X_centered</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (150, 4)</span>
+
+<span class="c1"># Step 2: Covariance Matrix</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X_centered</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Covariance Matrix Shape:&quot;</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (4, 4)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Covariance Matrix:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Step 3: Eigen Decomposition</span>
+<span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Unsorted Eigenvalues:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unsorted Eigenvectors Shape:&quot;</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (4, 4)</span>
+
+<span class="c1"># Step 4: Sort Eigenvalues and Eigenvectors (Descending)</span>
+<span class="n">sorted_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">sorted_idx</span><span class="p">]</span>
+<span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="n">sorted_idx</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorted Eigenvalues:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">)</span>
+
+<span class="c1"># Step 5: Select Top-k Eigenvectors (e.g., k=2)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Projection Matrix W Shape:&quot;</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (4, 2)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Top-2 Eigenvectors (W):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+
+<span class="c1"># Step 6: Project Data</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X_centered</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Projected Data Shape (Z):&quot;</span><span class="p">,</span> <span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (150, 2)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First 5 Projected Samples:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">Z</span><span class="p">[:</span><span class="mi">5</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># Step 7 (Optional): Reconstruct Approximate Original Data</span>
+<span class="n">X_reconstructed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">mean_vector</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Reconstructed Data Shape:&quot;</span><span class="p">,</span> <span class="n">X_reconstructed</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First 5 Reconstructed Samples (Approx.):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">X_reconstructed</span><span class="p">[:</span><span class="mi">5</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Scree Plot – Explained Variance Ratio</span>
+
+<span class="c1"># This helps decide how many principal components to retain.</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Explained variance ratio</span>
+<span class="n">explained_variance_ratio</span> <span class="o">=</span> <span class="n">eigenvalues</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+
+<span class="c1"># Scree plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">explained_variance_ratio</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Scree Plot: Explained Variance Ratio&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Principal Component&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Explained Variance Ratio&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Optional: Cumulative variance</span>
+<span class="n">cumulative_variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">explained_variance_ratio</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">cumulative_variance</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Cumulative Explained Variance&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Components&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Cumulative Variance&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;95% Variance Threshold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+
+
+<span class="c1"># 2. Original vs Reconstructed (2D Scatter Plot)</span>
+
+<span class="c1"># For a 2D PCA example, plot the first two original features vs reconstructed ones.</span>
+
+<span class="c1"># Only compare the first 2 features (just for 2D visualization)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_reconstructed</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_reconstructed</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Reconstructed (k=2)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Original vs Reconstructed (First 2 Features)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Feature 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Feature 2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>These visuals will show:</p>
+<ul class="simple">
+<li><p>How many components are needed to retain most variance.</p></li>
+<li><p>How close the reconstruction is to the original data using reduced dimensions.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Load Stock Data</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Choose some stocks (diverse sectors)</span>
+<span class="n">tickers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AAPL&#39;</span><span class="p">,</span> <span class="s1">&#39;MSFT&#39;</span><span class="p">,</span> <span class="s1">&#39;GOOGL&#39;</span><span class="p">,</span> <span class="s1">&#39;AMZN&#39;</span><span class="p">,</span> <span class="s1">&#39;JPM&#39;</span><span class="p">,</span> <span class="s1">&#39;TSLA&#39;</span><span class="p">,</span> <span class="s1">&#39;META&#39;</span><span class="p">,</span> <span class="s1">&#39;NVDA&#39;</span><span class="p">,</span> <span class="s1">&#39;XOM&#39;</span><span class="p">,</span> <span class="s1">&#39;UNH&#39;</span><span class="p">]</span>
+
+<span class="c1"># Download adjusted close prices</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;stock_prices_2022_2023.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Price Data Shape:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Price Data Shape:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Compute daily returns</span>
+<span class="n">returns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Daily Returns Shape:&quot;</span><span class="p">,</span> <span class="n">returns</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+
+
+
+<span class="c1"># Step 2: Mean Centering</span>
+
+<span class="n">returns_centered</span> <span class="o">=</span> <span class="n">returns</span> <span class="o">-</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+
+
+<span class="c1"># Step 3: Covariance Matrix and PCA</span>
+
+<span class="c1"># Covariance matrix</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">returns_centered</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+<span class="c1"># Eigen decomposition</span>
+<span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+
+<span class="c1"># Sort</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+
+<span class="c1"># Explained variance</span>
+<span class="n">explained_variance_ratio</span> <span class="o">=</span> <span class="n">eigenvalues</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+
+<span class="c1"># Project returns to top-2 components</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span>
+<span class="n">returns_pca</span> <span class="o">=</span> <span class="n">returns_centered</span> <span class="o">@</span> <span class="n">W</span>
+
+
+
+
+<span class="c1"># Step 4: Scree Plot</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">explained_variance_ratio</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkorange&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Scree Plot: Explained Variance from Stock Returns&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Principal Component&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Explained Variance Ratio&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 5: 2D PCA Plot of Stock Clusters</span>
+
+<span class="c1"># This shows how stocks cluster by return behavior.</span>
+
+<span class="c1"># Transpose eigenvectors to get stock coordinates in 2D PCA space</span>
+<span class="n">stock_coords_2d</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ticker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tickers</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">stock_coords_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">stock_coords_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">ticker</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Stocks in 2D PCA Space (Based on Return Covariance)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;PC1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PC2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+
+<span class="c1"># Step 6 (Optional): Reconstruct Returns</span>
+
+<span class="c1"># Approximate returns from top-k PCs</span>
+<span class="n">returns_reconstructed</span> <span class="o">=</span> <span class="n">returns_pca</span> <span class="o">@</span> <span class="n">W</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Compare first few reconstructed vs original</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">returns</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Reconstructed:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">returns_reconstructed</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">returns</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretation
+•	The scree plot shows how many components capture the majority of market movement.
+•	The 2D stock PCA plot groups stocks with similar return profiles.
+•	The reconstruction shows how well the market structure is retained with reduced dimensions.</p>
+<p>⸻</p>
+<p>What This Tells You:
+•	Each cluster groups stocks that moved similarly over the date range.
+•	PCA extracts dominant return patterns, and KMeans groups those patterns.
+•	You’ll likely see tech stocks cluster together, or energy stocks cluster separately.</p>
+<p>⸻</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="4_Logistic_Regression.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><strong>Logistic Regression (Mathematical Explanation)</strong></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="6_Clustering.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">K-Means and Clustering</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dimensionality Reduction: PCA</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example usage</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#standardize-the-data-mean-0-variance-1">Standardize the data (mean=0, variance=1)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#apply-pca">Apply PCA</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#explained-variance-and-reconstruction-error">Explained variance and reconstruction error</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#singular-value-decomposition">Singular value decomposition</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-analysis-pca-deeper-mathematical-foundations">Principal Component Analysis (PCA): Deeper Mathematical Foundations</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-as-a-quadratic-form">1. Variance as a Quadratic Form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-problem-in-pca">2. Optimization Problem in PCA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometric-interpretation">3. Geometric Interpretation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orthonormality-of-eigenvectors">4. Orthonormality of Eigenvectors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dimensionality-reduction-with-pca">5. Dimensionality Reduction with PCA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruction-from-pca">6. Reconstruction from PCA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#total-variance-and-explained-variance">7. Total Variance and Explained Variance</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Chandravesh Chaudhari
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

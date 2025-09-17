@@ -1,0 +1,68 @@
+name: Build & Deploy Machine Learning for Business Site
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'notebooks/**'
+      - 'forced_jupyterlite_button.py'
+      - 'build_site.py'
+      - 'README.md'
+      - '.github/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          # If you have a requirements.txt, include it; else install needed tools
+          pip install jupyter-book
+          pip install jupyterlite-core jupyterlite-pyodide-kernel
+          pip install -r requirements.txt || echo "No requirements.txt"
+
+      - name: Build JupyterBook
+        run: jupyter-book build notebooks/
+
+      - name: Copy Book HTML into docs
+        run: cp -r notebooks/_build/html/* docs/
+
+      - name: Run forced JupyterLite button script
+        run: python3 forced_jupyterlite_button.py
+
+      - name: Build JupyterLite
+        run: |
+          mkdir -p jupyterlite_things
+          cp notebooks/*.ipynb jupyterlite_things/
+          cd jupyterlite_things
+          jupyter lite build
+          cp -r _output/* ../docs/jupyterlite/
+          cd ..
+          rm -rf jupyterlite_things
+
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

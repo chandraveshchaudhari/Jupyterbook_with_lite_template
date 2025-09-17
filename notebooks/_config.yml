@@ -1,0 +1,35 @@
+# notebooks/_config.yml
+title: Machine Learning for Business
+author: Chandravesh Chaudhari
+logo: logo.png
+
+execute:
+  execute_notebooks: off
+
+latex:
+  latex_documents:
+    targetname: book.tex
+
+bibtex_bibfiles:
+  - references.bib
+
+repository:
+  url: https://github.com/chandraveshchaudhari/BusinessML_web
+  path_to_book: .   # because this _config.yml is inside notebooks/ (use '.' here)
+  branch: main/notebooks/
+
+html:
+  use_issues_button: true
+  use_repository_button: true
+  extra_css:
+    - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+  extra_js:
+    - https://code.jquery.com/jquery-3.5.1.slim.min.js
+    - https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js
+    - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js
+  # Do NOT set theme: _templates. Use a real theme name (sphinx-book-theme is default for jupyter-book)
+  theme: sphinx_book_theme
+
+launch_buttons:
+  notebook_interface: "jupyterlab"
+  colab_url: "https://colab.research.google.com"

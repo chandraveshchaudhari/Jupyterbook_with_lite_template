@@ -1,0 +1,865 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Generative Models &#8212; Machine Learning for Business</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Generative_Models';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Performance Metrics" href="Performance_Metrics.html" />
+    <link rel="prev" title="Multimodal Learning" href="20_Multimodal_Learning.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Machine Learning for Business - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Machine Learning for Business - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">Common Math Symbols and Notations in Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_Linear_regression.html">Linear Regression</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="2_Regularization.html">Generalization, Overfitting, Regularization</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="3_Naive_Bayes.html">Naive Bayes</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="4_Logistic_Regression.html"><strong>Logistic Regression (Mathematical Explanation)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_Dimensionality_Reduction.html">Dimensionality Reduction: PCA</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="6_Clustering.html">K-Means and Clustering</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="7_Gaussian_Mixture_Models.html">Gaussian Mixture Models and EM</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="8_Nearest_Neighbour_Algorithm.html">Nearest Neighbour Algorithm</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="10_Support_Vector_Machines.html">Support Vector Machines</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="11_Decision_Trees.html">Decision Trees</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="12_Ensemble_Methods.html">Ensemble Methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="13_Neural_Networks.html">Neural Networks: From Perceptron to MLP</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="14_Arima.html">ARIMA</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="15_LSTM.html">Advanced DL: ResNets, RNNs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="16_CNN.html">Convolutional Neural Networks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="17_Resnet.html">1D-ResNet (or TCN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_LLM.html">Transformers and LLMs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="19_Reinforcement_Learning.html">Reinforcement Learning</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="20_Multimodal_Learning.html">Multimodal Learning</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Generative Models</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Performance_Metrics.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization.html">Visualisation</a></li>
+
+
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/chandraveshchaudhari/BusinessML_web/blob/main/notebooks//./Generative_Models.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+
+<li>
+  <a href="https://chandraveshchaudhari.github.io/BusinessML_web/jupyterlite/lab/index.html?path=Generative_Models.ipynb" target="_blank"
+     class="btn btn-sm dropdown-item"
+     title="Launch on JupyterLite"
+     data-bs-placement="left" data-bs-toggle="tooltip">
+    <span class="btn__icon-container" style="display:inline-block; width:20px; height:20px;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+        <circle cx="128" cy="128" r="128" fill="#f37726"/>
+        <ellipse cx="128" cy="128" rx="110" ry="40" fill="white" transform="rotate(-25, 128, 128)"/>
+        <ellipse cx="128" cy="128" rx="110" ry="40" fill="white" transform="rotate(25, 128, 128)"/>
+        <circle cx="200" cy="60" r="18" fill="white"/>
+        <circle cx="60" cy="200" r="18" fill="white"/>
+      </svg>
+    </span>
+    <span class="btn__text-container">JupyterLite</span>
+  </a>
+</li>
+
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web/issues/new?title=Issue%20on%20page%20%2FGenerative_Models.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Generative_Models.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Generative Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Generative Models</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#simulate-2d-data">Simulate 2D data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#estimate-parameters">Estimate parameters</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-boundary">Decision boundary</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#plot">Plot</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="generative-models">
+<h1>Generative Models<a class="headerlink" href="#generative-models" title="Link to this heading">#</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>• Class Conditional Density Estimation
+• Gaussian Discriminant Analysis
+• Decision Boundaries from Probabilistic Models
+• Python: GDA with Matrix Algebra
+</pre></div>
+</div>
+<p>Here’s a detailed and Jupyter Notebook–ready explanation of Generative Models, formatted in Markdown with LaTeX math and Python code, especially suited for financial forecasting students.</p>
+<p>⸻</p>
+<p>Generative Models</p>
+<p>⸻</p>
+<ol class="arabic simple">
+<li><p>Class Conditional Density Estimation</p></li>
+</ol>
+<p>Generative models estimate the joint probability:</p>
+<div class="math notranslate nohighlight">
+\[
+p(x, y) = p(x \mid y) \cdot p(y)
+\]</div>
+<p>From this, we compute the posterior using Bayes’ Rule:</p>
+<div class="math notranslate nohighlight">
+\[
+p(y \mid x) = \frac{p(x \mid y) \cdot p(y)}{p(x)}
+\]</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>•	Discriminative Models: Directly model $p(y \mid x)$
+•	Generative Models: Model $p(x \mid y)$ and $p(y)$
+</pre></div>
+</div>
+<p>Applications:
+•	Naive Bayes
+•	Gaussian Discriminant Analysis (GDA)</p>
+<p>⸻</p>
+<ol class="arabic simple" start="2">
+<li><p>Gaussian Discriminant Analysis (GDA)</p></li>
+</ol>
+<p>Assume:
+•	<span class="math notranslate nohighlight">\(y \in {0, 1}\)</span>
+•	<span class="math notranslate nohighlight">\(x \in \mathbb{R}^n\)</span>
+•	Class conditional densities: <span class="math notranslate nohighlight">\(x \mid y = k \sim \mathcal{N}(\mu_k, \Sigma)\)</span>
+•	Shared covariance <span class="math notranslate nohighlight">\(\Sigma\)</span></p>
+<p>Model Parameters:
+•	<span class="math notranslate nohighlight">\(\phi = p(y = 1)\)</span>
+•	<span class="math notranslate nohighlight">\(\mu_0 = \mathbb{E}[x \mid y = 0]\)</span>
+•	<span class="math notranslate nohighlight">\(\mu_1 = \mathbb{E}[x \mid y = 1]\)</span>
+•	<span class="math notranslate nohighlight">\(\Sigma = \mathbb{E}[(x - \mu_y)(x - \mu_y)^T \mid y]\)</span></p>
+<p>Class Conditional Likelihood:</p>
+<div class="math notranslate nohighlight">
+\[
+p(x \mid y = k) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}} \exp\left(-\frac{1}{2}(x - \mu_k)^T \Sigma^{-1}(x - \mu_k)\right)
+\]</div>
+<p>⸻</p>
+<ol class="arabic simple" start="3">
+<li><p>Decision Boundaries from Probabilistic Models</p></li>
+</ol>
+<p>Use Bayes’ Rule:</p>
+<div class="math notranslate nohighlight">
+\[
+p(y=1 \mid x) = \frac{p(x \mid y=1)p(y=1)}{p(x \mid y=0)p(y=0) + p(x \mid y=1)p(y=1)}
+\]</div>
+<p>The decision boundary is where:</p>
+<div class="math notranslate nohighlight">
+\[
+p(y=1 \mid x) = p(y=0 \mid x)
+\]</div>
+<p>This simplifies to:</p>
+<div class="math notranslate nohighlight">
+\[
+(x - \mu_0)^T \Sigma^{-1}(x - \mu_0) - (x - \mu_1)^T \Sigma^{-1}(x - \mu_1) = \log\left(\frac{1 - \phi}{\phi}\right)
+\]</div>
+<p>This is a linear decision boundary when <span class="math notranslate nohighlight">\(\Sigma\)</span> is shared.</p>
+<p>⸻</p>
+<ol class="arabic simple" start="4">
+<li><p>Python: GDA with Matrix Algebra</p></li>
+</ol>
+<p>import numpy as np
+import matplotlib.pyplot as plt
+from numpy.linalg import inv, det</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="simulate-2d-data">
+<h1>Simulate 2D data<a class="headerlink" href="#simulate-2d-data" title="Link to this heading">#</a></h1>
+<p>np.random.seed(0)
+n = 100
+mu0 = np.array([1, 2])
+mu1 = np.array([3, 4])
+Sigma = np.array([[1, 0.5], [0.5, 1]])</p>
+<p>X0 = np.random.multivariate_normal(mu0, Sigma, n)
+X1 = np.random.multivariate_normal(mu1, Sigma, n)
+X = np.vstack((X0, X1))
+y = np.array([0]*n + [1]*n)</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="estimate-parameters">
+<h1>Estimate parameters<a class="headerlink" href="#estimate-parameters" title="Link to this heading">#</a></h1>
+<p>phi = np.mean(y)
+mu0_hat = X[y == 0].mean(axis=0)
+mu1_hat = X[y == 1].mean(axis=0)</p>
+<p>def compute_sigma(X, y, mu0, mu1):
+m = len(y)
+Sigma = np.zeros((2, 2))
+for i in range(m):
+xi = X[i].reshape(-1, 1)
+mui = mu0.reshape(-1, 1) if y[i] == 0 else mu1.reshape(-1, 1)
+Sigma += (xi - mui) &#64; (xi - mui).T
+return Sigma / m</p>
+<p>Sigma_hat = compute_sigma(X, y, mu0_hat, mu1_hat)</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="decision-boundary">
+<h1>Decision boundary<a class="headerlink" href="#decision-boundary" title="Link to this heading">#</a></h1>
+<p>def decision_boundary(x):
+Sigma_inv = inv(Sigma_hat)
+term = (
+x &#64; Sigma_inv &#64; (mu1_hat - mu0_hat)
+- 0.5 * (mu1_hat.T &#64; Sigma_inv &#64; mu1_hat - mu0_hat.T &#64; Sigma_inv &#64; mu0_hat)
+- np.log((1 - phi) / phi)
+)
+return term</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="plot">
+<h1>Plot<a class="headerlink" href="#plot" title="Link to this heading">#</a></h1>
+<p>plt.figure(figsize=(8, 6))
+plt.scatter(X0[:, 0], X0[:, 1], label=’Class 0’)
+plt.scatter(X1[:, 0], X1[:, 1], label=’Class 1’)</p>
+<p>x_vals = np.linspace(-1, 6, 100)
+y_vals = np.linspace(0, 7, 100)
+X_vals, Y_vals = np.meshgrid(x_vals, y_vals)
+Z = np.array([decision_boundary(np.array([x, y])) for x, y in zip(X_vals.ravel(), Y_vals.ravel())])
+Z = Z.reshape(X_vals.shape)
+plt.contour(X_vals, Y_vals, Z, levels=[0], linewidths=2, colors=’black’)</p>
+<p>plt.legend()
+plt.title(“Gaussian Discriminant Analysis with Linear Boundary”)
+plt.grid(True)
+plt.show()</p>
+<p>⸻</p>
+<p>Would you like to explore Quadratic Discriminant Analysis (QDA) next, where <span class="math notranslate nohighlight">\(\Sigma_0 \ne \Sigma_1\)</span>?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">GaussianMixture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ellipse</span>
+
+<span class="c1"># Generate synthetic data from two Gaussians</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="c1"># True distribution parameters</span>
+<span class="n">mu1</span><span class="p">,</span> <span class="n">sigma1</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>  <span class="c1"># $ \mathcal{N}(\mu_1, \Sigma_1) $</span>
+<span class="n">mu2</span><span class="p">,</span> <span class="n">sigma2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.7</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.7</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>    <span class="c1"># $ \mathcal{N}(\mu_2, \Sigma_2) $</span>
+
+<span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mu1</span><span class="p">,</span> <span class="n">sigma1</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mu2</span><span class="p">,</span> <span class="n">sigma2</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">])</span>
+
+<span class="c1"># Fit GMM (generative model)</span>
+<span class="n">gmm</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">)</span>
+<span class="n">gmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Plotting</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># 1. Original Distribution</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X1</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Class 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Class 2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;True Data Distribution</span><span class="se">\n</span><span class="s2">$p(x|y)$&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># 2. Learned Generative Model</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot GMM components</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+    <span class="c1"># Draw ellipses for covariance matrices</span>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">lam</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>  <span class="c1"># 2*std for 95% confidence</span>
+    
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">ell</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lam</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lam</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span> 
+                 <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">ell</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Learned Generative Model</span><span class="se">\n</span><span class="s2"> p_theta(x|y)&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0336f5925b535276e0e761b40918006cde78711ea6ab59776f292c8be4037c40.png" src="_images/0336f5925b535276e0e761b40918006cde78711ea6ab59776f292c8be4037c40.png" />
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="20_Multimodal_Learning.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Multimodal Learning</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Performance_Metrics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Performance Metrics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Generative Models</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#simulate-2d-data">Simulate 2D data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#estimate-parameters">Estimate parameters</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-boundary">Decision boundary</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#plot">Plot</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Chandravesh Chaudhari
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

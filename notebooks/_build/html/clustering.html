@@ -1,0 +1,2090 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Clustering KNN &#8212; Machine Learning for Business</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'clustering';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Descriptive Analytics of Financial Data" href="descriptive_analytics.html" />
+    <link rel="prev" title="Visualisation" href="Visualization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Machine Learning for Business - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Machine Learning for Business - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to Machine Learning for Business Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">Common Math Symbols and Notations in Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_Linear_regression.html">Linear Regression</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="2_Regularization.html">Generalization, Overfitting, Regularization</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="3_Naive_Bayes.html">Naive Bayes</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="4_Logistic_Regression.html"><strong>Logistic Regression (Mathematical Explanation)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_Dimensionality_Reduction.html">Dimensionality Reduction: PCA</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="6_Clustering.html">K-Means and Clustering</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="7_Gaussian_Mixture_Models.html">Gaussian Mixture Models and EM</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="8_Nearest_Neighbour_Algorithm.html">Nearest Neighbour Algorithm</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="10_Support_Vector_Machines.html">Support Vector Machines</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="11_Decision_Trees.html">Decision Trees</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="12_Ensemble_Methods.html">Ensemble Methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="13_Neural_Networks.html">Neural Networks: From Perceptron to MLP</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="14_Arima.html">ARIMA</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="15_LSTM.html">Advanced DL: ResNets, RNNs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="16_CNN.html">Convolutional Neural Networks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="17_Resnet.html">1D-ResNet (or TCN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_LLM.html">Transformers and LLMs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="19_Reinforcement_Learning.html">Reinforcement Learning</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="20_Multimodal_Learning.html">Multimodal Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generative_Models.html">Generative Models</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Performance_Metrics.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization.html">Visualisation</a></li>
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Clustering KNN</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="descriptive_analytics.html">Descriptive Analytics of Financial Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Diff_and_integration.html">Differentiation and integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="financial_forecasting.html">FINANCIAL FORECASTING</a></li>
+<li class="toctree-l1"><a class="reference internal" href="level_data_time_series.html">Level Data Forecasting Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Llm_and_transformers.html">LLM Transformers</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Python_crash_course.html">Python Crash Course</a></li>
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="seasonal_data.html">Seasonal Data Forecasting Models</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="time_series_models.html">TIME SERIES MODELS</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/chandraveshchaudhari/BusinessML_web/blob/main/notebooks//./clustering.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web/issues/new?title=Issue%20on%20page%20%2Fclustering.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/clustering.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Clustering KNN</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Clustering KNN</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudocode">Pseudocode</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#high-level">High level</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="clustering-knn">
+<h1>Clustering KNN<a class="headerlink" href="#clustering-knn" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;players_22.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/private/var/mobile/Containers/Data/Application/6886C219-CE39-4A3F-BF34-486B937A2F19/tmp/ipykernel_3066/2061566770.py:1: DtypeWarning: Columns (25,108) have mixed types. Specify dtype option on import or set low_memory=False.
+  players = pd.read_csv(&quot;players_22.csv&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sofifa_id</th>
+      <th>player_url</th>
+      <th>short_name</th>
+      <th>long_name</th>
+      <th>player_positions</th>
+      <th>overall</th>
+      <th>potential</th>
+      <th>value_eur</th>
+      <th>wage_eur</th>
+      <th>age</th>
+      <th>...</th>
+      <th>lcb</th>
+      <th>cb</th>
+      <th>rcb</th>
+      <th>rb</th>
+      <th>gk</th>
+      <th>player_face_url</th>
+      <th>club_logo_url</th>
+      <th>club_flag_url</th>
+      <th>nation_logo_url</th>
+      <th>nation_flag_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>158023</td>
+      <td>https://sofifa.com/player/158023/lionel-messi/...</td>
+      <td>L. Messi</td>
+      <td>Lionel Andrés Messi Cuccittini</td>
+      <td>RW, ST, CF</td>
+      <td>93</td>
+      <td>93</td>
+      <td>78000000.0</td>
+      <td>320000.0</td>
+      <td>34</td>
+      <td>...</td>
+      <td>50+3</td>
+      <td>50+3</td>
+      <td>50+3</td>
+      <td>61+3</td>
+      <td>19+3</td>
+      <td>https://cdn.sofifa.net/players/158/023/22_120.png</td>
+      <td>https://cdn.sofifa.net/teams/73/60.png</td>
+      <td>https://cdn.sofifa.net/flags/fr.png</td>
+      <td>https://cdn.sofifa.net/teams/1369/60.png</td>
+      <td>https://cdn.sofifa.net/flags/ar.png</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>188545</td>
+      <td>https://sofifa.com/player/188545/robert-lewand...</td>
+      <td>R. Lewandowski</td>
+      <td>Robert Lewandowski</td>
+      <td>ST</td>
+      <td>92</td>
+      <td>92</td>
+      <td>119500000.0</td>
+      <td>270000.0</td>
+      <td>32</td>
+      <td>...</td>
+      <td>60+3</td>
+      <td>60+3</td>
+      <td>60+3</td>
+      <td>61+3</td>
+      <td>19+3</td>
+      <td>https://cdn.sofifa.net/players/188/545/22_120.png</td>
+      <td>https://cdn.sofifa.net/teams/21/60.png</td>
+      <td>https://cdn.sofifa.net/flags/de.png</td>
+      <td>https://cdn.sofifa.net/teams/1353/60.png</td>
+      <td>https://cdn.sofifa.net/flags/pl.png</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>20801</td>
+      <td>https://sofifa.com/player/20801/c-ronaldo-dos-...</td>
+      <td>Cristiano Ronaldo</td>
+      <td>Cristiano Ronaldo dos Santos Aveiro</td>
+      <td>ST, LW</td>
+      <td>91</td>
+      <td>91</td>
+      <td>45000000.0</td>
+      <td>270000.0</td>
+      <td>36</td>
+      <td>...</td>
+      <td>53+3</td>
+      <td>53+3</td>
+      <td>53+3</td>
+      <td>60+3</td>
+      <td>20+3</td>
+      <td>https://cdn.sofifa.net/players/020/801/22_120.png</td>
+      <td>https://cdn.sofifa.net/teams/11/60.png</td>
+      <td>https://cdn.sofifa.net/flags/gb-eng.png</td>
+      <td>https://cdn.sofifa.net/teams/1354/60.png</td>
+      <td>https://cdn.sofifa.net/flags/pt.png</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>190871</td>
+      <td>https://sofifa.com/player/190871/neymar-da-sil...</td>
+      <td>Neymar Jr</td>
+      <td>Neymar da Silva Santos Júnior</td>
+      <td>LW, CAM</td>
+      <td>91</td>
+      <td>91</td>
+      <td>129000000.0</td>
+      <td>270000.0</td>
+      <td>29</td>
+      <td>...</td>
+      <td>50+3</td>
+      <td>50+3</td>
+      <td>50+3</td>
+      <td>62+3</td>
+      <td>20+3</td>
+      <td>https://cdn.sofifa.net/players/190/871/22_120.png</td>
+      <td>https://cdn.sofifa.net/teams/73/60.png</td>
+      <td>https://cdn.sofifa.net/flags/fr.png</td>
+      <td>NaN</td>
+      <td>https://cdn.sofifa.net/flags/br.png</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>192985</td>
+      <td>https://sofifa.com/player/192985/kevin-de-bruy...</td>
+      <td>K. De Bruyne</td>
+      <td>Kevin De Bruyne</td>
+      <td>CM, CAM</td>
+      <td>91</td>
+      <td>91</td>
+      <td>125500000.0</td>
+      <td>350000.0</td>
+      <td>30</td>
+      <td>...</td>
+      <td>69+3</td>
+      <td>69+3</td>
+      <td>69+3</td>
+      <td>75+3</td>
+      <td>21+3</td>
+      <td>https://cdn.sofifa.net/players/192/985/22_120.png</td>
+      <td>https://cdn.sofifa.net/teams/10/60.png</td>
+      <td>https://cdn.sofifa.net/flags/gb-eng.png</td>
+      <td>https://cdn.sofifa.net/teams/1325/60.png</td>
+      <td>https://cdn.sofifa.net/flags/be.png</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 110 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;overall&quot;</span><span class="p">,</span> <span class="s2">&quot;potential&quot;</span><span class="p">,</span> <span class="s2">&quot;wage_eur&quot;</span><span class="p">,</span> <span class="s2">&quot;value_eur&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span> <span class="o">=</span> <span class="n">players</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>overall</th>
+      <th>potential</th>
+      <th>wage_eur</th>
+      <th>value_eur</th>
+      <th>age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>93</td>
+      <td>93</td>
+      <td>320000.0</td>
+      <td>78000000.0</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>92</td>
+      <td>92</td>
+      <td>270000.0</td>
+      <td>119500000.0</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>91</td>
+      <td>91</td>
+      <td>270000.0</td>
+      <td>45000000.0</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>91</td>
+      <td>91</td>
+      <td>270000.0</td>
+      <td>129000000.0</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>91</td>
+      <td>91</td>
+      <td>350000.0</td>
+      <td>125500000.0</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>19234</th>
+      <td>47</td>
+      <td>52</td>
+      <td>1000.0</td>
+      <td>70000.0</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>19235</th>
+      <td>47</td>
+      <td>59</td>
+      <td>500.0</td>
+      <td>110000.0</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>19236</th>
+      <td>47</td>
+      <td>55</td>
+      <td>500.0</td>
+      <td>100000.0</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>19237</th>
+      <td>47</td>
+      <td>60</td>
+      <td>500.0</td>
+      <td>110000.0</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>19238</th>
+      <td>47</td>
+      <td>60</td>
+      <td>500.0</td>
+      <td>110000.0</td>
+      <td>19</td>
+    </tr>
+  </tbody>
+</table>
+<p>19165 rows × 5 columns</p>
+</div></div></div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="pseudocode">
+<h1>Pseudocode<a class="headerlink" href="#pseudocode" title="Link to this heading">#</a></h1>
+<section id="high-level">
+<h2>High level<a class="headerlink" href="#high-level" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Scale data to standardize values</p></li>
+<li><p>Initialize random centroids</p></li>
+<li><p>Get labels for each data point</p></li>
+<li><p>Create new centroids</p></li>
+<li><p>Plot the centroids</p></li>
+<li><p>Repeat 3-5 until the centroids stop changing</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">((</span><span class="n">data</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>overall</th>
+      <th>potential</th>
+      <th>wage_eur</th>
+      <th>value_eur</th>
+      <th>age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>19165.000000</td>
+      <td>19165.000000</td>
+      <td>19165.000000</td>
+      <td>19165.000000</td>
+      <td>19165.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>5.078302</td>
+      <td>5.799998</td>
+      <td>1.243826</td>
+      <td>1.146473</td>
+      <td>4.403716</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>1.496262</td>
+      <td>1.323418</td>
+      <td>0.557253</td>
+      <td>0.392477</td>
+      <td>1.750932</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>4.043478</td>
+      <td>4.913043</td>
+      <td>1.014306</td>
+      <td>1.024022</td>
+      <td>2.851852</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>5.130435</td>
+      <td>5.782609</td>
+      <td>1.071531</td>
+      <td>1.049796</td>
+      <td>4.333333</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>6.000000</td>
+      <td>6.652174</td>
+      <td>1.214592</td>
+      <td>1.102634</td>
+      <td>5.814815</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>11.000000</td>
+      <td>11.000000</td>
+      <td>11.000000</td>
+      <td>11.000000</td>
+      <td>11.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>overall</th>
+      <th>potential</th>
+      <th>wage_eur</th>
+      <th>value_eur</th>
+      <th>age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>11.000000</td>
+      <td>10.565217</td>
+      <td>10.141631</td>
+      <td>5.020341</td>
+      <td>7.666667</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.782609</td>
+      <td>10.347826</td>
+      <td>8.711016</td>
+      <td>7.159616</td>
+      <td>6.925926</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>10.565217</td>
+      <td>10.130435</td>
+      <td>8.711016</td>
+      <td>3.319231</td>
+      <td>8.407407</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>10.565217</td>
+      <td>10.130435</td>
+      <td>8.711016</td>
+      <td>7.649329</td>
+      <td>5.814815</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>10.565217</td>
+      <td>10.130435</td>
+      <td>11.000000</td>
+      <td>7.468908</td>
+      <td>6.185185</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">random_centroids</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="n">centroid</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">sample</span><span class="p">()))</span>
+        <span class="n">centroids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">centroid</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">centroids</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">centroids</span> <span class="o">=</span> <span class="n">random_centroids</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/private/var/mobile/Containers/Data/Application/6886C219-CE39-4A3F-BF34-486B937A2F19/tmp/ipykernel_3066/1845334667.py:4: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  centroid = data.apply(lambda x: float(x.sample()))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">centroids</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>overall</th>
+      <td>4.695652</td>
+      <td>7.086957</td>
+      <td>5.782609</td>
+      <td>6.217391</td>
+      <td>7.086957</td>
+    </tr>
+    <tr>
+      <th>potential</th>
+      <td>6.652174</td>
+      <td>7.739130</td>
+      <td>6.217391</td>
+      <td>2.956522</td>
+      <td>4.695652</td>
+    </tr>
+    <tr>
+      <th>wage_eur</th>
+      <td>1.042918</td>
+      <td>1.004292</td>
+      <td>1.001431</td>
+      <td>1.071531</td>
+      <td>1.128755</td>
+    </tr>
+    <tr>
+      <th>value_eur</th>
+      <td>1.015001</td>
+      <td>1.047219</td>
+      <td>1.195421</td>
+      <td>1.020156</td>
+      <td>1.040775</td>
+    </tr>
+    <tr>
+      <th>age</th>
+      <td>5.814815</td>
+      <td>2.851852</td>
+      <td>3.222222</td>
+      <td>4.703704</td>
+      <td>1.740741</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_labels</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">centroids</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">data</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">distances</span><span class="o">.</span><span class="n">idxmin</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="n">get_labels</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">centroids</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2    9308
+0    5802
+1    2124
+3    1931
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">new_centroids</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">centroids</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_clusters</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">centroids</span><span class="p">,</span> <span class="n">iteration</span><span class="p">):</span>
+    <span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">data_2d</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">centroids_2d</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">centroids</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">clear_output</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration </span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">data_2d</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">data_2d</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">centroids_2d</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">centroids_2d</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_iterations</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">centroid_count</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">centroids</span> <span class="o">=</span> <span class="n">random_centroids</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">centroid_count</span><span class="p">)</span>
+<span class="n">old_centroids</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">iteration</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">while</span> <span class="n">iteration</span> <span class="o">&lt;</span> <span class="n">max_iterations</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">centroids</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">old_centroids</span><span class="p">):</span>
+    <span class="n">old_centroids</span> <span class="o">=</span> <span class="n">centroids</span>
+    
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">get_labels</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">centroids</span><span class="p">)</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">new_centroids</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">centroid_count</span><span class="p">)</span>
+    <span class="n">plot_clusters</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">centroids</span><span class="p">,</span> <span class="n">iteration</span><span class="p">)</span>
+    <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/deec3713e2a49068bf546f703aab54382348a19549e864327b0cc22fe4de6fa8.png" src="_images/deec3713e2a49068bf546f703aab54382348a19549e864327b0cc22fe4de6fa8.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">centroids</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>overall</th>
+      <td>6.324628</td>
+      <td>3.436536</td>
+      <td>5.200636</td>
+    </tr>
+    <tr>
+      <th>potential</th>
+      <td>7.100439</td>
+      <td>5.357557</td>
+      <td>4.894208</td>
+    </tr>
+    <tr>
+      <th>wage_eur</th>
+      <td>1.456630</td>
+      <td>1.031374</td>
+      <td>1.130961</td>
+    </tr>
+    <tr>
+      <th>value_eur</th>
+      <td>1.311183</td>
+      <td>1.029343</td>
+      <td>1.049892</td>
+    </tr>
+    <tr>
+      <th>age</th>
+      <td>3.874397</td>
+      <td>2.674807</td>
+      <td>5.963956</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2    7188
+1    6162
+0    5815
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][[</span><span class="s2">&quot;short_name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">features</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>short_name</th>
+      <th>overall</th>
+      <th>potential</th>
+      <th>wage_eur</th>
+      <th>value_eur</th>
+      <th>age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>L. Messi</td>
+      <td>93</td>
+      <td>93</td>
+      <td>320000.0</td>
+      <td>78000000.0</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>R. Lewandowski</td>
+      <td>92</td>
+      <td>92</td>
+      <td>270000.0</td>
+      <td>119500000.0</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Cristiano Ronaldo</td>
+      <td>91</td>
+      <td>91</td>
+      <td>270000.0</td>
+      <td>45000000.0</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Neymar Jr</td>
+      <td>91</td>
+      <td>91</td>
+      <td>270000.0</td>
+      <td>129000000.0</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>K. De Bruyne</td>
+      <td>91</td>
+      <td>91</td>
+      <td>350000.0</td>
+      <td>125500000.0</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>13267</th>
+      <td>K. Nagera</td>
+      <td>63</td>
+      <td>80</td>
+      <td>8000.0</td>
+      <td>1300000.0</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>13351</th>
+      <td>Llabrés</td>
+      <td>63</td>
+      <td>81</td>
+      <td>3000.0</td>
+      <td>1200000.0</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>14026</th>
+      <td>M. Azeez</td>
+      <td>62</td>
+      <td>83</td>
+      <td>4000.0</td>
+      <td>1300000.0</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>14144</th>
+      <td>H. Mejbri</td>
+      <td>62</td>
+      <td>84</td>
+      <td>6000.0</td>
+      <td>1300000.0</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>14349</th>
+      <td>R. Lavia</td>
+      <td>62</td>
+      <td>85</td>
+      <td>700.0</td>
+      <td>1200000.0</td>
+      <td>17</td>
+    </tr>
+  </tbody>
+</table>
+<p>5815 rows × 6 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/private/var/containers/Bundle/Application/BDB2F03A-48CB-4984-82CA-190D8BC5581E/Carnets-sci.app/Library/lib/python3.11/site-packages/sklearn/cluster/_kmeans.py:870: FutureWarning: The default value of `n_init` will change from 10 to &#39;auto&#39; in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output text_html"><style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>KMeans(n_clusters=3)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">KMeans</label><div class="sk-toggleable__content"><pre>KMeans(n_clusters=3)</pre></div></div></div></div></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">features</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>overall</th>
+      <td>3.873971</td>
+      <td>6.798739</td>
+      <td>5.230949</td>
+    </tr>
+    <tr>
+      <th>potential</th>
+      <td>5.665009</td>
+      <td>7.247227</td>
+      <td>4.902857</td>
+    </tr>
+    <tr>
+      <th>wage_eur</th>
+      <td>1.043807</td>
+      <td>1.725143</td>
+      <td>1.126631</td>
+    </tr>
+    <tr>
+      <th>value_eur</th>
+      <td>1.039275</td>
+      <td>1.457660</td>
+      <td>1.044868</td>
+    </tr>
+    <tr>
+      <th>age</th>
+      <td>2.896812</td>
+      <td>4.466826</td>
+      <td>6.117672</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">euclidean_distance</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">KMeans</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">plot_steps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iters</span> <span class="o">=</span> <span class="n">max_iters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_steps</span> <span class="o">=</span> <span class="n">plot_steps</span>
+
+        <span class="c1"># list of sample indices for each cluster</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)]</span>
+        <span class="c1"># the centers (mean feature vector) for each cluster</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># initialize</span>
+        <span class="n">random_sample_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">random_sample_idxs</span><span class="p">]</span>
+
+        <span class="c1"># Optimize clusters</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iters</span><span class="p">):</span>
+            <span class="c1"># Assign samples to closest centroids (create clusters)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_clusters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_steps</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+            <span class="c1"># Calculate new centroids from the clusters</span>
+            <span class="n">centroids_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_centroids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">)</span>
+
+            <span class="c1"># check if clusters have changed</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_converged</span><span class="p">(</span><span class="n">centroids_old</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">):</span>
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_steps</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+        <span class="c1"># Classify samples as the index of their clusters</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cluster_labels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_cluster_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+        <span class="c1"># each sample will get the label of the cluster it was assigned to</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">cluster_idx</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clusters</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">sample_index</span> <span class="ow">in</span> <span class="n">cluster</span><span class="p">:</span>
+                <span class="n">labels</span><span class="p">[</span><span class="n">sample_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_idx</span>
+        <span class="k">return</span> <span class="n">labels</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+        <span class="c1"># Assign the samples to the closest centroids to create clusters</span>
+        <span class="n">clusters</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">):</span>
+            <span class="n">centroid_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closest_centroid</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">centroids</span><span class="p">)</span>
+            <span class="n">clusters</span><span class="p">[</span><span class="n">centroid_idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">clusters</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_closest_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+        <span class="c1"># distance of the current sample to each centroid</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span><span class="n">euclidean_distance</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">centroids</span><span class="p">]</span>
+        <span class="n">closest_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">closest_index</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_centroids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+        <span class="c1"># assign mean value of clusters to centroids</span>
+        <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">cluster_idx</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clusters</span><span class="p">):</span>
+            <span class="n">cluster_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">cluster</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">centroids</span><span class="p">[</span><span class="n">cluster_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_mean</span>
+        <span class="k">return</span> <span class="n">centroids</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_converged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centroids_old</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+        <span class="c1"># distances between each old and new centroids, fol all centroids</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">euclidean_distance</span><span class="p">(</span><span class="n">centroids_old</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">centroids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">):</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="c1"># Testing</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_blobs</span>
+
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span>
+        <span class="n">centers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">40</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">clusters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span>
+
+    <span class="n">k</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">clusters</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">plot_steps</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="n">k</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(500, 2)
+3
+</pre></div>
+</div>
+<img alt="_images/172c8545c6f9225f019cc1dbb4af0adae9a76990b4f6fb78693944566b7682bf.png" src="_images/172c8545c6f9225f019cc1dbb4af0adae9a76990b4f6fb78693944566b7682bf.png" />
+<img alt="_images/b790b09e826e87292a9eb0e4bb468a908740b2691b62f0b0e19253fd239b4583.png" src="_images/b790b09e826e87292a9eb0e4bb468a908740b2691b62f0b0e19253fd239b4583.png" />
+<img alt="_images/fe89b2896121abcae3eacff1eca2ef7081a5a5f6b3a4ffffc748f04621ec326b.png" src="_images/fe89b2896121abcae3eacff1eca2ef7081a5a5f6b3a4ffffc748f04621ec326b.png" />
+<img alt="_images/d5d879e02a0c58009b9062ba532770dc3385d46816ac1d18894f3845b4451f3b.png" src="_images/d5d879e02a0c58009b9062ba532770dc3385d46816ac1d18894f3845b4451f3b.png" />
+<img alt="_images/21f6aa98cfab72889838453f93bfb9eaca336aa5446bbef9ae8732612531508a.png" src="_images/21f6aa98cfab72889838453f93bfb9eaca336aa5446bbef9ae8732612531508a.png" />
+<img alt="_images/e4d0d5d8096127869291089487f0a9f84476ce106fb04ed0bb2135fec8622bc1.png" src="_images/e4d0d5d8096127869291089487f0a9f84476ce106fb04ed0bb2135fec8622bc1.png" />
+<img alt="_images/f4a059d09293406f9da70f826ec3c0f93c57f323eae375cd4520495ea44b25b2.png" src="_images/f4a059d09293406f9da70f826ec3c0f93c57f323eae375cd4520495ea44b25b2.png" />
+<img alt="_images/c86af3d13ff6e1d5d1eda70c047e66460e14dbf240ff8e028a11ecda50c236e0.png" src="_images/c86af3d13ff6e1d5d1eda70c047e66460e14dbf240ff8e028a11ecda50c236e0.png" />
+<img alt="_images/09bd5be05724e167e9d5364c6fc7f7701dbecf70bdf4e7f00310ade7fda1ba3f.png" src="_images/09bd5be05724e167e9d5364c6fc7f7701dbecf70bdf4e7f00310ade7fda1ba3f.png" />
+<img alt="_images/7bb5f39d28fe4e203847762f4a950f10bb7ec7261e34a6a308cd4211c9155f1d.png" src="_images/7bb5f39d28fe4e203847762f4a950f10bb7ec7261e34a6a308cd4211c9155f1d.png" />
+<img alt="_images/7bb5f39d28fe4e203847762f4a950f10bb7ec7261e34a6a308cd4211c9155f1d.png" src="_images/7bb5f39d28fe4e203847762f4a950f10bb7ec7261e34a6a308cd4211c9155f1d.png" />
+<img alt="_images/7bb5f39d28fe4e203847762f4a950f10bb7ec7261e34a6a308cd4211c9155f1d.png" src="_images/7bb5f39d28fe4e203847762f4a950f10bb7ec7261e34a6a308cd4211c9155f1d.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">euclidean_distance</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">KNN</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># Compute distances between x and all examples in the training set</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span><span class="n">euclidean_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_train</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_train</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">]</span>
+        <span class="c1"># Sort by distance and return indices of the first k neighbors</span>
+        <span class="n">k_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">distances</span><span class="p">)[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">]</span>
+        <span class="c1"># Extract the labels of the k nearest neighbor training samples</span>
+        <span class="n">k_neighbor_labels</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">y_train</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">k_idx</span><span class="p">]</span>
+        <span class="c1"># return the most common class label</span>
+        <span class="n">most_common</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">k_neighbor_labels</span><span class="p">)</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">most_common</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Imports</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListedColormap</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="s2">&quot;#FF0000&quot;</span><span class="p">,</span> <span class="s2">&quot;#00FF00&quot;</span><span class="p">,</span> <span class="s2">&quot;#0000FF&quot;</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">accuracy</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_true</span> <span class="o">==</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">accuracy</span>
+
+    <span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1234</span>
+    <span class="p">)</span>
+
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">KNN</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KNN classification accuracy&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KNN classification accuracy 1.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">points</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;blue&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span>
+          <span class="s1">&#39;orange&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">]]}</span>
+
+<span class="n">new_point</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">euclidean_distance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">q</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">KNearestNeighbors</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">points</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_point</span><span class="p">):</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">category</span><span class="p">]:</span>
+                <span class="n">distance</span> <span class="o">=</span> <span class="n">euclidean_distance</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">new_point</span><span class="p">)</span>
+                <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">distance</span><span class="p">,</span> <span class="n">category</span><span class="p">])</span>
+
+        <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="n">category</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">distances</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">]]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">KNearestNeighbors</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_point</span><span class="p">))</span>
+
+<span class="c1"># Visualize KNN Distances</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;#121212&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#104DCA&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[</span><span class="s1">&#39;orange&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#EF6C35&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="n">new_class</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_point</span><span class="p">)</span>
+<span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#EF6C35&#39;</span> <span class="k">if</span> <span class="n">new_class</span> <span class="o">==</span> <span class="s1">&#39;orange&#39;</span> <span class="k">else</span> <span class="s1">&#39;#104DCA&#39;</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">new_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">new_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">new_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#104DCA&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[</span><span class="s1">&#39;orange&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">new_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">new_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#EF6C35&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># 3D Example</span>
+
+<span class="n">points</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;blue&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">]],</span>
+          <span class="s1">&#39;orange&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]}</span>
+
+<span class="n">new_point</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">KNearestNeighbors</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_point</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#323232&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;#121212&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#104DCA&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[</span><span class="s1">&#39;orange&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#EF6C35&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="n">new_class</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_point</span><span class="p">)</span>
+<span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#EF6C35&#39;</span> <span class="k">if</span> <span class="n">new_class</span> <span class="o">==</span> <span class="s1">&#39;orange&#39;</span> <span class="k">else</span> <span class="s1">&#39;#104DCA&#39;</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">new_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_point</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">new_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">new_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">new_point</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#104DCA&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[</span><span class="s1">&#39;orange&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">new_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">new_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">new_point</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#EF6C35&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>blue
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/private/var/mobile/Containers/Data/Application/6886C219-CE39-4A3F-BF34-486B937A2F19/tmp/ipykernel_3066/1022396484.py:44: UserWarning: First parameter to grid() is false, but line properties are supplied. The grid will be enabled.
+  ax.grid(False, color=&#39;#000000&#39;)
+</pre></div>
+</div>
+<img alt="_images/cfbe09fe5f3fcd3795b2a199932e7eaa78d0e1723408a3d7ff591364fed9e8cd.png" src="_images/cfbe09fe5f3fcd3795b2a199932e7eaa78d0e1723408a3d7ff591364fed9e8cd.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>blue
+</pre></div>
+</div>
+<img alt="_images/9805800b96bfadaa462ec831bebd4956b607c15d5a89418bfd3a3bdc2fa0e0c2.png" src="_images/9805800b96bfadaa462ec831bebd4956b607c15d5a89418bfd3a3bdc2fa0e0c2.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Visualization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Visualisation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="descriptive_analytics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Descriptive Analytics of Financial Data</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Clustering KNN</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudocode">Pseudocode</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#high-level">High level</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Chandravesh Chaudhari
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

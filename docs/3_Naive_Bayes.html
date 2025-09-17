@@ -1,0 +1,2114 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Naive Bayes &#8212; Machine Learning for Business</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '3_Naive_Bayes';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Logistic Regression (Mathematical Explanation)" href="4_Logistic_Regression.html" />
+    <link rel="prev" title="Generalization, Overfitting, Regularization" href="2_Regularization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Machine Learning for Business - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Machine Learning for Business - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">Common Math Symbols and Notations in Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_Linear_regression.html">Linear Regression</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="2_Regularization.html">Generalization, Overfitting, Regularization</a></li>
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Naive Bayes</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="4_Logistic_Regression.html"><strong>Logistic Regression (Mathematical Explanation)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_Dimensionality_Reduction.html">Dimensionality Reduction: PCA</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="6_Clustering.html">K-Means and Clustering</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="7_Gaussian_Mixture_Models.html">Gaussian Mixture Models and EM</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="8_Nearest_Neighbour_Algorithm.html">Nearest Neighbour Algorithm</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="10_Support_Vector_Machines.html">Support Vector Machines</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="11_Decision_Trees.html">Decision Trees</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="12_Ensemble_Methods.html">Ensemble Methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="13_Neural_Networks.html">Neural Networks: From Perceptron to MLP</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="14_Arima.html">ARIMA</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="15_LSTM.html">Advanced DL: ResNets, RNNs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="16_CNN.html">Convolutional Neural Networks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="17_Resnet.html">1D-ResNet (or TCN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_LLM.html">Transformers and LLMs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="19_Reinforcement_Learning.html">Reinforcement Learning</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="20_Multimodal_Learning.html">Multimodal Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generative_Models.html">Generative Models</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Performance_Metrics.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization.html">Visualisation</a></li>
+
+
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/chandraveshchaudhari/BusinessML_web/blob/main/notebooks//./3_Naive_Bayes.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+
+<li>
+  <a href="https://chandraveshchaudhari.github.io/BusinessML_web/jupyterlite/lab/index.html?path=3_Naive_Bayes.ipynb" target="_blank"
+     class="btn btn-sm dropdown-item"
+     title="Launch on JupyterLite"
+     data-bs-placement="left" data-bs-toggle="tooltip">
+    <span class="btn__icon-container" style="display:inline-block; width:20px; height:20px;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+        <circle cx="128" cy="128" r="128" fill="#f37726"/>
+        <ellipse cx="128" cy="128" rx="110" ry="40" fill="white" transform="rotate(-25, 128, 128)"/>
+        <ellipse cx="128" cy="128" rx="110" ry="40" fill="white" transform="rotate(25, 128, 128)"/>
+        <circle cx="200" cy="60" r="18" fill="white"/>
+        <circle cx="60" cy="200" r="18" fill="white"/>
+      </svg>
+    </span>
+    <span class="btn__text-container">JupyterLite</span>
+  </a>
+</li>
+
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web/issues/new?title=Issue%20on%20page%20%2F3_Naive_Bayes.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/3_Naive_Bayes.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Naive Bayes</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Naive Bayes</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-math-for-understanding-naive-bayes">Probability Math for Understanding Naive Bayes</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-probability">1. Simple Probability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#joint-probability">2. Joint Probability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-probability">3. Conditional Probability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#law-of-total-probability">4. Law of Total Probability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayes-theorem">5. Bayes’ Theorem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-classifier">6. Naive Bayes Classifier</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">6.1. Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-assumption">6.2. Naive Assumption</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classification">6.3. Classification</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-probabilities">6.4. Estimating Probabilities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">6.5. Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequentist-vs-bayesian-probability">1. Frequentist vs. Bayesian Probability</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequentist-probability">1.1. Frequentist Probability</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-probability">1.2. Bayesian Probability</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-vs-discriminative-models">2. Generative vs. Discriminative Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-models">2.1. Generative Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discriminative-models">2.2. Discriminative Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-vs-non-parametric-models">3. Parametric vs. Non-Parametric Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-models"><strong>1. Parametric Models</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-parametric-models"><strong>2. Non-Parametric Models</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-difference"><strong>Key Difference</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#turning-text-into-numbers-for-machine-learning-with-naive-bayes">Turning Text into Numbers for Machine Learning with Naive Bayes</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#turning-text-into-usable-data">Turning Text into Usable Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ways-to-convert-text-to-numbers">Ways to Convert Text to Numbers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bag-of-words-model">Bag of Words Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-model-to-classify-text">Building a Model to Classify Text</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-categorical-distribution">What is a Categorical Distribution?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-simplification">Naive Bayes Simplification</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters-in-naive-bayes">Parameters in Naive Bayes</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-for-bag-of-words">Naive Bayes for Bag of Words</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#does-naive-bayes-work-well">Does Naive Bayes Work Well?</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-class-probabilities">Setting Up Class Probabilities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bernoulli-naive-bayes-model">Bernoulli Naive Bayes Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-the-models-parameters">Learning the Model’s Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-class-probabilities-phi-k">Learning Class Probabilities <span class="math notranslate nohighlight">\( \phi_k \)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-word-probabilities-psi-jk">Learning Word Probabilities <span class="math notranslate nohighlight">\( \psi_{jk} \)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-predictions">Making Predictions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-scenario">Example Scenario</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-classifying-emails-with-naive-bayes-three-categories">Example: Classifying Emails with Naive Bayes (Three Categories)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-representing-emails-as-feature-vectors">Step 1: Representing Emails as Feature Vectors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vocabulary">Vocabulary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-vector">Feature Vector</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-dataset">Step 2: Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-vectors">Feature Vectors</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-bernoulli-naive-bayes-model">Step 3: Bernoulli Naive Bayes Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-components">Model Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-assumption">Naive Bayes Assumption</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-learning-parameters">Step 4: Learning Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-class-priors-phi-k">Learning Class Priors <span class="math notranslate nohighlight">\( \phi_k \)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-feature-parameters-psi-jk">Learning Feature Parameters <span class="math notranslate nohighlight">\( \psi_{jk} \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#spam-k-1-n-1-3">Spam (<span class="math notranslate nohighlight">\( k = 1 \)</span>, <span class="math notranslate nohighlight">\( n_1 = 3 \)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#work-k-2-n-2-3">Work (<span class="math notranslate nohighlight">\( k = 2 \)</span>, <span class="math notranslate nohighlight">\( n_2 = 3 \)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#personal-k-3-n-3-4">Personal (<span class="math notranslate nohighlight">\( k = 3 \)</span>, <span class="math notranslate nohighlight">\( n_3 = 4 \)</span>)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-summary">Parameter Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-predicting-a-new-email">Step 5: Predicting a New Email</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spam-k-1">Spam (<span class="math notranslate nohighlight">\( k = 1 \)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#work-k-2">Work (<span class="math notranslate nohighlight">\( k = 2 \)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#personal-k-3">Personal (<span class="math notranslate nohighlight">\( k = 3 \)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-works-for-more-than-two-categories">Why This Works for More Than Two Categories</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="naive-bayes">
+<h1>Naive Bayes<a class="headerlink" href="#naive-bayes" title="Link to this heading">#</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>• Conditional Independence Assumption
+• Bag-of-Words Representation
+• Multinomial vs Bernoulli Naive Bayes
+• Python: Text Classification with Naive Bayes
+</pre></div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="probability-math-for-understanding-naive-bayes">
+<h1>Probability Math for Understanding Naive Bayes<a class="headerlink" href="#probability-math-for-understanding-naive-bayes" title="Link to this heading">#</a></h1>
+<p>To understand Naive Bayes, we first need to cover the foundational probability concepts that underpin it. This section progresses from basic probability to the specifics of Naive Bayes.</p>
+<section id="simple-probability">
+<h2>1. Simple Probability<a class="headerlink" href="#simple-probability" title="Link to this heading">#</a></h2>
+<p>Probability measures the likelihood of an event occurring, expressed as a number between 0 and 1.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: The probability of an event <span class="math notranslate nohighlight">\(A\)</span>, denoted <span class="math notranslate nohighlight">\(P(A)\)</span>, is:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(A) = \frac{\text{Number of favorable outcomes for } A}{\text{Total number of possible outcomes}}
+\]</div>
+<ul class="simple">
+<li><p><strong>Example</strong>: If you roll a fair six-sided die, the probability of rolling a 3 is:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(3) = \frac{1}{6} \approx 0.1667
+\]</div>
+<ul class="simple">
+<li><p><strong>Properties</strong>:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(0 \leq P(A) \leq 1\)</span></p></li>
+<li><p>The probability of the entire sample space <span class="math notranslate nohighlight">\(S\)</span> is <span class="math notranslate nohighlight">\(P(S) = 1\)</span>.</p></li>
+<li><p>For mutually exclusive events <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, <span class="math notranslate nohighlight">\(P(A \text{ or } B) = P(A) + P(B)\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="joint-probability">
+<h2>2. Joint Probability<a class="headerlink" href="#joint-probability" title="Link to this heading">#</a></h2>
+<p>Joint probability is the probability of two or more events occurring together.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: For events <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, the joint probability is <span class="math notranslate nohighlight">\(P(A \cap B)\)</span>, the probability that both <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> occur.</p></li>
+<li><p><strong>Independent Events</strong>: If <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are independent (the occurrence of one does not affect the other), then:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(A \cap B) = P(A) \cdot P(B)
+\]</div>
+<ul class="simple">
+<li><p><strong>Example</strong>: If you flip two fair coins, the probability of getting heads on both is:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(\text{Heads}_1 \cap \text{Heads}_2) = P(\text{Heads}_1) \cdot P(\text{Heads}_2) = \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}
+\]</div>
+<ul class="simple">
+<li><p><strong>Dependent Events</strong>: If <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are not independent, we use conditional probability (see below).</p></li>
+</ul>
+</section>
+<section id="conditional-probability">
+<h2>3. Conditional Probability<a class="headerlink" href="#conditional-probability" title="Link to this heading">#</a></h2>
+<p>Conditional probability measures the probability of an event given that another event has occurred.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: The probability of event <span class="math notranslate nohighlight">\(A\)</span> given event <span class="math notranslate nohighlight">\(B\)</span> has occurred is:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(A|B) = \frac{P(A \cap B)}{P(B)}, \quad \text{where } P(B) &gt; 0
+\]</div>
+<ul class="simple">
+<li><p><strong>Example</strong>: In a deck of 52 cards, what is the probability of drawing a heart given that the card is red? There are 26 red cards, 13 of which are hearts:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(\text{Heart}|\text{Red}) = \frac{P(\text{Heart} \cap \text{Red})}{P(\text{Red})} = \frac{\frac{13}{52}}{\frac{26}{52}} = \frac{13}{26} = \frac{1}{2}
+\]</div>
+<ul class="simple">
+<li><p><strong>Relation to Joint Probability</strong>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(A \cap B) = P(A|B) \cdot P(B) = P(B|A) \cdot P(A)
+\]</div>
+</section>
+<section id="law-of-total-probability">
+<h2>4. Law of Total Probability<a class="headerlink" href="#law-of-total-probability" title="Link to this heading">#</a></h2>
+<p>The law of total probability helps compute the probability of an event by considering all possible scenarios.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: If events <span class="math notranslate nohighlight">\(B_1, B_2, \dots, B_n\)</span> are mutually exclusive and exhaustive (they cover the entire sample space), then for any event <span class="math notranslate nohighlight">\(A\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(A) = \sum_{i=1}^n P(A|B_i) \cdot P(B_i)
+\]</div>
+<ul class="simple">
+<li><p><strong>Example</strong>: Suppose 60% of emails are spam (<span class="math notranslate nohighlight">\(P(\text{Spam}) = 0.6\)</span>), and 40% are not (<span class="math notranslate nohighlight">\(P(\text{Non-Spam}) = 0.4\)</span>). The probability an email contains the word “free” is 0.8 for spam and 0.1 for non-spam. The total probability of “free” is:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(\text{Free}) = P(\text{Free}|\text{Spam}) \cdot P(\text{Spam}) + P(\text{Free}|\text{Non-Spam}) \cdot P(\text{Non-Spam})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+= (0.8 \cdot 0.6) + (0.1 \cdot 0.4) = 0.48 + 0.04 = 0.52
+\]</div>
+</section>
+<section id="bayes-theorem">
+<h2>5. Bayes’ Theorem<a class="headerlink" href="#bayes-theorem" title="Link to this heading">#</a></h2>
+<p>Bayes’ Theorem relates conditional probabilities and is the foundation of Naive Bayes.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+\]</div>
+<ul class="simple">
+<li><p><strong>Interpretation</strong>:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(P(A|B)\)</span>: <strong>Posterior</strong>, the probability of <span class="math notranslate nohighlight">\(A\)</span> given <span class="math notranslate nohighlight">\(B\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(B|A)\)</span>: <strong>Likelihood</strong>, the probability of <span class="math notranslate nohighlight">\(B\)</span> given <span class="math notranslate nohighlight">\(A\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(A)\)</span>: <strong>Prior</strong>, the probability of <span class="math notranslate nohighlight">\(A\)</span> before observing <span class="math notranslate nohighlight">\(B\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(B)\)</span>: <strong>Evidence</strong>, the total probability of <span class="math notranslate nohighlight">\(B\)</span>, often computed using the law of total probability.</p></li>
+</ul>
+</li>
+<li><p><strong>Example</strong>: Using the email example, what is the probability an email is spam given it contains “free”?</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(\text{Spam}|\text{Free}) = \frac{P(\text{Free}|\text{Spam}) \cdot P(\text{Spam})}{P(\text{Free})}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+= \frac{0.8 \cdot 0.6}{0.52} = \frac{0.48}{0.52} \approx 0.923
+\]</div>
+</section>
+<section id="naive-bayes-classifier">
+<h2>6. Naive Bayes Classifier<a class="headerlink" href="#naive-bayes-classifier" title="Link to this heading">#</a></h2>
+<p>Naive Bayes applies Bayes’ Theorem to classification, assuming features are conditionally independent given the class.</p>
+<section id="setup">
+<h3>6.1. Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h3>
+<p>Given a data point with features <span class="math notranslate nohighlight">\(X = \{x_1, x_2, \dots, x_n\}\)</span> and class labels <span class="math notranslate nohighlight">\(C \in \{C_1, C_2, \dots, C_k\}\)</span>, we want to find the class that maximizes the posterior probability:</p>
+<div class="math notranslate nohighlight">
+\[
+P(C|X) = \frac{P(X|C) \cdot P(C)}{P(X)}
+\]</div>
+</section>
+<section id="naive-assumption">
+<h3>6.2. Naive Assumption<a class="headerlink" href="#naive-assumption" title="Link to this heading">#</a></h3>
+<p>The “naive” assumption is that features <span class="math notranslate nohighlight">\(x_1, x_2, \dots, x_n\)</span> are <strong>conditionally independent</strong> given the class <span class="math notranslate nohighlight">\(C\)</span>. Thus, the joint likelihood is:</p>
+<div class="math notranslate nohighlight">
+\[
+P(X|C) = P(x_1, x_2, \dots, x_n|C) = \prod_{i=1}^n P(x_i|C)
+\]</div>
+<p>So, the posterior becomes:</p>
+<div class="math notranslate nohighlight">
+\[
+P(C|X) = \frac{P(C) \cdot \prod_{i=1}^n P(x_i|C)}{P(X)}
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\(P(X)\)</span> is constant across classes, we maximize:</p>
+<div class="math notranslate nohighlight">
+\[
+P(C|X) \propto P(C) \cdot \prod_{i=1}^n P(x_i|C)
+\]</div>
+</section>
+<section id="classification">
+<h3>6.3. Classification<a class="headerlink" href="#classification" title="Link to this heading">#</a></h3>
+<p>Choose the class with the highest posterior:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{C} = \arg\max_C \left[ P(C) \cdot \prod_{i=1}^n P(x_i|C) \right]
+\]</div>
+<p>To avoid numerical underflow, use log-probabilities:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{C} = \arg\max_C \left[ \log P(C) + \sum_{i=1}^n \log P(x_i|C) \right]
+\]</div>
+</section>
+<section id="estimating-probabilities">
+<h3>6.4. Estimating Probabilities<a class="headerlink" href="#estimating-probabilities" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Prior</strong>: Estimated from training data:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(C) = \frac{\text{Number of instances of class } C}{\text{Total number of instances}}
+\]</div>
+<ul>
+<li><p><strong>Likelihood</strong>:</p>
+<ul class="simple">
+<li><p><strong>Categorical Features</strong>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+  P(x_i|C) = \frac{\text{Count of } x_i \text{ in class } C}{\text{Total instances in class } C}
+  \]</div>
+<p>Use <strong>Laplace smoothing</strong> to avoid zero probabilities:</p>
+<div class="math notranslate nohighlight">
+\[
+  P(x_i|C) = \frac{\text{Count of } x_i \text{ in class } C + 1}{\text{Total instances in class } C + K}
+  \]</div>
+<p>where <span class="math notranslate nohighlight">\(K\)</span> is the number of possible values for <span class="math notranslate nohighlight">\(x_i\)</span>.</p>
+<ul class="simple">
+<li><p><strong>Continuous Features</strong> (Gaussian Naive Bayes):</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+  P(x_i|C) = \frac{1}{\sqrt{2\pi\sigma_C^2}} \exp\left(-\frac{(x_i - \mu_C)^2}{2\sigma_C^2}\right)
+  \]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu_C\)</span> and <span class="math notranslate nohighlight">\(\sigma_C^2\)</span> are the mean and variance of feature <span class="math notranslate nohighlight">\(x_i\)</span> in class <span class="math notranslate nohighlight">\(C\)</span>.</p>
+</li>
+</ul>
+</section>
+<section id="example">
+<h3>6.5. Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
+<p>Classify an email as Spam (<span class="math notranslate nohighlight">\(C_1\)</span>) or Non-Spam (<span class="math notranslate nohighlight">\(C_2\)</span>) based on two features: <span class="math notranslate nohighlight">\(x_1 = \text{&quot;free&quot; (yes/no)}\)</span>, <span class="math notranslate nohighlight">\(x_2 = \text{&quot;urgent&quot; (yes/no)}\)</span>. Given:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(P(C_1) = 0.6\)</span>, <span class="math notranslate nohighlight">\(P(C_2) = 0.4\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{free}|C_1) = 0.8\)</span>, <span class="math notranslate nohighlight">\(P(\text{free}|C_2) = 0.1\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{urgent}|C_1) = 0.5\)</span>, <span class="math notranslate nohighlight">\(P(\text{urgent}|C_2) = 0.2\)</span></p></li>
+</ul>
+<p>For an email with <span class="math notranslate nohighlight">\(\text{free=yes}\)</span>, <span class="math notranslate nohighlight">\(\text{urgent=yes}\)</span>:</p>
+<ul class="simple">
+<li><p>Spam:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(C_1|X) \propto 0.6 \cdot 0.8 \cdot 0.5 = 0.24
+\]</div>
+<ul class="simple">
+<li><p>Non-Spam:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(C_2|X) \propto 0.4 \cdot 0.1 \cdot 0.2 = 0.008
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\(0.24 &gt; 0.008\)</span>, classify as Spam.</p>
+<hr class="docutils" />
+<p><strong>Naive Bayes Implementation</strong>:</p>
+<ul>
+<li><p><strong>Training</strong>: Estimates priors <span class="math notranslate nohighlight">\(P(C)\)</span> (e.g., <span class="math notranslate nohighlight">\(P(\text{spam})\)</span>) and likelihoods <span class="math notranslate nohighlight">\(P(x_i|C)\)</span> (e.g., <span class="math notranslate nohighlight">\(P(\text{lottery}=1|\text{spam})\)</span>) using frequency counts with Laplace smoothing to avoid zero probabilities:</p>
+<div class="math notranslate nohighlight">
+\[
+     P(x_i|C) = \frac{\text{Count of } x_i \text{ in class } C + 1}{\text{Total instances in class } C + 2}
+     \]</div>
+</li>
+<li><p><strong>Prediction</strong>: Computes the log posterior for each class:</p>
+<div class="math notranslate nohighlight">
+\[
+     \hat{C} = \arg\max_C \left[ \log P(C) + \sum_i \log P(x_i|C) \right]
+     \]</div>
+<p>and selects the class with the highest value.</p>
+</li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p><strong>Test Emails</strong>:</p>
+<ul class="simple">
+<li><p>Five test cases cover common spam (lottery, prince) and non-spam (LinkedIn, professional) scenarios.</p></li>
+<li><p>The output includes a human-readable description of each email’s features.</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import required libraries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="c1"># Sample dataset: List of (email_features, label) pairs</span>
+<span class="c1"># Features are dictionaries with key phrases (e.g., &quot;lottery&quot;, &quot;prince&quot;) and presence (1 for present, 0 for absent)</span>
+<span class="c1"># Labels: &quot;spam&quot; or &quot;no_spam&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s2">&quot;spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Earn 55 lakh lottery!&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s2">&quot;spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;You won a lottery!&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Nigerian prince needs help&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Prince urgent transfer&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s2">&quot;spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Lottery urgent claim&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;no_spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;LinkedIn connection request&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;no_spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;LinkedIn message&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s2">&quot;no_spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Congratulations on LinkedIn milestone&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;no_spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Meeting reminder&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;no_spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;LinkedIn profile view&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;no_spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Urgent team meeting&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s2">&quot;no_spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Congratulations on promotion&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s2">&quot;spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Lottery win, congratulations!&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;spam&quot;</span><span class="p">),</span>  <span class="c1"># &quot;Help from Nigerian prince&quot;</span>
+    <span class="p">({</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;no_spam&quot;</span><span class="p">)</span>  <span class="c1"># &quot;LinkedIn job alert&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># Class to implement Naive Bayes for spam filtering</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NaiveBayesSpamFilter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priors</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># P(C)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">likelihoods</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)))</span>  <span class="c1"># P(x_i|C)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Count instances per class for priors</span>
+        <span class="n">total_instances</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">class_counts</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">features</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">class_counts</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="c1"># Calculate priors: P(C) = count(C) / total_instances</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">class_counts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_counts</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_instances</span>
+
+        <span class="c1"># Count feature occurrences per class for likelihoods</span>
+        <span class="n">feature_counts</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">features</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">feature_counts</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">feature</span><span class="p">][</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Calculate likelihoods with Laplace smoothing: P(x_i|C) = (count(x_i, C) + 1) / (count(C) + K)</span>
+        <span class="c1"># K = number of possible values for feature (here, 2: 0 or 1)</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>  <span class="c1"># Binary features</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">likelihoods</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">feature</span><span class="p">][</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="p">(</span><span class="n">feature_counts</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">feature</span><span class="p">][</span><span class="n">value</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> 
+                        <span class="p">(</span><span class="n">class_counts</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_with_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">):</span>
+        <span class="c1"># Store calculation details</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">log_posteriors</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Calculate log posterior for each class: log(P(C|X)) ∝ log(P(C)) + ∑ log(P(x_i|C))</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">:</span>
+            <span class="n">details</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Calculating for class &#39;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+            <span class="n">log_posterior</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="p">[</span><span class="n">label</span><span class="p">])</span>
+            <span class="n">details</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  log(P(</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">)) = log(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">log_posterior</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Sum log likelihoods for each feature</span>
+            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Assume 0 if feature missing</span>
+                <span class="n">likelihood</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihoods</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">feature</span><span class="p">][</span><span class="n">value</span><span class="p">]</span>
+                <span class="n">log_likelihood</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">likelihood</span><span class="p">)</span>
+                <span class="n">details</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;  log(P(</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">)) = log(</span><span class="si">{</span><span class="n">likelihood</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">log_likelihood</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="n">log_posterior</span> <span class="o">+=</span> <span class="n">log_likelihood</span>
+
+            <span class="n">log_posteriors</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">log_posterior</span>
+            <span class="n">details</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total log posterior for </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">log_posterior</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Determine predicted class</span>
+        <span class="n">predicted_class</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">log_posteriors</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">log_posteriors</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+        <span class="n">details</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Predicted class: &#39;</span><span class="si">{</span><span class="n">predicted_class</span><span class="si">}</span><span class="s2">&#39; (highest log posterior: </span><span class="si">{</span><span class="n">log_posteriors</span><span class="p">[</span><span class="n">predicted_class</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">predicted_class</span><span class="p">,</span> <span class="n">details</span>
+
+<span class="c1"># Train the model</span>
+<span class="n">spam_filter</span> <span class="o">=</span> <span class="n">NaiveBayesSpamFilter</span><span class="p">()</span>
+<span class="n">spam_filter</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Test email: &quot;Earn 55 lakh lottery, urgent!&quot;</span>
+<span class="n">test_email</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;lottery&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;prince&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;urgent&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;congratulations&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+
+<span class="c1"># Predict with detailed calculations</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Spam Filter Detailed Calculation for Test Email:&quot;</span><span class="p">)</span>
+<span class="c1"># Create description of email</span>
+<span class="n">description</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">test_email</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">description</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mentions </span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">&quot; and &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">description</span><span class="p">)</span> <span class="k">if</span> <span class="n">description</span> <span class="k">else</span> <span class="s2">&quot;no key phrases&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Email features: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get prediction and details</span>
+<span class="n">prediction</span><span class="p">,</span> <span class="n">calculation_details</span> <span class="o">=</span> <span class="n">spam_filter</span><span class="o">.</span><span class="n">predict_with_details</span><span class="p">(</span><span class="n">test_email</span><span class="p">)</span>
+
+<span class="c1"># Print full calculation</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step-by-Step Calculation:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">calculation_details</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Final Classification: </span><span class="si">{</span><span class="n">prediction</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Spam Filter Detailed Calculation for Test Email:
+Email features: mentions lottery and mentions urgent and mentions congratulations
+
+Step-by-Step Calculation:
+
+Calculating for class &#39;spam&#39;:
+  log(P(spam)) = log(0.4667) = -0.7621
+  log(P(urgent=1|spam)) = log(0.5556) = -0.5878
+  log(P(lottery=1|spam)) = log(0.5556) = -0.5878
+  log(P(congratulations=1|spam)) = log(0.5556) = -0.5878
+  log(P(prince=0|spam)) = log(0.5556) = -0.5878
+  log(P(linkedin=0|spam)) = log(0.8889) = -0.1178
+  Total log posterior for spam: -3.2311
+
+Calculating for class &#39;no_spam&#39;:
+  log(P(no_spam)) = log(0.5333) = -0.6286
+  log(P(urgent=1|no_spam)) = log(0.2000) = -1.6094
+  log(P(lottery=1|no_spam)) = log(0.1000) = -2.3026
+  log(P(congratulations=1|no_spam)) = log(0.3000) = -1.2040
+  log(P(prince=0|no_spam)) = log(0.9000) = -0.1054
+  log(P(linkedin=0|no_spam)) = log(0.4000) = -0.9163
+  Total log posterior for no_spam: -6.7663
+
+Predicted class: &#39;spam&#39; (highest log posterior: -3.2311)
+
+Final Classification: spam
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="frequentist-vs-bayesian-probability">
+<h2>1. Frequentist vs. Bayesian Probability<a class="headerlink" href="#frequentist-vs-bayesian-probability" title="Link to this heading">#</a></h2>
+<p>Probability can be interpreted in two primary ways: <strong>Frequentist</strong> and <strong>Bayesian</strong>. These approaches differ in how they define probability and handle uncertainty, which impacts their application in machine learning, including Naive Bayes.</p>
+<section id="frequentist-probability">
+<h3>1.1. Frequentist Probability<a class="headerlink" href="#frequentist-probability" title="Link to this heading">#</a></h3>
+<p>The Frequentist approach views probability as the long-run frequency of an event occurring in repeated trials.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: Probability of an event <span class="math notranslate nohighlight">\(A\)</span>, denoted <span class="math notranslate nohighlight">\(P(A)\)</span>, is the limit of the relative frequency of <span class="math notranslate nohighlight">\(A\)</span> as the number of trials <span class="math notranslate nohighlight">\(n\)</span> approaches infinity:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(A) = \lim_{n \to \infty} \frac{\text{Number of times } A \text{ occurs}}{n}
+\]</div>
+<ul class="simple">
+<li><p><strong>Key Characteristics</strong>:</p>
+<ul>
+<li><p>Parameters (e.g., mean, probability) are fixed but unknown constants.</p></li>
+<li><p>Inference relies on sampling and point estimates (e.g., maximum likelihood estimation).</p></li>
+<li><p>Confidence intervals describe the range where the true parameter lies with a certain probability (e.g., 95% confidence).</p></li>
+<li><p>No incorporation of prior knowledge beyond the data.</p></li>
+</ul>
+</li>
+<li><p><strong>Example</strong>: If you flip a coin 1000 times and get 510 heads, the Frequentist estimate of the probability of heads is:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(\text{Heads}) \approx \frac{510}{1000} = 0.51
+\]</div>
+<ul class="simple">
+<li><p><strong>In Machine Learning</strong>: Frequentist methods estimate model parameters (e.g., weights in logistic regression) using maximum likelihood, assuming the data is a random sample from a fixed distribution.</p></li>
+<li><p><strong>Limitations</strong>:</p>
+<ul>
+<li><p>Requires large sample sizes for reliable estimates.</p></li>
+<li><p>Does not naturally incorporate prior knowledge or uncertainty about parameters.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="bayesian-probability">
+<h3>1.2. Bayesian Probability<a class="headerlink" href="#bayesian-probability" title="Link to this heading">#</a></h3>
+<p>The Bayesian approach treats probability as a measure of belief or uncertainty about an event, updated with new evidence.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: Probability <span class="math notranslate nohighlight">\(P(A)\)</span> represents the degree of belief in event <span class="math notranslate nohighlight">\(A\)</span>, quantified using Bayes’ Theorem:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+\]</div>
+<ul class="simple">
+<li><p><strong>Key Characteristics</strong>:</p>
+<ul>
+<li><p>Parameters are treated as random variables with probability distributions.</p></li>
+<li><p>Prior beliefs about parameters (<span class="math notranslate nohighlight">\(P(A)\)</span>) are updated with observed data (<span class="math notranslate nohighlight">\(P(B|A)\)</span>) to form the posterior distribution (<span class="math notranslate nohighlight">\(P(A|B)\)</span>).</p></li>
+<li><p>Inference involves computing the full posterior distribution or summarizing it (e.g., mean, mode).</p></li>
+<li><p>Naturally incorporates prior knowledge via the prior distribution.</p></li>
+</ul>
+</li>
+<li><p><strong>Example</strong>: Suppose you believe a coin is fair (prior: <span class="math notranslate nohighlight">\(P(\theta = 0.5) = 0.9\)</span>, where <span class="math notranslate nohighlight">\(\theta\)</span> is the probability of heads) but allow for bias (e.g., a Beta distribution prior). After observing 510 heads in 1000 flips, you update the prior using the likelihood to get a posterior distribution for <span class="math notranslate nohighlight">\(\theta\)</span>, which might center around 0.51 but reflect uncertainty.</p></li>
+<li><p><strong>In Machine Learning</strong>: Bayesian methods model uncertainty in parameters (e.g., Bayesian linear regression) and are used in algorithms like Naive Bayes, which relies on Bayes’ Theorem to compute posterior probabilities.</p></li>
+<li><p><strong>Advantages</strong>:</p>
+<ul>
+<li><p>Incorporates prior knowledge, useful for small datasets.</p></li>
+<li><p>Provides full uncertainty quantification via the posterior.</p></li>
+</ul>
+</li>
+<li><p><strong>Limitations</strong>:</p>
+<ul>
+<li><p>Computationally intensive (e.g., integrating over posterior distributions).</p></li>
+<li><p>Choice of prior can be subjective.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="generative-vs-discriminative-models">
+<h2>2. Generative vs. Discriminative Models<a class="headerlink" href="#generative-vs-discriminative-models" title="Link to this heading">#</a></h2>
+<p>Machine learning models can be categorized as <strong>generative</strong> or <strong>discriminative</strong> based on what they model and how they approach classification. Naive Bayes is a generative model.</p>
+<section id="generative-models">
+<h3>2.1. Generative Models<a class="headerlink" href="#generative-models" title="Link to this heading">#</a></h3>
+<p>Generative models learn the joint probability distribution <span class="math notranslate nohighlight">\(P(X, C)\)</span> of the features <span class="math notranslate nohighlight">\(X\)</span> and class <span class="math notranslate nohighlight">\(C\)</span>, allowing them to generate new data similar to the training set.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: A generative model models:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(X, C) = P(X|C) \cdot P(C)
+\]</div>
+<p>For classification, it uses Bayes’ Theorem to compute the posterior:</p>
+<div class="math notranslate nohighlight">
+\[
+P(C|X) = \frac{P(X|C) \cdot P(C)}{P(X)}
+\]</div>
+<ul class="simple">
+<li><p><strong>Key Characteristics</strong>:</p>
+<ul>
+<li><p>Models how the data is generated (i.e., the distribution of <span class="math notranslate nohighlight">\(X\)</span> for each class <span class="math notranslate nohighlight">\(C\)</span>).</p></li>
+<li><p>Can generate synthetic data by sampling from <span class="math notranslate nohighlight">\(P(X|C)\)</span>.</p></li>
+<li><p>Requires estimating both <span class="math notranslate nohighlight">\(P(X|C)\)</span> (likelihood) and <span class="math notranslate nohighlight">\(P(C)\)</span> (prior).</p></li>
+<li><p>Often more robust to missing data or small datasets because it models the full joint distribution.</p></li>
+</ul>
+</li>
+<li><p><strong>Examples</strong>:</p>
+<ul>
+<li><p><strong>Naive Bayes</strong>: Assumes features are conditionally independent given the class, modeling <span class="math notranslate nohighlight">\(P(X|C) = \prod_i P(x_i|C)\)</span>.</p></li>
+<li><p>Gaussian Mixture Models (GMMs).</p></li>
+<li><p>Hidden Markov Models (HMMs).</p></li>
+</ul>
+</li>
+<li><p><strong>In Naive Bayes</strong>: For a data point <span class="math notranslate nohighlight">\(X = \{x_1, x_2, \dots, x_n\}\)</span>, Naive Bayes models:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(X|C) = \prod_{i=1}^n P(x_i|C)
+\]</div>
+<p>and uses the prior <span class="math notranslate nohighlight">\(P(C)\)</span> to compute <span class="math notranslate nohighlight">\(P(C|X)\)</span>. It can generate new data by sampling feature values from <span class="math notranslate nohighlight">\(P(x_i|C)\)</span> for a given class.</p>
+<ul class="simple">
+<li><p><strong>Advantages</strong>:</p>
+<ul>
+<li><p>Can handle missing features by marginalizing over them.</p></li>
+<li><p>Useful for tasks beyond classification (e.g., data generation).</p></li>
+<li><p>Works well with small datasets if the generative assumptions hold.</p></li>
+</ul>
+</li>
+<li><p><strong>Limitations</strong>:</p>
+<ul>
+<li><p>Requires strong assumptions (e.g., feature independence in Naive Bayes).</p></li>
+<li><p>May not focus directly on the decision boundary, potentially leading to suboptimal classification performance.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="discriminative-models">
+<h3>2.2. Discriminative Models<a class="headerlink" href="#discriminative-models" title="Link to this heading">#</a></h3>
+<p>Discriminative models learn the conditional probability <span class="math notranslate nohighlight">\(P(C|X)\)</span> or directly model the decision boundary between classes, focusing on classification.</p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: A discriminative model directly models:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(C|X)
+\]</div>
+<p>or learns a mapping from <span class="math notranslate nohighlight">\(X\)</span> to <span class="math notranslate nohighlight">\(C\)</span> without modeling the data distribution.</p>
+<ul class="simple">
+<li><p><strong>Key Characteristics</strong>:</p>
+<ul>
+<li><p>Focuses on distinguishing classes rather than modeling how data is generated.</p></li>
+<li><p>Often simpler to train for classification tasks since it avoids modeling <span class="math notranslate nohighlight">\(P(X)\)</span>.</p></li>
+<li><p>Typically better at classification accuracy for large datasets.</p></li>
+</ul>
+</li>
+<li><p><strong>Examples</strong>:</p>
+<ul>
+<li><p>Logistic Regression: Models <span class="math notranslate nohighlight">\(P(C|X)\)</span> using a logistic function.</p></li>
+<li><p>Support Vector Machines (SVMs): Learns the decision boundary directly.</p></li>
+<li><p>Neural Networks: Often used as discriminative models for classification.</p></li>
+</ul>
+</li>
+<li><p><strong>In Context</strong>: Unlike Naive Bayes, logistic regression directly estimates:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P(C|X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_1 + \dots + \beta_n x_n)}}
+\]</div>
+<p>without modeling <span class="math notranslate nohighlight">\(P(X|C)\)</span> or <span class="math notranslate nohighlight">\(P(C)\)</span>.</p>
+<ul class="simple">
+<li><p><strong>Advantages</strong>:</p>
+<ul>
+<li><p>Often more accurate for classification, especially with large datasets.</p></li>
+<li><p>Less sensitive to incorrect assumptions about data distribution.</p></li>
+</ul>
+</li>
+<li><p><strong>Limitations</strong>:</p>
+<ul>
+<li><p>Cannot generate data or handle missing features as naturally.</p></li>
+<li><p>May require more data to achieve good performance.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="parametric-vs-non-parametric-models">
+<h2>3. Parametric vs. Non-Parametric Models<a class="headerlink" href="#parametric-vs-non-parametric-models" title="Link to this heading">#</a></h2>
+<section id="parametric-models">
+<h3><strong>1. Parametric Models</strong><a class="headerlink" href="#parametric-models" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Assume a fixed functional form with <strong>finite parameters</strong> <span class="math notranslate nohighlight">\( \theta \)</span>, independent of data size <span class="math notranslate nohighlight">\( n \)</span>.</p></li>
+<li><p><strong>Model</strong>: <span class="math notranslate nohighlight">\( p(y|x, \theta) \)</span>, where <span class="math notranslate nohighlight">\( \theta \in \mathbb{R}^d \)</span> (e.g., <span class="math notranslate nohighlight">\( d = \text{dim}(\theta) \)</span>).</p></li>
+</ul>
+</section>
+<section id="non-parametric-models">
+<h3><strong>2. Non-Parametric Models</strong><a class="headerlink" href="#non-parametric-models" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>No fixed form</strong>; model complexity grows with <span class="math notranslate nohighlight">\( n \)</span>.</p></li>
+<li><p><strong>Model</strong>: Relies directly on data (e.g., kernel methods, distances).</p></li>
+<li><p><strong>Example (k-Nearest Neighbors)</strong>:<br />
+[
+\hat{y}(x) = \frac{1}{k} \sum_{i \in \mathcal{N}_k(x)} y_i, \quad \mathcal{N}_k(x) = \text{k closest points to } x
+]</p></li>
+<li><p><strong>Learning</strong>: Stores/adapts to data (e.g., kernel density estimation: <span class="math notranslate nohighlight">\( p(x) = \frac{1}{n} \sum_{i=1}^n K_h(x - x_i) \)</span>).</p></li>
+</ul>
+</section>
+<section id="key-difference">
+<h3><strong>Key Difference</strong><a class="headerlink" href="#key-difference" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Parametric</strong>: Fixed <span class="math notranslate nohighlight">\( \dim(\theta) \)</span> (e.g., <span class="math notranslate nohighlight">\( O(d) \)</span>).</p></li>
+<li><p><strong>Non-Parametric</strong>: Grows with <span class="math notranslate nohighlight">\( n \)</span> (e.g., <span class="math notranslate nohighlight">\( O(n) \)</span> for kNN).</p></li>
+</ul>
+<p><strong>Trade-off</strong>: Bias (parametric) vs. Variance (non-parametric).</p>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="turning-text-into-numbers-for-machine-learning-with-naive-bayes">
+<h1>Turning Text into Numbers for Machine Learning with Naive Bayes<a class="headerlink" href="#turning-text-into-numbers-for-machine-learning-with-naive-bayes" title="Link to this heading">#</a></h1>
+<section id="turning-text-into-usable-data">
+<h2>Turning Text into Usable Data<a class="headerlink" href="#turning-text-into-usable-data" title="Link to this heading">#</a></h2>
+<p>Each piece of data, called <span class="math notranslate nohighlight">\( x \)</span>, is a string of text (like an email or message) that can be any length. To use this text with machine learning, we need to convert it into a list of numbers, called a <span class="math notranslate nohighlight">\( d \)</span>-dimensional feature vector <span class="math notranslate nohighlight">\( \phi(x) \)</span>, where <span class="math notranslate nohighlight">\( d \)</span> is the number of features (like characteristics we measure).</p>
+<section id="ways-to-convert-text-to-numbers">
+<h3>Ways to Convert Text to Numbers<a class="headerlink" href="#ways-to-convert-text-to-numbers" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Custom Features</strong>:</p>
+<ul class="simple">
+<li><p>Look at the text and create features based on what you know about it.</p></li>
+<li><p>Examples:</p>
+<ul>
+<li><p>Does the text have the word “church”? (<span class="math notranslate nohighlight">\( x_j = 1 \)</span> if yes, <span class="math notranslate nohighlight">\( 0 \)</span> if no)</p></li>
+<li><p>Is the email sent from outside the U.S.? (<span class="math notranslate nohighlight">\( x_j = 1 \)</span> if yes, <span class="math notranslate nohighlight">\( 0 \)</span> if no)</p></li>
+<li><p>Is the sender a university? (<span class="math notranslate nohighlight">\( x_j = 1 \)</span> if yes, <span class="math notranslate nohighlight">\( 0 \)</span> if no)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Word Presence Features</strong>:</p>
+<ul class="simple">
+<li><p>Make a list of words (called a vocabulary) and check if each word is in the text.</p></li>
+<li><p>For words like “Aardvark”, “Apple”, …, “Zebra”:</p>
+<ul>
+<li><p>Set <span class="math notranslate nohighlight">\( x_j = 1 \)</span> if the word is in the text, <span class="math notranslate nohighlight">\( 0 \)</span> if it’s not.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Deep Learning Methods</strong>:</p>
+<ul class="simple">
+<li><p>Advanced machine learning techniques can work directly with raw text, using tools like neural networks that understand sequences of letters or words.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="bag-of-words-model">
+<h3>Bag of Words Model<a class="headerlink" href="#bag-of-words-model" title="Link to this heading">#</a></h3>
+<p>A common way to represent text is the <strong>bag of words</strong> model, which treats text like a bag of words, ignoring their order.</p>
+<ul class="simple">
+<li><p><strong>Vocabulary</strong>:</p>
+<ul>
+<li><p>Create a list of words to track, called the vocabulary <span class="math notranslate nohighlight">\( V \)</span>:
+$<span class="math notranslate nohighlight">\( V = \{\text{church}, \text{doctor}, \text{fervently}, \text{purple}, \text{slow}, \dots\} \)</span>$</p></li>
+</ul>
+</li>
+<li><p><strong>Feature Vector</strong>:</p>
+<ul>
+<li><p>Turn a text <span class="math notranslate nohighlight">\( x \)</span> into a list of 1s and 0s, with one number for each word in <span class="math notranslate nohighlight">\( V \)</span>. This list is <span class="math notranslate nohighlight">\( \phi(x) \)</span>, and its length is the number of words in <span class="math notranslate nohighlight">\( V \)</span>, written <span class="math notranslate nohighlight">\( |V| \)</span>:
+$<span class="math notranslate nohighlight">\(
+\phi(x) = \begin{pmatrix}
+0 \\
+1 \\
+0 \\
+\vdots \\
+1 \\
+\vdots
+\end{pmatrix}
+\begin{array}{l}
+\text{church} \\
+\text{doctor} \\
+\text{fervently} \\
+\vdots \\
+\text{purple} \\
+\vdots
+\end{array}
+\)</span>$</p></li>
+<li><p>Each number <span class="math notranslate nohighlight">\( \phi(x)_j \)</span> is <span class="math notranslate nohighlight">\( 1 \)</span> if the <span class="math notranslate nohighlight">\( j \)</span>-th word in <span class="math notranslate nohighlight">\( V \)</span> is in the text, or <span class="math notranslate nohighlight">\( 0 \)</span> if it’s not. For example, if “doctor” is in the text, the second number is <span class="math notranslate nohighlight">\( 1 \)</span>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="building-a-model-to-classify-text">
+<h2>Building a Model to Classify Text<a class="headerlink" href="#building-a-model-to-classify-text" title="Link to this heading">#</a></h2>
+<p>For binary classification (e.g., spam vs. not spam), we create two models using a dataset with labeled examples (texts marked as spam or not):
+\begin{align*}
+P_\theta(x|y=0) &amp;&amp; \text{and} &amp;&amp; P_\theta(x|y=1)
+\end{align*}</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x|y=0) \)</span> tells us how likely a text <span class="math notranslate nohighlight">\( x \)</span> is to be not spam (<span class="math notranslate nohighlight">\( y=0 \)</span>).</p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x|y=1) \)</span> tells us how likely it is to be spam (<span class="math notranslate nohighlight">\( y=1 \)</span>).</p></li>
+<li><p>The <span class="math notranslate nohighlight">\( \theta \)</span> means these probabilities depend on parameters we’ll learn, and we use the bag-of-words representation for <span class="math notranslate nohighlight">\( x \)</span>.</p></li>
+</ul>
+<section id="what-is-a-categorical-distribution">
+<h3>What is a Categorical Distribution?<a class="headerlink" href="#what-is-a-categorical-distribution" title="Link to this heading">#</a></h3>
+<p>A <strong>Categorical</strong> distribution is like rolling a die with <span class="math notranslate nohighlight">\( K \)</span> sides, where each side has a probability:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x = j) = \theta_j
+\)</span>$</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( x \)</span> can be one of <span class="math notranslate nohighlight">\( K \)</span> outcomes (like 1, 2, …, <span class="math notranslate nohighlight">\( K \)</span>).</p></li>
+<li><p><span class="math notranslate nohighlight">\( \theta_j \)</span> is the probability of outcome <span class="math notranslate nohighlight">\( j \)</span>.</p></li>
+<li><p>When <span class="math notranslate nohighlight">\( K=2 \)</span> (e.g., yes/no), it’s called a <strong>Bernoulli</strong> distribution, like flipping a coin.</p></li>
+</ul>
+</section>
+<section id="naive-bayes-simplification">
+<h3>Naive Bayes Simplification<a class="headerlink" href="#naive-bayes-simplification" title="Link to this heading">#</a></h3>
+<p>Text data can have many words (e.g., 10,000), making it hard to calculate probabilities for every possible combination of words. The <strong>Naive Bayes</strong> assumption simplifies this by assuming each word’s presence is independent of the others:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x = x' | y) = \prod_{j=1}^d P_\theta(x_j = x_j' | y)
+\)</span>$</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( x \)</span> is the text’s feature vector, and <span class="math notranslate nohighlight">\( x' \)</span> is a specific vector (e.g., <span class="math notranslate nohighlight">\( [0, 1, 0, \dots] \)</span>).</p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x = x' | y) \)</span> is the probability that a text has the exact word pattern <span class="math notranslate nohighlight">\( x' \)</span> given its class <span class="math notranslate nohighlight">\( y \)</span>.</p></li>
+<li><p>The product <span class="math notranslate nohighlight">\( \prod \)</span> means we multiply the probabilities for each word’s presence or absence.</p></li>
+</ul>
+<p>For example, if a text has:
+$<span class="math notranslate nohighlight">\(
+x = \left( \begin{array}{c}
+0 \\
+1 \\
+0 \\
+\vdots \\
+0
+\end{array} \right) \begin{array}{l}
+\text{church} \\
+\text{doctor} \\
+\text{fervently} \\
+\vdots \\
+\text{purple}
+\end{array}
+\)</span><span class="math notranslate nohighlight">\(
+The probability it belongs to class \)</span> y <span class="math notranslate nohighlight">\( (e.g., spam) is:
+\)</span><span class="math notranslate nohighlight">\(
+P_\theta \left( x = \left( \begin{array}{c}
+0 \\
+1 \\
+0 \\
+\vdots \\
+0
+\end{array} \right) \middle| y \right) = P_\theta(x_1=0|y) \cdot P_\theta(x_2=1|y) \cdot \dots \cdot P_\theta(x_d=0|y)
+\)</span>$</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_1=0|y) \)</span> is the chance “church” is absent given class <span class="math notranslate nohighlight">\( y \)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_2=1|y) \)</span> is the chance “doctor” is present, and so on.</p></li>
+</ul>
+<section id="parameters-in-naive-bayes">
+<h4>Parameters in Naive Bayes<a class="headerlink" href="#parameters-in-naive-bayes" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Each word’s probability <span class="math notranslate nohighlight">\( P_\theta(x_j | y=k) \)</span> is a Bernoulli distribution with a parameter <span class="math notranslate nohighlight">\( \psi_{jk} \)</span>:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x_j = 1 | y=k) = \psi_{jk}, \quad P_\theta(x_j = 0 | y=k) = 1 - \psi_{jk}
+\)</span>$</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\( \psi_{jk} \)</span> is the probability that word <span class="math notranslate nohighlight">\( j \)</span> appears in class <span class="math notranslate nohighlight">\( k \)</span>.</p></li>
+</ul>
+</li>
+<li><p>If we have <span class="math notranslate nohighlight">\( K \)</span> classes (e.g., spam and not spam, so <span class="math notranslate nohighlight">\( K=2 \)</span>) and <span class="math notranslate nohighlight">\( d \)</span> words, we need <span class="math notranslate nohighlight">\( Kd \)</span> parameters, which is much simpler than calculating every possible text combination.</p></li>
+</ul>
+</section>
+<section id="naive-bayes-for-bag-of-words">
+<h4>Naive Bayes for Bag of Words<a class="headerlink" href="#naive-bayes-for-bag-of-words" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>The chance a text <span class="math notranslate nohighlight">\( x \)</span> has a specific word pattern <span class="math notranslate nohighlight">\( x' \)</span> in class <span class="math notranslate nohighlight">\( k \)</span>:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x = x' | y=k) = \prod_{j=1}^d P_\theta(x_j = x_j' | y=k)
+\)</span>$</p></li>
+<li><p>Each word’s presence is a Bernoulli:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x_j = 1 | y=k) = \psi_{jk}, \quad P_\theta(x_j = 0 | y=k) = 1 - \psi_{jk}
+\)</span>$</p></li>
+<li><p>We need <span class="math notranslate nohighlight">\( Kd \)</span> parameters, where <span class="math notranslate nohighlight">\( \psi_{jk} \)</span> is the chance word <span class="math notranslate nohighlight">\( j \)</span> is in a text of class <span class="math notranslate nohighlight">\( k \)</span>.</p></li>
+</ul>
+</section>
+<section id="does-naive-bayes-work-well">
+<h4>Does Naive Bayes Work Well?<a class="headerlink" href="#does-naive-bayes-work-well" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Problem</strong>: It assumes words don’t affect each other, but in real life, words like “bank” and “account” often appear together in spam.</p></li>
+<li><p><strong>Effect</strong>: This can make the model’s probabilities too extreme (over- or under-confident).</p></li>
+<li><p><strong>Benefit</strong>: Even with this flaw, Naive Bayes often classifies texts accurately, making it a practical choice.</p></li>
+</ul>
+</section>
+</section>
+<section id="setting-up-class-probabilities">
+<h3>Setting Up Class Probabilities<a class="headerlink" href="#setting-up-class-probabilities" title="Link to this heading">#</a></h3>
+<p>We need a starting guess for how likely each class is, called the prior <span class="math notranslate nohighlight">\( P_\theta(y=k) \)</span>:</p>
+<ul class="simple">
+<li><p>Use a Categorical distribution with parameters <span class="math notranslate nohighlight">\( \vec{\phi} = (\phi_1, \dots, \phi_K) \)</span>:
+$<span class="math notranslate nohighlight">\(
+P_\theta(y=k) = \phi_k
+\)</span>$</p></li>
+<li><p>We can learn <span class="math notranslate nohighlight">\( \phi_k \)</span> from the data, like counting how many texts are spam vs. not spam.</p></li>
+</ul>
+</section>
+<section id="bernoulli-naive-bayes-model">
+<h3>Bernoulli Naive Bayes Model<a class="headerlink" href="#bernoulli-naive-bayes-model" title="Link to this heading">#</a></h3>
+<p>The <strong>Bernoulli Naive Bayes</strong> model works with binary data <span class="math notranslate nohighlight">\( x \in \{0,1\}^d \)</span> (e.g., bag-of-words where each word is present or absent):</p>
+<ul class="simple">
+<li><p><strong>Parameters</strong>: <span class="math notranslate nohighlight">\( \theta = (\phi_1, \dots, \phi_K, \psi_{11}, \dots, \psi_{dK}) \)</span>, totaling <span class="math notranslate nohighlight">\( K(d+1) \)</span> parameters.</p></li>
+<li><p><strong>Class Prior</strong>:
+$<span class="math notranslate nohighlight">\(
+P_\theta(y) = \text{Categorical}(\phi_1, \phi_2, \dots, \phi_K)
+\)</span>$</p></li>
+<li><p><strong>Word Probabilities</strong>:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x_j = 1 | y=k) = \text{Bernoulli}(\psi_{jk})
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+P_\theta(x | y=k) = \prod_{j=1}^d P_\theta(x_j | y=k)
+\)</span>$</p></li>
+</ul>
+</section>
+</section>
+<section id="learning-the-models-parameters">
+<h2>Learning the Model’s Parameters<a class="headerlink" href="#learning-the-models-parameters" title="Link to this heading">#</a></h2>
+<section id="learning-class-probabilities-phi-k">
+<h3>Learning Class Probabilities <span class="math notranslate nohighlight">\( \phi_k \)</span><a class="headerlink" href="#learning-class-probabilities-phi-k" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Suppose we have <span class="math notranslate nohighlight">\( n \)</span> texts, and <span class="math notranslate nohighlight">\( n_k \)</span> of them belong to class <span class="math notranslate nohighlight">\( k \)</span> (e.g., <span class="math notranslate nohighlight">\( n_k \)</span> spam emails).</p></li>
+<li><p>The best estimate for <span class="math notranslate nohighlight">\( \phi_k \)</span> is:
+$<span class="math notranslate nohighlight">\(
+\phi_k = \frac{n_k}{n}
+\)</span>$</p></li>
+<li><p>This is just the fraction of texts in class <span class="math notranslate nohighlight">\( k \)</span>. For example, if 30 out of 100 emails are spam, <span class="math notranslate nohighlight">\( \phi_{\text{spam}} = 0.3 \)</span>.</p></li>
+</ul>
+</section>
+<section id="learning-word-probabilities-psi-jk">
+<h3>Learning Word Probabilities <span class="math notranslate nohighlight">\( \psi_{jk} \)</span><a class="headerlink" href="#learning-word-probabilities-psi-jk" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>For each class <span class="math notranslate nohighlight">\( k \)</span> and word <span class="math notranslate nohighlight">\( j \)</span>, <span class="math notranslate nohighlight">\( \psi_{jk} \)</span> is the chance that word <span class="math notranslate nohighlight">\( j \)</span> appears in texts of class <span class="math notranslate nohighlight">\( k \)</span>:
+$<span class="math notranslate nohighlight">\(
+\psi_{jk} = \frac{n_{jk}}{n_k}
+\)</span>$</p></li>
+<li><p><span class="math notranslate nohighlight">\( n_{jk} \)</span> is the number of texts in class <span class="math notranslate nohighlight">\( k \)</span> that contain word <span class="math notranslate nohighlight">\( j \)</span>.</p></li>
+<li><p>Example: If 20 out of 50 spam emails contain “doctor”, then <span class="math notranslate nohighlight">\( \psi_{\text{doctor,spam}} = \frac{20}{50} = 0.4 \)</span>.</p></li>
+</ul>
+</section>
+<section id="making-predictions">
+<h3>Making Predictions<a class="headerlink" href="#making-predictions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>To classify a new text, use Bayes’ rule to find the most likely class:
+$<span class="math notranslate nohighlight">\(
+\arg\max_y P_\theta(y|x) = \arg\max_y P_\theta(x|y)P_\theta(y)
+\)</span>$</p></li>
+<li><p>Calculate <span class="math notranslate nohighlight">\( P_\theta(x|y=k)P_\theta(y=k) \)</span> for each class <span class="math notranslate nohighlight">\( k \)</span> (e.g., spam and not spam), and pick the class with the highest value.</p></li>
+<li><p>Think of it like scoring how “spam-like” or “not-spam-like” the text is, then choosing the best match.</p></li>
+</ul>
+</section>
+<section id="example-scenario">
+<h3>Example Scenario<a class="headerlink" href="#example-scenario" title="Link to this heading">#</a></h3>
+<p>Suppose we have a small dataset of emails, and we want to classify them into three categories: Spam (<span class="math notranslate nohighlight">\( y = 1 \)</span>), Work (<span class="math notranslate nohighlight">\( y = 2 \)</span>), or Personal (<span class="math notranslate nohighlight">\( y = 3 \)</span>). Each email is represented as a bag-of-words feature vector based on a small vocabulary of four words: “deal,” “meeting,” “friend,” and “family” (<span class="math notranslate nohighlight">\( d = 4 \)</span>). We’ll use the Bernoulli Naive Bayes model to:</p>
+<ol class="arabic simple">
+<li><p>Represent the emails as feature vectors.</p></li>
+<li><p>Estimate the model parameters (<span class="math notranslate nohighlight">\( \phi_k \)</span> and <span class="math notranslate nohighlight">\( \psi_{jk} \)</span>).</p></li>
+<li><p>Predict the class of a new email.</p></li>
+</ol>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="example-classifying-emails-with-naive-bayes-three-categories">
+<h1>Example: Classifying Emails with Naive Bayes (Three Categories)<a class="headerlink" href="#example-classifying-emails-with-naive-bayes-three-categories" title="Link to this heading">#</a></h1>
+<p>This example applies the Naive Bayes model from the provided text to classify emails into three categories: Spam, Work, or Personal, using a small vocabulary. We’ll use the same math and concepts, showing how they work with <span class="math notranslate nohighlight">\( K = 3 \)</span> classes.</p>
+<section id="step-1-representing-emails-as-feature-vectors">
+<h2>Step 1: Representing Emails as Feature Vectors<a class="headerlink" href="#step-1-representing-emails-as-feature-vectors" title="Link to this heading">#</a></h2>
+<p>Each email <span class="math notranslate nohighlight">\( x \)</span> is a sequence of words. We convert it into a <span class="math notranslate nohighlight">\( d \)</span>-dimensional feature vector <span class="math notranslate nohighlight">\( \phi(x) \)</span> using the <strong>bag of words</strong> model.</p>
+<section id="vocabulary">
+<h3>Vocabulary<a class="headerlink" href="#vocabulary" title="Link to this heading">#</a></h3>
+<p>Define a vocabulary <span class="math notranslate nohighlight">\( V \)</span> with <span class="math notranslate nohighlight">\( d = 4 \)</span> words:
+$<span class="math notranslate nohighlight">\(
+V = \{\text{deal}, \text{meeting}, \text{friend}, \text{family}\}
+\)</span>$</p>
+</section>
+<section id="feature-vector">
+<h3>Feature Vector<a class="headerlink" href="#feature-vector" title="Link to this heading">#</a></h3>
+<p>For an email <span class="math notranslate nohighlight">\( x \)</span>, we create a binary vector <span class="math notranslate nohighlight">\( \phi(x) \in \{0,1\}^4 \)</span>:
+$<span class="math notranslate nohighlight">\(
+\phi(x) = \begin{pmatrix}
+x_1 \\
+x_2 \\
+x_3 \\
+x_4
+\end{pmatrix}
+\begin{array}{l}
+\text{deal} \\
+\text{meeting} \\
+\text{friend} \\
+\text{family}
+\end{array}
+\)</span>$</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( x_j = 1 \)</span> if word <span class="math notranslate nohighlight">\( j \)</span> (e.g., “deal”) is in the email, else <span class="math notranslate nohighlight">\( x_j = 0 \)</span>.</p></li>
+<li><p>Example: If an email contains “meeting” and “friend” but not “deal” or “family,” its feature vector is:
+$<span class="math notranslate nohighlight">\(
+\phi(x) = \begin{pmatrix}
+0 \\
+1 \\
+1 \\
+0
+\end{pmatrix}
+\)</span>$</p></li>
+</ul>
+</section>
+</section>
+<section id="step-2-dataset">
+<h2>Step 2: Dataset<a class="headerlink" href="#step-2-dataset" title="Link to this heading">#</a></h2>
+<p>Suppose we have a small training dataset with <span class="math notranslate nohighlight">\( n = 10 \)</span> emails, labeled as Spam (<span class="math notranslate nohighlight">\( y = 1 \)</span>), Work (<span class="math notranslate nohighlight">\( y = 2 \)</span>), or Personal (<span class="math notranslate nohighlight">\( y = 3 \)</span>):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Email ID</p></th>
+<th class="head"><p>Words Present</p></th>
+<th class="head"><p>Class (<span class="math notranslate nohighlight">\( y \)</span>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>deal, friend</p></td>
+<td><p>Spam (1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>deal</p></td>
+<td><p>Spam (1)</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>meeting, friend</p></td>
+<td><p>Work (2)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>meeting</p></td>
+<td><p>Work (2)</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>meeting, family</p></td>
+<td><p>Work (2)</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>friend, family</p></td>
+<td><p>Personal (3)</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>family</p></td>
+<td><p>Personal (3)</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>friend</p></td>
+<td><p>Personal (3)</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>deal, meeting</p></td>
+<td><p>Spam (1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>friend, family</p></td>
+<td><p>Personal (3)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="feature-vectors">
+<h3>Feature Vectors<a class="headerlink" href="#feature-vectors" title="Link to this heading">#</a></h3>
+<p>Each email is converted to a 4D binary vector:</p>
+<ul class="simple">
+<li><p>Email 1: <span class="math notranslate nohighlight">\( x^{(1)} = [1, 0, 1, 0] \)</span> (deal, friend)</p></li>
+<li><p>Email 2: <span class="math notranslate nohighlight">\( x^{(2)} = [1, 0, 0, 0] \)</span> (deal)</p></li>
+<li><p>Email 3: <span class="math notranslate nohighlight">\( x^{(3)} = [0, 1, 1, 0] \)</span> (meeting, friend)</p></li>
+<li><p>…</p></li>
+<li><p>Email 10: <span class="math notranslate nohighlight">\( x^{(10)} = [0, 0, 1, 1] \)</span> (friend, family)</p></li>
+</ul>
+</section>
+</section>
+<section id="step-3-bernoulli-naive-bayes-model">
+<h2>Step 3: Bernoulli Naive Bayes Model<a class="headerlink" href="#step-3-bernoulli-naive-bayes-model" title="Link to this heading">#</a></h2>
+<p>We use the <strong>Bernoulli Naive Bayes</strong> model for binary data <span class="math notranslate nohighlight">\( x \in \{0,1\}^4 \)</span>, with three classes (<span class="math notranslate nohighlight">\( K = 3 \)</span>).</p>
+<section id="model-components">
+<h3>Model Components<a class="headerlink" href="#model-components" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Parameters</strong>: <span class="math notranslate nohighlight">\( \theta = (\phi_1, \phi_2, \phi_3, \psi_{11}, \psi_{21}, \dots, \psi_{43}) \)</span>, with <span class="math notranslate nohighlight">\( K(d+1) = 3(4+1) = 15 \)</span> parameters.</p></li>
+<li><p><strong>Class Prior</strong>:
+$<span class="math notranslate nohighlight">\(
+P_\theta(y) = \text{Categorical}(\phi_1, \phi_2, \phi_3)
+\)</span>$</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\( \phi_k \)</span> is the probability of class <span class="math notranslate nohighlight">\( k \)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>Feature Likelihood</strong>:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x_j = 1 | y=k) = \text{Bernoulli}(\psi_{jk})
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+P_\theta(x | y=k) = \prod_{j=1}^4 P_\theta(x_j | y=k)
+\)</span>$</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\( \psi_{jk} \)</span> is the probability that word <span class="math notranslate nohighlight">\( j \)</span> is present in class <span class="math notranslate nohighlight">\( k \)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_j = 0 | y=k) = 1 - \psi_{jk} \)</span>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="naive-bayes-assumption">
+<h3>Naive Bayes Assumption<a class="headerlink" href="#naive-bayes-assumption" title="Link to this heading">#</a></h3>
+<p>We assume words are independent given the class:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x = x' | y=k) = \prod_{j=1}^4 P_\theta(x_j = x_j' | y=k)
+\)</span><span class="math notranslate nohighlight">\(
+For a vector \)</span> x’ = [0, 1, 1, 0] <span class="math notranslate nohighlight">\(:
+\)</span><span class="math notranslate nohighlight">\(
+P_\theta \left( x = \begin{pmatrix}
+0 \\
+1 \\
+1 \\
+0
+\end{pmatrix} \middle| y=k \right) = P_\theta(x_1=0|y=k) \cdot P_\theta(x_2=1|y=k) \cdot P_\theta(x_3=1|y=k) \cdot P_\theta(x_4=0|y=k)
+\)</span>$</p>
+</section>
+</section>
+<section id="step-4-learning-parameters">
+<h2>Step 4: Learning Parameters<a class="headerlink" href="#step-4-learning-parameters" title="Link to this heading">#</a></h2>
+<section id="learning-class-priors-phi-k">
+<h3>Learning Class Priors <span class="math notranslate nohighlight">\( \phi_k \)</span><a class="headerlink" href="#learning-class-priors-phi-k" title="Link to this heading">#</a></h3>
+<p>Count the number of emails in each class:</p>
+<ul class="simple">
+<li><p>Spam (<span class="math notranslate nohighlight">\( y = 1 \)</span>): <span class="math notranslate nohighlight">\( n_1 = 3 \)</span> (Emails 1, 2, 9)</p></li>
+<li><p>Work (<span class="math notranslate nohighlight">\( y = 2 \)</span>): <span class="math notranslate nohighlight">\( n_2 = 3 \)</span> (Emails 3, 4, 5)</p></li>
+<li><p>Personal (<span class="math notranslate nohighlight">\( y = 3 \)</span>): <span class="math notranslate nohighlight">\( n_3 = 4 \)</span> (Emails 6, 7, 8, 10)</p></li>
+<li><p>Total emails: <span class="math notranslate nohighlight">\( n = 10 \)</span></p></li>
+</ul>
+<p>The prior probabilities are:
+$<span class="math notranslate nohighlight">\(
+\phi_k = \frac{n_k}{n}
+\)</span>$</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( \phi_1 = \frac{3}{10} = 0.3 \)</span> (Spam)</p></li>
+<li><p><span class="math notranslate nohighlight">\( \phi_2 = \frac{3}{10} = 0.3 \)</span> (Work)</p></li>
+<li><p><span class="math notranslate nohighlight">\( \phi_3 = \frac{4}{10} = 0.4 \)</span> (Personal)</p></li>
+</ul>
+</section>
+<section id="learning-feature-parameters-psi-jk">
+<h3>Learning Feature Parameters <span class="math notranslate nohighlight">\( \psi_{jk} \)</span><a class="headerlink" href="#learning-feature-parameters-psi-jk" title="Link to this heading">#</a></h3>
+<p>For each class <span class="math notranslate nohighlight">\( k \)</span> and word <span class="math notranslate nohighlight">\( j \)</span>, compute:
+$<span class="math notranslate nohighlight">\(
+\psi_{jk} = \frac{n_{jk}}{n_k}
+\)</span>$</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( n_{jk} \)</span> is the number of emails in class <span class="math notranslate nohighlight">\( k \)</span> where word <span class="math notranslate nohighlight">\( j \)</span> is present.</p></li>
+<li><p><span class="math notranslate nohighlight">\( n_k \)</span> is the number of emails in class <span class="math notranslate nohighlight">\( k \)</span>.</p></li>
+</ul>
+<section id="spam-k-1-n-1-3">
+<h4>Spam (<span class="math notranslate nohighlight">\( k = 1 \)</span>, <span class="math notranslate nohighlight">\( n_1 = 3 \)</span>)<a class="headerlink" href="#spam-k-1-n-1-3" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Word 1 (deal): Present in Emails 1, 2, 9 (<span class="math notranslate nohighlight">\( n_{11} = 3 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{11} = \frac{3}{3} = 1.0
+\)</span>$</p></li>
+<li><p>Word 2 (meeting): Present in Email 9 (<span class="math notranslate nohighlight">\( n_{21} = 1 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{21} = \frac{1}{3} \approx 0.333
+\)</span>$</p></li>
+<li><p>Word 3 (friend): Present in Email 1 (<span class="math notranslate nohighlight">\( n_{31} = 1 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{31} = \frac{1}{3} \approx 0.333
+\)</span>$</p></li>
+<li><p>Word 4 (family): Absent (<span class="math notranslate nohighlight">\( n_{41} = 0 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{41} = \frac{0}{3} = 0.0
+\)</span>$</p></li>
+</ul>
+</section>
+<section id="work-k-2-n-2-3">
+<h4>Work (<span class="math notranslate nohighlight">\( k = 2 \)</span>, <span class="math notranslate nohighlight">\( n_2 = 3 \)</span>)<a class="headerlink" href="#work-k-2-n-2-3" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Word 1 (deal): Absent (<span class="math notranslate nohighlight">\( n_{12} = 0 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{12} = \frac{0}{3} = 0.0
+\)</span>$</p></li>
+<li><p>Word 2 (meeting): Present in Emails 3, 4, 5 (<span class="math notranslate nohighlight">\( n_{22} = 3 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{22} = \frac{3}{3} = 1.0
+\)</span>$</p></li>
+<li><p>Word 3 (friend): Present in Email 3 (<span class="math notranslate nohighlight">\( n_{32} = 1 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{32} = \frac{1}{3} \approx 0.333
+\)</span>$</p></li>
+<li><p>Word 4 (family): Present in Email 5 (<span class="math notranslate nohighlight">\( n_{42} = 1 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{42} = \frac{1}{3} \approx 0.333
+\)</span>$</p></li>
+</ul>
+</section>
+<section id="personal-k-3-n-3-4">
+<h4>Personal (<span class="math notranslate nohighlight">\( k = 3 \)</span>, <span class="math notranslate nohighlight">\( n_3 = 4 \)</span>)<a class="headerlink" href="#personal-k-3-n-3-4" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Word 1 (deal): Absent (<span class="math notranslate nohighlight">\( n_{13} = 0 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{13} = \frac{0}{4} = 0.0
+\)</span>$</p></li>
+<li><p>Word 2 (meeting): Absent (<span class="math notranslate nohighlight">\( n_{23} = 0 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{23} = \frac{0}{4} = 0.0
+\)</span>$</p></li>
+<li><p>Word 3 (friend): Present in Emails 6, 8, 10 (<span class="math notranslate nohighlight">\( n_{33} = 3 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{33} = \frac{3}{4} = 0.75
+\)</span>$</p></li>
+<li><p>Word 4 (family): Present in Emails 6, 7, 10 (<span class="math notranslate nohighlight">\( n_{43} = 3 \)</span>)
+$<span class="math notranslate nohighlight">\(
+\psi_{43} = \frac{3}{4} = 0.75
+\)</span>$</p></li>
+</ul>
+</section>
+</section>
+<section id="parameter-summary">
+<h3>Parameter Summary<a class="headerlink" href="#parameter-summary" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Priors: <span class="math notranslate nohighlight">\( \phi_1 = 0.3 \)</span>, <span class="math notranslate nohighlight">\( \phi_2 = 0.3 \)</span>, <span class="math notranslate nohighlight">\( \phi_3 = 0.4 \)</span></p></li>
+<li><p>Feature probabilities:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Word <span class="math notranslate nohighlight">\( j \)</span></p></th>
+<th class="head"><p>Spam (<span class="math notranslate nohighlight">\( \psi_{j1} \)</span>)</p></th>
+<th class="head"><p>Work (<span class="math notranslate nohighlight">\( \psi_{j2} \)</span>)</p></th>
+<th class="head"><p>Personal (<span class="math notranslate nohighlight">\( \psi_{j3} \)</span>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>deal</p></td>
+<td><p>1.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>meeting</p></td>
+<td><p>0.333</p></td>
+<td><p>1.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>friend</p></td>
+<td><p>0.333</p></td>
+<td><p>0.333</p></td>
+<td><p>0.75</p></td>
+</tr>
+<tr class="row-odd"><td><p>family</p></td>
+<td><p>0.0</p></td>
+<td><p>0.333</p></td>
+<td><p>0.75</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="step-5-predicting-a-new-email">
+<h2>Step 5: Predicting a New Email<a class="headerlink" href="#step-5-predicting-a-new-email" title="Link to this heading">#</a></h2>
+<p>Suppose a new email contains “friend” and “family” (<span class="math notranslate nohighlight">\( x' = [0, 0, 1, 1] \)</span>). We predict its class using Bayes’ rule:
+$<span class="math notranslate nohighlight">\(
+\arg\max_y P_\theta(y|x) = \arg\max_y P_\theta(x|y)P_\theta(y)
+\)</span>$</p>
+<p>Compute <span class="math notranslate nohighlight">\( P_\theta(x = x' | y=k)P_\theta(y=k) \)</span> for each class <span class="math notranslate nohighlight">\( k \)</span>.</p>
+<section id="spam-k-1">
+<h3>Spam (<span class="math notranslate nohighlight">\( k = 1 \)</span>)<a class="headerlink" href="#spam-k-1" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+P_\theta(x = [0, 0, 1, 1] | y=1) = P_\theta(x_1=0|y=1) \cdot P_\theta(x_2=0|y=1) \cdot P_\theta(x_3=1|y=1) \cdot P_\theta(x_4=1|y=1)
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_1=0|y=1) = 1 - \psi_{11} = 1 - 1.0 = 0.0 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_2=0|y=1) = 1 - \psi_{21} = 1 - 0.333 = 0.667 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_3=1|y=1) = \psi_{31} = 0.333 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_4=1|y=1) = \psi_{41} = 0.0 \)</span></p></li>
+</ul>
+<p>Since <span class="math notranslate nohighlight">\( P_\theta(x_1=0|y=1) = 0.0 \)</span>, the product is:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x | y=1) = 0.0 \cdot 0.667 \cdot 0.333 \cdot 0.0 = 0.0
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+P_\theta(x | y=1)P_\theta(y=1) = 0.0 \cdot 0.3 = 0.0
+\)</span>$</p>
+</section>
+<section id="work-k-2">
+<h3>Work (<span class="math notranslate nohighlight">\( k = 2 \)</span>)<a class="headerlink" href="#work-k-2" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+P_\theta(x = [0, 0, 1, 1] | y=2) = P_\theta(x_1=0|y=2) \cdot P_\theta(x_2=0|y=2) \cdot P_\theta(x_3=1|y=2) \cdot P_\theta(x_4=1|y=2)
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_1=0|y=2) = 1 - \psi_{12} = 1 - 0.0 = 1.0 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_2=0|y=2) = 1 - \psi_{22} = 1 - 1.0 = 0.0 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_3=1|y=2) = \psi_{32} = 0.333 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_4=1|y=2) = \psi_{42} = 0.333 \)</span></p></li>
+</ul>
+<p>Since <span class="math notranslate nohighlight">\( P_\theta(x_2=0|y=2) = 0.0 \)</span>:
+$<span class="math notranslate nohighlight">\(
+P_\theta(x | y=2) = 1.0 \cdot 0.0 \cdot 0.333 \cdot 0.333 = 0.0
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+P_\theta(x | y=2)P_\theta(y=2) = 0.0 \cdot 0.3 = 0.0
+\)</span>$</p>
+</section>
+<section id="personal-k-3">
+<h3>Personal (<span class="math notranslate nohighlight">\( k = 3 \)</span>)<a class="headerlink" href="#personal-k-3" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+P_\theta(x = [0, 0, 1, 1] | y=3) = P_\theta(x_1=0|y=3) \cdot P_\theta(x_2=0|y=3) \cdot P_\theta(x_3=1|y=3) \cdot P_\theta(x_4=1|y=3)
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_1=0|y=3) = 1 - \psi_{13} = 1 - 0.0 = 1.0 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_2=0|y=3) = 1 - \psi_{23} = 1 - 0.0 = 1.0 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_3=1|y=3) = \psi_{33} = 0.75 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( P_\theta(x_4=1|y=3) = \psi_{43} = 0.75 \)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+P_\theta(x | y=3) = 1.0 \cdot 1.0 \cdot 0.75 \cdot 0.75 = 0.5625
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+P_\theta(x | y=3)P_\theta(y=3) = 0.5625 \cdot 0.4 = 0.225
+\]</div>
+</section>
+<section id="prediction">
+<h3>Prediction<a class="headerlink" href="#prediction" title="Link to this heading">#</a></h3>
+<p>Compare the scores:</p>
+<ul class="simple">
+<li><p>Spam: <span class="math notranslate nohighlight">\( 0.0 \)</span></p></li>
+<li><p>Work: <span class="math notranslate nohighlight">\( 0.0 \)</span></p></li>
+<li><p>Personal: <span class="math notranslate nohighlight">\( 0.225 \)</span></p></li>
+</ul>
+<p>The highest score is for Personal (<span class="math notranslate nohighlight">\( y = 3 \)</span>), so we predict the email is <strong>Personal</strong>.</p>
+</section>
+</section>
+<section id="why-this-works-for-more-than-two-categories">
+<h2>Why This Works for More Than Two Categories<a class="headerlink" href="#why-this-works-for-more-than-two-categories" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The Naive Bayes model scales to <span class="math notranslate nohighlight">\( K &gt; 2 \)</span> classes by:</p>
+<ul>
+<li><p>Estimating a prior <span class="math notranslate nohighlight">\( \phi_k \)</span> for each class <span class="math notranslate nohighlight">\( k = 1, 2, \dots, K \)</span>.</p></li>
+<li><p>Learning <span class="math notranslate nohighlight">\( \psi_{jk} \)</span> for each word <span class="math notranslate nohighlight">\( j \)</span> and class <span class="math notranslate nohighlight">\( k \)</span>, resulting in <span class="math notranslate nohighlight">\( Kd \)</span> feature parameters.</p></li>
+<li><p>Computing <span class="math notranslate nohighlight">\( P_\theta(x | y=k)P_\theta(y=k) \)</span> for all <span class="math notranslate nohighlight">\( K \)</span> classes during prediction.</p></li>
+</ul>
+</li>
+<li><p>In this example, <span class="math notranslate nohighlight">\( K = 3 \)</span>, but the same process applies for any <span class="math notranslate nohighlight">\( K \)</span>. For <span class="math notranslate nohighlight">\( K = 4 \)</span> (e.g., adding a “Promotional” class), you’d count emails in the new class and estimate <span class="math notranslate nohighlight">\( \phi_4 \)</span> and <span class="math notranslate nohighlight">\( \psi_{j4} \)</span> similarly.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="2_Regularization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Generalization, Overfitting, Regularization</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="4_Logistic_Regression.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><strong>Logistic Regression (Mathematical Explanation)</strong></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Naive Bayes</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-math-for-understanding-naive-bayes">Probability Math for Understanding Naive Bayes</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-probability">1. Simple Probability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#joint-probability">2. Joint Probability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-probability">3. Conditional Probability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#law-of-total-probability">4. Law of Total Probability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayes-theorem">5. Bayes’ Theorem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-classifier">6. Naive Bayes Classifier</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">6.1. Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-assumption">6.2. Naive Assumption</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classification">6.3. Classification</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-probabilities">6.4. Estimating Probabilities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">6.5. Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequentist-vs-bayesian-probability">1. Frequentist vs. Bayesian Probability</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequentist-probability">1.1. Frequentist Probability</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-probability">1.2. Bayesian Probability</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-vs-discriminative-models">2. Generative vs. Discriminative Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-models">2.1. Generative Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discriminative-models">2.2. Discriminative Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-vs-non-parametric-models">3. Parametric vs. Non-Parametric Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-models"><strong>1. Parametric Models</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-parametric-models"><strong>2. Non-Parametric Models</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-difference"><strong>Key Difference</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#turning-text-into-numbers-for-machine-learning-with-naive-bayes">Turning Text into Numbers for Machine Learning with Naive Bayes</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#turning-text-into-usable-data">Turning Text into Usable Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ways-to-convert-text-to-numbers">Ways to Convert Text to Numbers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bag-of-words-model">Bag of Words Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-model-to-classify-text">Building a Model to Classify Text</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-categorical-distribution">What is a Categorical Distribution?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-simplification">Naive Bayes Simplification</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters-in-naive-bayes">Parameters in Naive Bayes</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-for-bag-of-words">Naive Bayes for Bag of Words</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#does-naive-bayes-work-well">Does Naive Bayes Work Well?</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-class-probabilities">Setting Up Class Probabilities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bernoulli-naive-bayes-model">Bernoulli Naive Bayes Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-the-models-parameters">Learning the Model’s Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-class-probabilities-phi-k">Learning Class Probabilities <span class="math notranslate nohighlight">\( \phi_k \)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-word-probabilities-psi-jk">Learning Word Probabilities <span class="math notranslate nohighlight">\( \psi_{jk} \)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-predictions">Making Predictions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-scenario">Example Scenario</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-classifying-emails-with-naive-bayes-three-categories">Example: Classifying Emails with Naive Bayes (Three Categories)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-representing-emails-as-feature-vectors">Step 1: Representing Emails as Feature Vectors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vocabulary">Vocabulary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-vector">Feature Vector</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-dataset">Step 2: Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-vectors">Feature Vectors</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-bernoulli-naive-bayes-model">Step 3: Bernoulli Naive Bayes Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-components">Model Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-assumption">Naive Bayes Assumption</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-learning-parameters">Step 4: Learning Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-class-priors-phi-k">Learning Class Priors <span class="math notranslate nohighlight">\( \phi_k \)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-feature-parameters-psi-jk">Learning Feature Parameters <span class="math notranslate nohighlight">\( \psi_{jk} \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#spam-k-1-n-1-3">Spam (<span class="math notranslate nohighlight">\( k = 1 \)</span>, <span class="math notranslate nohighlight">\( n_1 = 3 \)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#work-k-2-n-2-3">Work (<span class="math notranslate nohighlight">\( k = 2 \)</span>, <span class="math notranslate nohighlight">\( n_2 = 3 \)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#personal-k-3-n-3-4">Personal (<span class="math notranslate nohighlight">\( k = 3 \)</span>, <span class="math notranslate nohighlight">\( n_3 = 4 \)</span>)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-summary">Parameter Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-predicting-a-new-email">Step 5: Predicting a New Email</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spam-k-1">Spam (<span class="math notranslate nohighlight">\( k = 1 \)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#work-k-2">Work (<span class="math notranslate nohighlight">\( k = 2 \)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#personal-k-3">Personal (<span class="math notranslate nohighlight">\( k = 3 \)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-works-for-more-than-two-categories">Why This Works for More Than Two Categories</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Chandravesh Chaudhari
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

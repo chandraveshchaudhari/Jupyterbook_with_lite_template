@@ -1,0 +1,1060 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>K-Means and Clustering &#8212; Machine Learning for Business</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '6_Clustering';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Gaussian Mixture Models and EM" href="7_Gaussian_Mixture_Models.html" />
+    <link rel="prev" title="Dimensionality Reduction: PCA" href="5_Dimensionality_Reduction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Machine Learning for Business - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Machine Learning for Business - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">Common Math Symbols and Notations in Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_Linear_regression.html">Linear Regression</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="2_Regularization.html">Generalization, Overfitting, Regularization</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="3_Naive_Bayes.html">Naive Bayes</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="4_Logistic_Regression.html"><strong>Logistic Regression (Mathematical Explanation)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_Dimensionality_Reduction.html">Dimensionality Reduction: PCA</a></li>
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">K-Means and Clustering</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="7_Gaussian_Mixture_Models.html">Gaussian Mixture Models and EM</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="8_Nearest_Neighbour_Algorithm.html">Nearest Neighbour Algorithm</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="10_Support_Vector_Machines.html">Support Vector Machines</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="11_Decision_Trees.html">Decision Trees</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="12_Ensemble_Methods.html">Ensemble Methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="13_Neural_Networks.html">Neural Networks: From Perceptron to MLP</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="14_Arima.html">ARIMA</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="15_LSTM.html">Advanced DL: ResNets, RNNs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="16_CNN.html">Convolutional Neural Networks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="17_Resnet.html">1D-ResNet (or TCN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_LLM.html">Transformers and LLMs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="19_Reinforcement_Learning.html">Reinforcement Learning</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="20_Multimodal_Learning.html">Multimodal Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generative_Models.html">Generative Models</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Performance_Metrics.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization.html">Visualisation</a></li>
+
+
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/chandraveshchaudhari/BusinessML_web/blob/main/notebooks//./6_Clustering.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+
+<li>
+  <a href="https://chandraveshchaudhari.github.io/BusinessML_web/jupyterlite/lab/index.html?path=6_Clustering.ipynb" target="_blank"
+     class="btn btn-sm dropdown-item"
+     title="Launch on JupyterLite"
+     data-bs-placement="left" data-bs-toggle="tooltip">
+    <span class="btn__icon-container" style="display:inline-block; width:20px; height:20px;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+        <circle cx="128" cy="128" r="128" fill="#f37726"/>
+        <ellipse cx="128" cy="128" rx="110" ry="40" fill="white" transform="rotate(-25, 128, 128)"/>
+        <ellipse cx="128" cy="128" rx="110" ry="40" fill="white" transform="rotate(25, 128, 128)"/>
+        <circle cx="200" cy="60" r="18" fill="white"/>
+        <circle cx="60" cy="200" r="18" fill="white"/>
+      </svg>
+    </span>
+    <span class="btn__text-container">JupyterLite</span>
+  </a>
+</li>
+
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web/issues/new?title=Issue%20on%20page%20%2F6_Clustering.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/6_Clustering.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>K-Means and Clustering</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">K-Means and Clustering</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example usage</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#standardize-the-data">Standardize the data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#apply-k-means">Apply K-Means</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-kmeans-clustering">Step-by-Step: KMeans Clustering</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="k-means-and-clustering">
+<h1>K-Means and Clustering<a class="headerlink" href="#k-means-and-clustering" title="Link to this heading">#</a></h1>
+<hr style="height:2px; border-width:0; color:gray; background-color:gray">
+<table width="100%">
+  <tr>
+    <td align="left" width="60%">
+      <h2 style="color: #2c3e50; font-family: Arial, sans-serif;">
+        Machine Learning for Business
+      </h2>
+      <p>
+        <strong>Chandravesh Chaudhari</strong><br>
+        Assistant Professor<br>
+        School of Business and Management<br>
+        <a href="mailto:chandraveshchaudhari@gmail.com" style="color: #2980b9; text-decoration: none;">
+          chandraveshchaudhari@gmail.com
+        </a>
+      </p>
+    </td>
+    <td align="right" width="40%">
+      <img src="logo.jpg" alt="Christ University" width="250">
+    </td>
+  </tr>
+</table>
+<hr style="height:2px; border-width:0; color:gray; background-color:gray">
+<p>K-Means and Clustering</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>• Objective Function Minimization
+• Lloyd’s Algorithm
+• Distance Metrics (Euclidean, Manhattan)
+</pre></div>
+</div>
+<p>Python: K-Means with Random Initialization</p>
+<p>K-Means and Clustering
+K-Means is an unsupervised clustering algorithm that partitions a dataset into ( k ) clusters by minimizing the variance within each cluster. It assigns each data point to the nearest cluster centroid and iteratively updates the centroids to optimize the objective function.</p>
+<ol class="arabic simple">
+<li><p>Objective Function Minimization
+Objective: Minimize the within-cluster sum of squares (WCSS), also known as the inertia, which measures the total squared distance between each point and its assigned cluster centroid.
+•	Mathematical Formulation: Given a dataset ( X = {x_1, x_2, \dots, x_n} ) with ( n ) points in ( \mathbb{R}^p ), and ( k ) clusters with centroids ( {\mu_1, \mu_2, \dots, \mu_k} ), the objective function is: [ J = \sum_{i=1}^n \sum_{j=1}^k r_{ij} | x_i - \mu_j |^2 ] where:
+◦	( r_{ij} = 1 ) if point ( x_i ) is assigned to cluster ( j ), and ( 0 ) otherwise.
+◦	( | x_i - \mu_j |^2 ) is the squared distance between point ( x_i ) and centroid ( \mu_j ).
+•	Goal: Find the optimal assignments ( r_{ij} ) and centroids ( \mu_j ) that minimize ( J ).</p></li>
+<li><p>Lloyd’s Algorithm
+Lloyd’s algorithm is the standard iterative method for solving the K-Means optimization problem. It alternates between two steps until convergence:
+1	Assignment Step:
+◦	Assign each data point to the nearest centroid based on a distance metric: [ r_{ij} = \begin{cases} 1 &amp; \text{if } j = \arg\min_{j’} | x_i - \mu_{j’} |^2 \ 0 &amp; \text{otherwise} \end{cases} ]
+2	Update Step:
+◦	Recalculate the centroid of each cluster as the mean of all points assigned to it: [ \mu_j = \frac{\sum_{i=1}^n r_{ij} x_i}{\sum_{i=1}^n r_{ij}} ]
+•	Convergence:
+◦	The algorithm iterates until the centroids stabilize (i.e., no significant change in ( J ) or assignments) or a maximum number of iterations is reached.
+◦	Note: K-Means is guaranteed to converge to a local minimum, but the solution may not be globally optimal.
+•	Challenges:
+◦	Sensitive to initial centroid placement, which can lead to suboptimal solutions.
+◦	Requires specifying ( k ) in advance.
+◦	Assumes clusters are spherical and of similar size due to the use of distance-based assignments.</p></li>
+<li><p>Distance Metrics
+The choice of distance metric affects how points are assigned to clusters. Common metrics include:
+•	Euclidean Distance:
+◦	The standard distance metric used in K-Means: [ d(x_i, \mu_j) = \sqrt{\sum_{l=1}^p (x_{il} - \mu_{jl})^2} ]
+◦	Assumes clusters are spherical and works well for continuous, isotropic data.
+◦	Sensitive to feature scaling.
+•	Manhattan Distance:
+◦	Also known as L1 distance or city-block distance: [ d(x_i, \mu_j) = \sum_{l=1}^p |x_{il} - \mu_{jl}| ]
+◦	Better suited for data with non-spherical clusters or when robustness to outliers is desired.
+◦	Less sensitive to large differences in individual dimensions compared to Euclidean distance.
+•	Other Metrics:
+◦	Cosine similarity, Mahalanobis distance, or custom metrics can be used for specific applications, but they require modifications to the standard K-Means algorithm.
+•	Choosing a Metric:
+◦	Euclidean is default for K-Means due to its compatibility with the mean-based centroid update.
+◦	Standardize features (zero mean, unit variance) to ensure fair contributions from all dimensions.</p></li>
+<li><p>Python: K-Means with Random Initialization
+Below is a Python implementation of K-Means using random initialization, followed by a scikit-learn example for comparison.
+Implementation from Scratch
+import numpy as np</p></li>
+</ol>
+<p>def kmeans(X, k, max_iters=100, distance_metric=’euclidean’):
+# Randomly initialize centroids
+n_samples, n_features = X.shape
+idx = np.random.choice(n_samples, k, replace=False)
+centroids = X[idx]</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>for _ in range(max_iters):
+    # Assignment step
+    distances = np.zeros((n_samples, k))
+    for j in range(k):
+        if distance_metric == &#39;euclidean&#39;:
+            distances[:, j] = np.sum((X - centroids[j])**2, axis=1)
+        elif distance_metric == &#39;manhattan&#39;:
+            distances[:, j] = np.sum(np.abs(X - centroids[j]), axis=1)
+    
+    labels = np.argmin(distances, axis=1)
+    
+    # Update step
+    new_centroids = np.zeros_like(centroids)
+    for j in range(k):
+        if np.sum(labels == j) &gt; 0:  # Avoid division by zero
+            new_centroids[j] = np.mean(X[labels == j], axis=0)
+        else:
+            new_centroids[j] = centroids[j]  # Keep old centroid if no points assigned
+    
+    # Check for convergence
+    if np.all(centroids == new_centroids):
+        break
+    centroids = new_centroids
+
+# Compute WCSS (inertia)
+inertia = 0
+for j in range(k):
+    if distance_metric == &#39;euclidean&#39;:
+        inertia += np.sum((X[labels == j] - centroids[j])**2)
+    elif distance_metric == &#39;manhattan&#39;:
+        inertia += np.sum(np.abs(X[labels == j] - centroids[j]))
+
+return labels, centroids, inertia
+</pre></div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="example-usage">
+<h1>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h1>
+<p>np.random.seed(42)
+X = np.concatenate([np.random.normal(0, 1, (50, 2)),
+np.random.normal(5, 1, (50, 2)),
+np.random.normal(10, 1, (50, 2))])  # 3 clusters
+k = 3
+labels, centroids, inertia = kmeans(X, k, distance_metric=’euclidean’)</p>
+<p>print(“Cluster Labels:”, labels)
+print(“Centroids:”, centroids)
+print(“Inertia (WCSS):”, inertia)
+Using scikit-learn
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="standardize-the-data">
+<h1>Standardize the data<a class="headerlink" href="#standardize-the-data" title="Link to this heading">#</a></h1>
+<p>scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="apply-k-means">
+<h1>Apply K-Means<a class="headerlink" href="#apply-k-means" title="Link to this heading">#</a></h1>
+<p>kmeans_sklearn = KMeans(n_clusters=k, init=’random’, max_iter=100, random_state=42)
+labels_sklearn = kmeans_sklearn.fit_predict(X_scaled)
+centroids_sklearn = scaler.inverse_transform(kmeans_sklearn.cluster_centers_)  # Transform back
+inertia_sklearn = kmeans_sklearn.inertia_</p>
+<p>print(“scikit-learn Cluster Labels:”, labels_sklearn)
+print(“scikit-learn Centroids:”, centroids_sklearn)
+print(“scikit-learn Inertia (WCSS):”, inertia_sklearn)
+Output Explanation
+•	Cluster Labels: The cluster assignment for each data point (0 to ( k-1 )).
+•	Centroids: The coordinates of the cluster centers.
+•	Inertia (WCSS): The objective function value, measuring the total within-cluster variance.
+Notes
+•	Random Initialization: The scratch implementation uses random selection of initial centroids, which can lead to different results across runs. For better results, consider K-Means++ initialization (available in scikit-learn).
+•	Standardization: Always standardize the data before clustering to ensure all features contribute equally.
+•	Choosing ( k ): Use the elbow method (plotting inertia vs. ( k )) or silhouette score to select an appropriate number of clusters.
+•	scikit-learn: More robust, supports K-Means++ initialization, and handles edge cases efficiently.</p>
+<p>Summary
+•	Objective Function: K-Means minimizes the within-cluster sum of squares (WCSS).
+•	Lloyd’s Algorithm: Iteratively assigns points to the nearest centroid and updates centroids.
+•	Distance Metrics: Euclidean is standard, but Manhattan or others can be used for specific cases.
+•	Python Implementation: Random initialization works but is sensitive to starting points; scikit-learn’s K-Means is recommended for production.
+Let me know if you need further details, visualization code, or help with evaluating clustering performance!</p>
+<p>⸻</p>
+<p>K-means</p>
+<p>The KMeans algorithm clusters data by trying to separate samples into <span class="math notranslate nohighlight">\(n\)</span> groups of equal variance, minimizing a criterion known as the inertia or within-cluster sum-of-squares (see below). This algorithm requires the number of clusters to be specified. It scales well to large numbers of samples and has been used across a large range of application areas in many different fields.</p>
+<p>The k-means algorithm divides a set of <span class="math notranslate nohighlight">\(N\)</span> samples <span class="math notranslate nohighlight">\(X\)</span> into <span class="math notranslate nohighlight">\(K\)</span> disjoint clusters <span class="math notranslate nohighlight">\(C\)</span>, each described by the mean <span class="math notranslate nohighlight">\(\mu_j\)</span> of the samples in the cluster. The means are commonly called the cluster “centroids”; note that they are not, in general, points from <span class="math notranslate nohighlight">\(X\)</span>, although they live in the same space.</p>
+<p>The K-means algorithm aims to choose centroids that minimize the inertia, or within-cluster sum-of-squares criterion:</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=0}^{n} \min_{\mu_j \in C} \left( |x_i - \mu_j|^2 \right)
+\]</div>
+<p>Inertia can be recognized as a measure of how internally coherent clusters are. It suffers from various drawbacks:
+•	Inertia makes the assumption that clusters are convex and isotropic, which is not always the case. It responds poorly to elongated clusters or manifolds with irregular shapes.
+•	Inertia is not a normalized metric: we just know that lower values are better and zero is optimal. But in very high-dimensional spaces, Euclidean distances tend to become inflated (this is an instance of the so-called “curse of dimensionality”).
+•	Running a dimensionality reduction algorithm such as PCA prior to k-means clustering can alleviate this problem and speed up the computations.</p>
+<p>⸻</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="step-by-step-kmeans-clustering">
+<h1>Step-by-Step: KMeans Clustering<a class="headerlink" href="#step-by-step-kmeans-clustering" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Import KMeans and Reduce Data</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
+
+<span class="c1"># Use 2D PCA coordinates of stocks (each stock is a point)</span>
+<span class="n">X_cluster</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># shape (2, num_stocks)</span>
+<span class="n">X_cluster</span> <span class="o">=</span> <span class="n">X_cluster</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># shape (num_stocks, 2)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Clustering Data Shape:&quot;</span><span class="p">,</span> <span class="n">X_cluster</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (10, 2)</span>
+
+<span class="c1"># KMeans clustering (e.g., 3 clusters)</span>
+<span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X_cluster</span><span class="p">)</span>
+
+
+
+
+<span class="c1"># Step 2: Visualize Clusters in 2D PCA Space</span>
+
+<span class="c1"># Plot stocks with cluster colors</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ticker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tickers</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_cluster</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_cluster</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)],</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">X_cluster</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">X_cluster</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">ticker</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;KMeans Clustering of Stocks in 2D PCA Space&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;PC1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PC2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+
+
+
+<span class="c1"># Step 3 (Optional): Cluster Membership Table</span>
+
+<span class="c1"># Show which stocks belong to which cluster</span>
+<span class="n">df_clusters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Stock&#39;</span><span class="p">:</span> <span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;Cluster&#39;</span><span class="p">:</span> <span class="n">labels</span><span class="p">})</span>
+<span class="n">df_clusters</span> <span class="o">=</span> <span class="n">df_clusters</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;Cluster&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_clusters</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Elbow Method vs Silhouette Score — Which is More Popular?</p>
+<ol class="arabic simple">
+<li><p>Elbow Method
+•	Idea: Plot total within-cluster variance (inertia) vs number of clusters k.
+•	As k increases, inertia decreases. But after a point, the rate of improvement “bends” like an elbow — suggesting the optimal number of clusters.
+•	Popular because it’s simple and visual.
+•	Works well when you expect compact, spherical clusters.
+•	Used more often in practice for KMeans, especially in business or EDA contexts.</p></li>
+<li><p>Silhouette Score
+•	Idea: Measures how similar a point is to its own cluster vs others.
+•	Score ranges from -1 to 1 (higher is better).
+•	Tells both how well-separated and how dense clusters are.
+•	Better for algorithmic tuning, especially for non-spherical clusters or comparing across clustering algorithms.</p></li>
+</ol>
+<p>⸻</p>
+<p>Which One Should You Use?</p>
+<p>Use Case	Recommended Method
+Quick visual guess (KMeans)	Elbow Method
+Want a more objective, numerical score	Silhouette Score
+Comparing non-KMeans algorithms	Silhouette Score
+Exploratory, business reporting	Elbow (visual appeal)
+Small datasets or when clusters are hard to spot	Silhouette is more reliable</p>
+<p>⸻</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inertias</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">K_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">K_range</span><span class="p">:</span>
+    <span class="n">km</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">km</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cluster</span><span class="p">)</span>
+    <span class="n">inertias</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">km</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+<span class="c1"># Plot Elbow Curve</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">K_range</span><span class="p">,</span> <span class="n">inertias</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Elbow Method for Optimal k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Clusters (k)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Inertia (Within-Cluster Sum of Squares)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">euclidean_distance</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">KMeans</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">plot_steps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iters</span> <span class="o">=</span> <span class="n">max_iters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_steps</span> <span class="o">=</span> <span class="n">plot_steps</span>
+
+        <span class="c1"># list of sample indices for each cluster</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)]</span>
+        <span class="c1"># the centers (mean feature vector) for each cluster</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># initialize</span>
+        <span class="n">random_sample_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">random_sample_idxs</span><span class="p">]</span>
+
+        <span class="c1"># Optimize clusters</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iters</span><span class="p">):</span>
+            <span class="c1"># Assign samples to closest centroids (create clusters)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_clusters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_steps</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+            <span class="c1"># Calculate new centroids from the clusters</span>
+            <span class="n">centroids_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_centroids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">)</span>
+
+            <span class="c1"># check if clusters have changed</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_converged</span><span class="p">(</span><span class="n">centroids_old</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">):</span>
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_steps</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+        <span class="c1"># Classify samples as the index of their clusters</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cluster_labels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_cluster_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+        <span class="c1"># each sample will get the label of the cluster it was assigned to</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">cluster_idx</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clusters</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">sample_index</span> <span class="ow">in</span> <span class="n">cluster</span><span class="p">:</span>
+                <span class="n">labels</span><span class="p">[</span><span class="n">sample_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_idx</span>
+        <span class="k">return</span> <span class="n">labels</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+        <span class="c1"># Assign the samples to the closest centroids to create clusters</span>
+        <span class="n">clusters</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">):</span>
+            <span class="n">centroid_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closest_centroid</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">centroids</span><span class="p">)</span>
+            <span class="n">clusters</span><span class="p">[</span><span class="n">centroid_idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">clusters</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_closest_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+        <span class="c1"># distance of the current sample to each centroid</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span><span class="n">euclidean_distance</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">centroids</span><span class="p">]</span>
+        <span class="n">closest_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">closest_index</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_centroids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+        <span class="c1"># assign mean value of clusters to centroids</span>
+        <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">cluster_idx</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clusters</span><span class="p">):</span>
+            <span class="n">cluster_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">cluster</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">centroids</span><span class="p">[</span><span class="n">cluster_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_mean</span>
+        <span class="k">return</span> <span class="n">centroids</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_converged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centroids_old</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+        <span class="c1"># distances between each old and new centroids, fol all centroids</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">euclidean_distance</span><span class="p">(</span><span class="n">centroids_old</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">centroids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">):</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="c1"># Testing</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_blobs</span>
+
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span>
+        <span class="n">centers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">40</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">clusters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span>
+
+    <span class="n">k</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">clusters</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">plot_steps</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="n">k</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="5_Dimensionality_Reduction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Dimensionality Reduction: PCA</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="7_Gaussian_Mixture_Models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Gaussian Mixture Models and EM</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">K-Means and Clustering</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example usage</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#standardize-the-data">Standardize the data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#apply-k-means">Apply K-Means</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-kmeans-clustering">Step-by-Step: KMeans Clustering</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Chandravesh Chaudhari
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

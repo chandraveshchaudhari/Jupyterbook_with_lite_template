@@ -1,0 +1,1716 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gaussian Mixture Models and EM &#8212; Machine Learning for Business</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '7_Gaussian_Mixture_Models';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Nearest Neighbour Algorithm" href="8_Nearest_Neighbour_Algorithm.html" />
+    <link rel="prev" title="K-Means and Clustering" href="6_Clustering.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Machine Learning for Business - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Machine Learning for Business - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">Common Math Symbols and Notations in Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_Linear_regression.html">Linear Regression</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="2_Regularization.html">Generalization, Overfitting, Regularization</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="3_Naive_Bayes.html">Naive Bayes</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="4_Logistic_Regression.html"><strong>Logistic Regression (Mathematical Explanation)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_Dimensionality_Reduction.html">Dimensionality Reduction: PCA</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="6_Clustering.html">K-Means and Clustering</a></li>
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Gaussian Mixture Models and EM</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="8_Nearest_Neighbour_Algorithm.html">Nearest Neighbour Algorithm</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="10_Support_Vector_Machines.html">Support Vector Machines</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="11_Decision_Trees.html">Decision Trees</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="12_Ensemble_Methods.html">Ensemble Methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="13_Neural_Networks.html">Neural Networks: From Perceptron to MLP</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="14_Arima.html">ARIMA</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="15_LSTM.html">Advanced DL: ResNets, RNNs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="16_CNN.html">Convolutional Neural Networks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="17_Resnet.html">1D-ResNet (or TCN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_LLM.html">Transformers and LLMs</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="19_Reinforcement_Learning.html">Reinforcement Learning</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="20_Multimodal_Learning.html">Multimodal Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generative_Models.html">Generative Models</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Performance_Metrics.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization.html">Visualisation</a></li>
+
+
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/chandraveshchaudhari/BusinessML_web/blob/main/notebooks//./7_Gaussian_Mixture_Models.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chandraveshchaudhari/BusinessML_web/issues/new?title=Issue%20on%20page%20%2F7_Gaussian_Mixture_Models.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/7_Gaussian_Mixture_Models.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gaussian Mixture Models and EM</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Gaussian Mixture Models and EM</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hard-clustering-e-g-k-means"><strong>1. Hard Clustering (e.g., K-Means)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soft-clustering-e-g-gaussian-mixture-models-gmm"><strong>2. Soft Clustering (e.g., Gaussian Mixture Models, GMM)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-differences"><strong>Key Differences</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-use-each"><strong>When to Use Each?</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-mixture-models-with-expectation-maximization">Gaussian Mixture Models with Expectation-Maximization</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">Key Concepts</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-gaussian-mixture-models-gmms-for-beginners">Understanding Gaussian Mixture Models (GMMs) for Beginners</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-gaussian-mixture-model">What is a Gaussian Mixture Model?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analogy">Analogy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts-explained">Key Concepts Explained</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-distribution">1. Gaussian Distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mixture-model">2. Mixture Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expectation-maximization-em-algorithm">3. Expectation-Maximization (EM) Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#e-step-assigning-responsibilities">E-Step: Assigning Responsibilities</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-updating-parameters">M-Step: Updating Parameters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-gmms">4. Why Use GMMs?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recap-gaussian-mixture-models-and-em-algorithm">Recap: Gaussian Mixture Models and EM Algorithm</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-maximization-step-m-step">The Maximization Step (M-Step)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-the-m-step">What is the M-Step?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-details">Mathematical Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mixing-coefficients-pi-k">1. Mixing Coefficients (<span class="math notranslate nohighlight">\(\pi_k\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#means-mu-k">2. Means (<span class="math notranslate nohighlight">\(\mu_k\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#covariances-sigma-k">3. Covariances (<span class="math notranslate nohighlight">\(\Sigma_k\)</span>)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-does-this-work">Why Does This Work?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-code-for-m-step">Python Code for M-Step</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence-in-gmms">Convergence in GMMs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-convergence">What is Convergence?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-em-ensures-convergence">How EM Ensures Convergence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-convergence-criteria">Practical Convergence Criteria</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-code-for-convergence">Python Code for Convergence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-clusters-with-covariance-ellipses">Visualizing Clusters with Covariance Ellipses</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-python-implementation">Complete Python Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-description">Plot Description</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-highlights">Code Highlights</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-insights">Practical Insights</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-convergence">Visualizing Convergence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#expectation-maximization-algorithm">Expectation-Maximization Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-step-expectation">E-Step (Expectation)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-maximization">M-Step (Maximization)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence">Convergence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation-of-the-code">Explanation of the Code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-considerations">Practical Considerations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output">Output</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussian-mixture-models-and-em">
+<h1>Gaussian Mixture Models and EM<a class="headerlink" href="#gaussian-mixture-models-and-em" title="Link to this heading">#</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>• Soft Clustering vs Hard Clustering
+• Expectation-Maximization Algorithm
+• Log-Likelihood Maximization and Latent Variables
+• Python: EM Algorithm Implementation
+</pre></div>
+</div>
+<hr class="docutils" />
+<section id="hard-clustering-e-g-k-means">
+<h2><strong>1. Hard Clustering (e.g., K-Means)</strong><a class="headerlink" href="#hard-clustering-e-g-k-means" title="Link to this heading">#</a></h2>
+<p><strong>Definition</strong>:</p>
+<ul class="simple">
+<li><p>Each data point belongs to <strong>exactly one cluster</strong>.</p></li>
+<li><p>Assignments are deterministic (binary membership).</p></li>
+</ul>
+<p><strong>Key Properties</strong>:</p>
+<ul class="simple">
+<li><p><strong>Algorithm Example</strong>: K-Means.</p></li>
+<li><p><strong>Mechanism</strong>:</p>
+<ul>
+<li><p>Minimizes within-cluster variance.</p></li>
+<li><p>Assigns point ( x_i ) to cluster ( C_k ) based on nearest centroid:<br />
+$<span class="math notranslate nohighlight">\(
+C(x_i) = \arg\min_{k} \|x_i - \mu_k\|^2
+\)</span>$</p></li>
+</ul>
+</li>
+<li><p><strong>Output</strong>: Discrete labels (e.g., Cluster 1, Cluster 2).</p></li>
+</ul>
+<p><strong>Pros</strong>:</p>
+<ul class="simple">
+<li><p>Simple and computationally efficient.</p></li>
+<li><p>Works well with spherical, well-separated data.</p></li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul class="simple">
+<li><p>Fails for overlapping clusters or complex geometries.</p></li>
+<li><p>Sensitive to outliers and initial centroid placement.</p></li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="soft-clustering-e-g-gaussian-mixture-models-gmm">
+<h2><strong>2. Soft Clustering (e.g., Gaussian Mixture Models, GMM)</strong><a class="headerlink" href="#soft-clustering-e-g-gaussian-mixture-models-gmm" title="Link to this heading">#</a></h2>
+<p><strong>Definition</strong>:</p>
+<ul class="simple">
+<li><p>Each data point can belong to <strong>multiple clusters</strong> with probabilistic weights.</p></li>
+<li><p>Assignments reflect uncertainty or partial membership.</p></li>
+</ul>
+<p><strong>Key Properties</strong>:</p>
+<ul class="simple">
+<li><p><strong>Algorithm Example</strong>: Gaussian Mixture Models (GMM).</p></li>
+<li><p><strong>Mechanism</strong>:</p>
+<ul>
+<li><p>Models data as a mixture of ( K ) Gaussians.</p></li>
+<li><p>Computes posterior probability ( P(C_k | x_i) ) for each cluster:<br />
+$<span class="math notranslate nohighlight">\(
+P(C_k | x_i) = \frac{\pi_k \mathcal{N}(x_i | \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j \mathcal{N}(x_i | \mu_j, \Sigma_j)}
+\)</span>$<br />
+where ( \pi_k ) = mixture weight, ( \mathcal{N} ) = Gaussian density.</p></li>
+</ul>
+</li>
+<li><p><strong>Output</strong>: Probability vector (e.g., [0.8, 0.2] for 2 clusters).</p></li>
+</ul>
+<p><strong>Pros</strong>:</p>
+<ul class="simple">
+<li><p>Handles overlapping clusters and uncertainty.</p></li>
+<li><p>More flexible for non-spherical data.</p></li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul class="simple">
+<li><p>Computationally heavier (requires EM algorithm).</p></li>
+<li><p>Needs tuning of covariance matrices.</p></li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="key-differences">
+<h2><strong>Key Differences</strong><a class="headerlink" href="#key-differences" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Aspect</strong></p></th>
+<th class="head"><p><strong>Hard Clustering</strong></p></th>
+<th class="head"><p><strong>Soft Clustering</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Membership</strong></p></td>
+<td><p>Binary (0 or 1)</p></td>
+<td><p>Probabilistic ([0, 1])</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Algorithm</strong></p></td>
+<td><p>K-Means, Hierarchical</p></td>
+<td><p>GMM, Fuzzy C-Means</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Complexity</strong></p></td>
+<td><p>Low (O(n))</p></td>
+<td><p>High (O(nKT), T = iterations)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Use Case</strong></p></td>
+<td><p>Clear separation</p></td>
+<td><p>Ambiguous or overlapping data</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+</section>
+<section id="when-to-use-each">
+<h2><strong>When to Use Each?</strong><a class="headerlink" href="#when-to-use-each" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Hard Clustering</strong>:</p>
+<ul>
+<li><p>Clear cluster boundaries (e.g., customer segmentation).</p></li>
+<li><p>Speed is critical (large datasets).</p></li>
+</ul>
+</li>
+<li><p><strong>Soft Clustering</strong>:</p>
+<ul>
+<li><p>Uncertain or overlapping groups (e.g., topic modeling in text).</p></li>
+<li><p>Need confidence scores (e.g., anomaly detection).</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<ul>
+<li><p><strong>K-Means (Hard)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
+<span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span>  <span class="c1"># Discrete assignments</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>GMM (Soft)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">GaussianMixture</span>
+<span class="n">gmm</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">probs</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># Probability matrix</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="gaussian-mixture-models-with-expectation-maximization">
+<h1>Gaussian Mixture Models with Expectation-Maximization<a class="headerlink" href="#gaussian-mixture-models-with-expectation-maximization" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>A Gaussian Mixture Model (GMM) is a probabilistic model that assumes the data is generated from a mixture of several Gaussian distributions. The Expectation-Maximization (EM) algorithm is used to estimate the parameters of these Gaussians (means, covariances, and mixing coefficients).</p>
+<section id="key-concepts">
+<h3>Key Concepts<a class="headerlink" href="#key-concepts" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Mixture Components</strong>: The model assumes <span class="math notranslate nohighlight">\(K\)</span> Gaussian components, each with its own mean <span class="math notranslate nohighlight">\(\mu_k\)</span>, covariance <span class="math notranslate nohighlight">\(\Sigma_k\)</span>, and mixing coefficient <span class="math notranslate nohighlight">\(\pi_k\)</span>.</p></li>
+<li><p><strong>Mixing Coefficients</strong>: <span class="math notranslate nohighlight">\(\pi_k\)</span> represents the weight of the <span class="math notranslate nohighlight">\(k\)</span>-th component, where <span class="math notranslate nohighlight">\(\sum_{k=1}^K \pi_k = 1\)</span> and <span class="math notranslate nohighlight">\(\pi_k \geq 0\)</span>.</p></li>
+<li><p><strong>Probability Density</strong>: The probability density of a data point <span class="math notranslate nohighlight">\(x_i\)</span> is:
+$<span class="math notranslate nohighlight">\(
+p(x_i) = \sum_{k=1}^K \pi_k \mathcal{N}(x_i | \mu_k, \Sigma_k)
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>\mathcal{N}(x_i | \mu_k, \Sigma_k)<span class="math notranslate nohighlight">\( is the Gaussian density:
+\)</span><span class="math notranslate nohighlight">\(
+\mathcal{N}(x_i | \mu_k, \Sigma_k) = \frac{1}{(2\pi)^{d/2} |\Sigma_k|^{1/2}} \exp\left(-\frac{1}{2}(x_i - \mu_k)^T \Sigma_k^{-1} (x_i - \mu_k)\right)
+\)</span><span class="math notranslate nohighlight">\(
+Here, \)</span>d$ is the dimensionality of the data.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="understanding-gaussian-mixture-models-gmms-for-beginners">
+<h1>Understanding Gaussian Mixture Models (GMMs) for Beginners<a class="headerlink" href="#understanding-gaussian-mixture-models-gmms-for-beginners" title="Link to this heading">#</a></h1>
+<section id="what-is-a-gaussian-mixture-model">
+<h2>What is a Gaussian Mixture Model?<a class="headerlink" href="#what-is-a-gaussian-mixture-model" title="Link to this heading">#</a></h2>
+<p>Imagine you’re at a party with people from different countries, each speaking their own language. The conversations mix together, creating a blend of sounds. If you want to figure out who’s speaking which language, you need to separate the voices. A <strong>Gaussian Mixture Model (GMM)</strong> is like a tool that helps you untangle mixed-up data, assuming the data comes from several groups (like the languages), each following a bell-shaped pattern called a <strong>Gaussian distribution</strong>.</p>
+<p>A GMM assumes your data is made up of multiple <strong>Gaussian distributions</strong> (think of them as bell curves). Each Gaussian represents a group or <strong>cluster</strong> in your data. For example, if you’re studying heights of people, one Gaussian might represent short people, another medium, and another tall. The “mixture” part means these groups are blended together, and the GMM helps figure out:</p>
+<ul class="simple">
+<li><p>How many groups (Gaussians) there are.</p></li>
+<li><p>The shape and position of each group (mean and spread).</p></li>
+<li><p>How much each group contributes to the mix (like how many people speak each language).</p></li>
+</ul>
+<p>Mathematically, a GMM describes the probability of a data point <span class="math notranslate nohighlight">\(x_i\)</span> as a weighted sum of <span class="math notranslate nohighlight">\(K\)</span> Gaussians:
+$<span class="math notranslate nohighlight">\(
+p(x_i) = \sum_{k=1}^K \pi_k \mathcal{N}(x_i | \mu_k, \Sigma_k)
+\)</span>$</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\pi_k\)</span>: The weight of the <span class="math notranslate nohighlight">\(k\)</span>-th Gaussian (how much it contributes).</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{N}(x_i | \mu_k, \Sigma_k)\)</span>: The Gaussian probability density, which depends on:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\mu_k\)</span>: The mean (center of the bell curve).</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma_k\)</span>: The covariance (spread or shape of the bell curve).</p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(K\)</span>: The number of Gaussians (clusters).</p></li>
+</ul>
+<p>The Gaussian density for a data point <span class="math notranslate nohighlight">\(x_i\)</span> in <span class="math notranslate nohighlight">\(d\)</span> dimensions is:
+$<span class="math notranslate nohighlight">\(
+\mathcal{N}(x_i | \mu_k, \Sigma_k) = \frac{1}{(2\pi)^{d/2} |\Sigma_k|^{1/2}} \exp\left(-\frac{1}{2}(x_i - \mu_k)^T \Sigma_k^{-1} (x_i - \mu_k)\right)
+\)</span>$
+Don’t worry about the formula yet—it just describes a bell curve. The key is that it tells us how likely a data point is to belong to a specific Gaussian.</p>
+<section id="analogy">
+<h3>Analogy<a class="headerlink" href="#analogy" title="Link to this heading">#</a></h3>
+<p>Think of GMM as a chef trying to reverse-engineer a soup made by mixing several recipes. Each recipe (Gaussian) has its own ingredients (mean and covariance) and portion size (weight). The chef tastes the soup (data) and guesses which recipes were used and in what amounts.</p>
+</section>
+</section>
+<section id="key-concepts-explained">
+<h2>Key Concepts Explained<a class="headerlink" href="#key-concepts-explained" title="Link to this heading">#</a></h2>
+<section id="gaussian-distribution">
+<h3>1. Gaussian Distribution<a class="headerlink" href="#gaussian-distribution" title="Link to this heading">#</a></h3>
+<p>A Gaussian (or normal distribution) is a bell-shaped curve that describes how data points are spread around a central value (the mean). For example, if you measure the heights of adults, most people are near the average height, with fewer very short or very tall people, forming a bell curve.</p>
+<p>In one dimension, a Gaussian is defined by:</p>
+<ul class="simple">
+<li><p><strong>Mean (<span class="math notranslate nohighlight">\(\mu\)</span>)</strong>: The center of the curve (e.g., average height).</p></li>
+<li><p><strong>Variance (<span class="math notranslate nohighlight">\(\sigma^2\)</span>)</strong>: How spread out the data is (how wide the bell is).</p></li>
+</ul>
+<p>In multiple dimensions (e.g., height and weight), we use a <strong>multivariate Gaussian</strong>, which has:</p>
+<ul class="simple">
+<li><p><strong>Mean vector (<span class="math notranslate nohighlight">\(\mu\)</span>)</strong>: The center point in multiple dimensions.</p></li>
+<li><p><strong>Covariance matrix (<span class="math notranslate nohighlight">\(\Sigma\)</span>)</strong>: Describes the spread and how dimensions are related (e.g., are taller people also heavier?).</p></li>
+</ul>
+<p>This code plots a bell curve centered at <span class="math notranslate nohighlight">\(\mu=0\)</span> with a standard deviation <span class="math notranslate nohighlight">\(\sigma=1\)</span>. The curve shows how likely different values are under this Gaussian.</p>
+</section>
+<section id="mixture-model">
+<h3>2. Mixture Model<a class="headerlink" href="#mixture-model" title="Link to this heading">#</a></h3>
+<p>A mixture model combines multiple Gaussians. Each Gaussian represents a cluster, and the <strong>mixing coefficients</strong> (<span class="math notranslate nohighlight">\(\pi_k\)</span>) tell us how much each cluster contributes to the data. For example, if 50% of people are in the “medium height” cluster, then <span class="math notranslate nohighlight">\(\pi_{\text{medium}} = 0.5\)</span>.</p>
+<p>The mixture model says that a data point could come from any of the Gaussians, with probabilities determined by the weights. The total probability is the weighted sum of the Gaussian probabilities.</p>
+</section>
+<section id="expectation-maximization-em-algorithm">
+<h3>3. Expectation-Maximization (EM) Algorithm<a class="headerlink" href="#expectation-maximization-em-algorithm" title="Link to this heading">#</a></h3>
+<p>Since we don’t know which data points belong to which Gaussians, or even the parameters of the Gaussians, we use the <strong>EM algorithm</strong> to guess them. It’s like solving a puzzle by iteratively refining your guesses.</p>
+<p>The EM algorithm has two steps:</p>
+<ul class="simple">
+<li><p><strong>Expectation (E-Step)</strong>: Guess which Gaussian each data point belongs to by calculating probabilities (called <strong>responsibilities</strong>).</p></li>
+<li><p><strong>Maximization (M-Step)</strong>: Use those guesses to update the Gaussian parameters (means, covariances, and weights).</p></li>
+</ul>
+<section id="e-step-assigning-responsibilities">
+<h4>E-Step: Assigning Responsibilities<a class="headerlink" href="#e-step-assigning-responsibilities" title="Link to this heading">#</a></h4>
+<p>For each data point <span class="math notranslate nohighlight">\(x_i\)</span> and Gaussian <span class="math notranslate nohighlight">\(k\)</span>, we calculate the <strong>responsibility</strong> <span class="math notranslate nohighlight">\(\gamma_{ik}\)</span>, which is the probability that <span class="math notranslate nohighlight">\(x_i\)</span> belongs to the <span class="math notranslate nohighlight">\(k\)</span>-th Gaussian:
+$<span class="math notranslate nohighlight">\(
+\gamma_{ik} = \frac{\pi_k \mathcal{N}(x_i | \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j \mathcal{N}(x_i | \mu_j, \Sigma_j)}
+\)</span>$</p>
+<ul class="simple">
+<li><p>The numerator is the probability of <span class="math notranslate nohighlight">\(x_i\)</span> coming from Gaussian <span class="math notranslate nohighlight">\(k\)</span>, weighted by <span class="math notranslate nohighlight">\(\pi_k\)</span>.</p></li>
+<li><p>The denominator sums the probabilities from all Gaussians, ensuring <span class="math notranslate nohighlight">\(\sum_{k=1}^K \gamma_{ik} = 1\)</span>.</p></li>
+</ul>
+<p>Think of this as assigning a “soft” label to each data point. Instead of saying “this point is definitely in cluster 1,” we say “it’s 70% in cluster 1, 20% in cluster 2, 10% in cluster 3.”</p>
+</section>
+<section id="m-step-updating-parameters">
+<h4>M-Step: Updating Parameters<a class="headerlink" href="#m-step-updating-parameters" title="Link to this heading">#</a></h4>
+<p>Using the responsibilities, we update:</p>
+<ul class="simple">
+<li><p><strong>Weights</strong>:
+$<span class="math notranslate nohighlight">\(
+\pi_k = \frac{1}{N} \sum_{i=1}^N \gamma_{ik}
+\)</span><span class="math notranslate nohighlight">\(
+The weight is the average responsibility for Gaussian \)</span>k<span class="math notranslate nohighlight">\( across all \)</span>N$ data points.</p></li>
+<li><p><strong>Means</strong>:
+$<span class="math notranslate nohighlight">\(
+\mu_k = \frac{\sum_{i=1}^N \gamma_{ik} x_i}{\sum_{i=1}^N \gamma_{ik}}
+\)</span>$
+The new mean is a weighted average of the data points, where the weights are the responsibilities.</p></li>
+<li><p><strong>Covariances</strong>:
+$<span class="math notranslate nohighlight">\(
+\Sigma_k = \frac{\sum_{i=1}^N \gamma_{ik} (x_i - \mu_k)(x_i - \mu_k)^T}{\sum_{i=1}^N \gamma_{ik}}
+\)</span>$
+The covariance measures how the data points vary around the mean, again weighted by responsibilities.</p></li>
+</ul>
+<p>These updates improve the Gaussians to better fit the data.</p>
+</section>
+</section>
+<section id="why-use-gmms">
+<h3>4. Why Use GMMs?<a class="headerlink" href="#why-use-gmms" title="Link to this heading">#</a></h3>
+<p>GMMs are powerful because:</p>
+<ul class="simple">
+<li><p>They allow <strong>soft clustering</strong>: A data point can partially belong to multiple clusters.</p></li>
+<li><p>They model data as probabilities, which is useful for tasks like anomaly detection or density estimation.</p></li>
+<li><p>They can capture complex patterns, like elliptical clusters, unlike simpler methods like K-means.</p></li>
+</ul>
+</section>
+</section>
+<section id="recap-gaussian-mixture-models-and-em-algorithm">
+<h2>Recap: Gaussian Mixture Models and EM Algorithm<a class="headerlink" href="#recap-gaussian-mixture-models-and-em-algorithm" title="Link to this heading">#</a></h2>
+<p>A <strong>Gaussian Mixture Model (GMM)</strong> models data as a combination of several Gaussian distributions, each representing a cluster with its own mean (<span class="math notranslate nohighlight">\(\mu_k\)</span>), covariance (<span class="math notranslate nohighlight">\(\Sigma_k\)</span>), and mixing coefficient (<span class="math notranslate nohighlight">\(\pi_k\)</span>). The <strong>Expectation-Maximization (EM) algorithm</strong> estimates these parameters by iterating between two steps:</p>
+<ul class="simple">
+<li><p><strong>E-Step</strong>: Computes <strong>responsibilities</strong> (<span class="math notranslate nohighlight">\(\gamma_{ik}\)</span>), the probability that data point <span class="math notranslate nohighlight">\(x_i\)</span> belongs to the <span class="math notranslate nohighlight">\(k\)</span>-th Gaussian.</p></li>
+<li><p><strong>M-Step</strong>: Updates the parameters (<span class="math notranslate nohighlight">\(\pi_k\)</span>, <span class="math notranslate nohighlight">\(\mu_k\)</span>, <span class="math notranslate nohighlight">\(\Sigma_k\)</span>) to maximize the likelihood of the data given the responsibilities.</p></li>
+</ul>
+<p>In this artifact, we’ll focus on the <strong>M-Step</strong> and <strong>Convergence</strong>, explaining them in detail with intuition, math, and code. We’ll also visualize the clusters with covariance ellipses to show the shape of each Gaussian.</p>
+</section>
+<section id="the-maximization-step-m-step">
+<h2>The Maximization Step (M-Step)<a class="headerlink" href="#the-maximization-step-m-step" title="Link to this heading">#</a></h2>
+<section id="what-is-the-m-step">
+<h3>What is the M-Step?<a class="headerlink" href="#what-is-the-m-step" title="Link to this heading">#</a></h3>
+<p>The M-Step updates the GMM parameters to make the data more likely under the model. After the E-Step assigns responsibilities (how much each data point belongs to each Gaussian), the M-Step uses these to adjust:</p>
+<ul class="simple">
+<li><p><strong>Mixing coefficients</strong> (<span class="math notranslate nohighlight">\(\pi_k\)</span>): How much each Gaussian contributes to the data.</p></li>
+<li><p><strong>Means</strong> (<span class="math notranslate nohighlight">\(\mu_k\)</span>): The center of each Gaussian.</p></li>
+<li><p><strong>Covariances</strong> (<span class="math notranslate nohighlight">\(\Sigma_k\)</span>): The spread and shape of each Gaussian.</p></li>
+</ul>
+<p>The goal is to maximize the <strong>expected log-likelihood</strong> of the data, which measures how well the model fits the data. Think of it as tweaking the recipe for a soup to make it taste as close as possible to the actual soup, using the E-Step’s guesses about which ingredients (Gaussians) are present.</p>
+</section>
+<section id="mathematical-details">
+<h3>Mathematical Details<a class="headerlink" href="#mathematical-details" title="Link to this heading">#</a></h3>
+<p>The M-Step maximizes the expected log-likelihood:
+$<span class="math notranslate nohighlight">\(
+Q(\theta, \theta^{\text{old}}) = \sum_{i=1}^N \sum_{k=1}^K \gamma_{ik} \log \left( \pi_k \mathcal{N}(x_i | \mu_k, \Sigma_k) \right)
+\)</span>$
+where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\theta = \{\pi_k, \mu_k, \Sigma_k\}\)</span> are the parameters to update.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma_{ik}\)</span> are the responsibilities from the E-Step.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{N}(x_i | \mu_k, \Sigma_k)\)</span> is the Gaussian density.</p></li>
+</ul>
+<p>To maximize <span class="math notranslate nohighlight">\(Q\)</span>, we take partial derivatives with respect to each parameter, set them to zero, and solve. Here are the updates:</p>
+<section id="mixing-coefficients-pi-k">
+<h4>1. Mixing Coefficients (<span class="math notranslate nohighlight">\(\pi_k\)</span>)<a class="headerlink" href="#mixing-coefficients-pi-k" title="Link to this heading">#</a></h4>
+<p>The mixing coefficient <span class="math notranslate nohighlight">\(\pi_k\)</span> represents the proportion of the data attributed to the <span class="math notranslate nohighlight">\(k\)</span>-th Gaussian. The update is:
+$<span class="math notranslate nohighlight">\(
+\pi_k = \frac{1}{N} \sum_{i=1}^N \gamma_{ik}
+\)</span>$</p>
+<ul class="simple">
+<li><p><strong>Intuition</strong>: Sum the responsibilities for Gaussian <span class="math notranslate nohighlight">\(k\)</span> across all <span class="math notranslate nohighlight">\(N\)</span> data points to estimate how much of the data belongs to it, then divide by <span class="math notranslate nohighlight">\(N\)</span> to get a proportion.</p></li>
+<li><p><strong>Constraint</strong>: The weights must sum to 1 (<span class="math notranslate nohighlight">\(\sum_{k=1}^K \pi_k = 1\)</span>), which is ensured by the normalization in the E-Step.</p></li>
+</ul>
+</section>
+<section id="means-mu-k">
+<h4>2. Means (<span class="math notranslate nohighlight">\(\mu_k\)</span>)<a class="headerlink" href="#means-mu-k" title="Link to this heading">#</a></h4>
+<p>The mean <span class="math notranslate nohighlight">\(\mu_k\)</span> is the center of the <span class="math notranslate nohighlight">\(k\)</span>-th Gaussian. The update is:
+$<span class="math notranslate nohighlight">\(
+\mu_k = \frac{\sum_{i=1}^N \gamma_{ik} x_i}{\sum_{i=1}^N \gamma_{ik}}
+\)</span>$</p>
+<ul class="simple">
+<li><p><strong>Intuition</strong>: Compute a weighted average of the data points, where the weights are the responsibilities. Points with higher <span class="math notranslate nohighlight">\(\gamma_{ik}\)</span> (more likely to belong to Gaussian <span class="math notranslate nohighlight">\(k\)</span>) pull the mean more strongly.</p></li>
+<li><p><strong>Analogy</strong>: Imagine each data point voting for where the cluster center should be, with votes weighted by how confident the point is in belonging to that cluster.</p></li>
+</ul>
+</section>
+<section id="covariances-sigma-k">
+<h4>3. Covariances (<span class="math notranslate nohighlight">\(\Sigma_k\)</span>)<a class="headerlink" href="#covariances-sigma-k" title="Link to this heading">#</a></h4>
+<p>The covariance matrix <span class="math notranslate nohighlight">\(\Sigma_k\)</span> describes the spread and orientation of the <span class="math notranslate nohighlight">\(k\)</span>-th Gaussian. The update is:
+$<span class="math notranslate nohighlight">\(
+\Sigma_k = \frac{\sum_{i=1}^N \gamma_{ik} (x_i - \mu_k)(x_i - \mu_k)^T}{\sum_{i=1}^N \gamma_{ik}}
+\)</span>$</p>
+<ul class="simple">
+<li><p><strong>Intuition</strong>: Calculate how the data points vary around the new mean, weighted by their responsibilities. The term <span class="math notranslate nohighlight">\((x_i - \mu_k)(x_i - \mu_k)^T\)</span> measures the spread in all directions, and responsibilities ensure only relevant points contribute significantly.</p></li>
+<li><p><strong>Why the <span class="math notranslate nohighlight">\(T\)</span>?</strong>: In multiple dimensions, <span class="math notranslate nohighlight">\((x_i - \mu_k)\)</span> is a vector, and the outer product <span class="math notranslate nohighlight">\((x_i - \mu_k)(x_i - \mu_k)^T\)</span> creates a matrix capturing correlations between dimensions (e.g., does height correlate with weight?).</p></li>
+<li><p><strong>Regularization</strong>: A small term (e.g., <span class="math notranslate nohighlight">\(10^{-6} \cdot I\)</span>) is often added to <span class="math notranslate nohighlight">\(\Sigma_k\)</span> to ensure it’s positive definite (invertible), avoiding numerical issues.</p></li>
+</ul>
+</section>
+</section>
+<section id="why-does-this-work">
+<h3>Why Does This Work?<a class="headerlink" href="#why-does-this-work" title="Link to this heading">#</a></h3>
+<p>The M-Step updates are derived by maximizing the likelihood, assuming the responsibilities are fixed. Each update moves the Gaussians to better fit the data points assigned to them, like adjusting the position and shape of a bell curve to cover its points more snugly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">m_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">responsibilities</span><span class="p">):</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Update weights</span>
+    <span class="n">Nk</span> <span class="o">=</span> <span class="n">responsibilities</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Sum of responsibilities for each Gaussian</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="n">Nk</span> <span class="o">/</span> <span class="n">n_samples</span>
+    <span class="c1"># Update means</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">responsibilities</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nk</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="c1"># Update covariances</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">responsibilities</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">diff</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e-6</span>  <span class="c1"># Regularization</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="python-code-for-m-step">
+<h3>Python Code for M-Step<a class="headerlink" href="#python-code-for-m-step" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Nk</strong>: The sum of responsibilities for Gaussian <span class="math notranslate nohighlight">\(k\)</span>, acting as the “effective number” of points in that cluster.</p></li>
+<li><p><strong>Matrix Operations</strong>: Using <code class="docutils literal notranslate"><span class="pre">np.dot</span></code> for efficiency, especially for means and covariances in high dimensions.</p></li>
+<li><p><strong>Regularization</strong>: Adds a small value to the diagonal of <span class="math notranslate nohighlight">\(\Sigma_k\)</span> to prevent singularities.</p></li>
+</ul>
+</section>
+</section>
+<section id="convergence-in-gmms">
+<h2>Convergence in GMMs<a class="headerlink" href="#convergence-in-gmms" title="Link to this heading">#</a></h2>
+<section id="what-is-convergence">
+<h3>What is Convergence?<a class="headerlink" href="#what-is-convergence" title="Link to this heading">#</a></h3>
+<p>Convergence means the EM algorithm has found parameters that don’t change much between iterations, indicating the model fits the data well. The EM algorithm doesn’t guarantee the global best solution, but it improves the <strong>log-likelihood</strong> with each iteration until it stabilizes.</p>
+<p>The <strong>log-likelihood</strong> measures how likely the data is under the current model:
+$<span class="math notranslate nohighlight">\(
+\log p(X | \theta) = \sum_{i=1}^N \log \left( \sum_{k=1}^K \pi_k \mathcal{N}(x_i | \mu_k, \Sigma_k) \right)
+\)</span>$</p>
+<ul class="simple">
+<li><p><strong>Goal</strong>: Maximize this value.</p></li>
+<li><p><strong>Convergence Check</strong>: Stop when the change in log-likelihood between iterations is small (e.g., less than a threshold like <span class="math notranslate nohighlight">\(10^{-4}\)</span>).</p></li>
+</ul>
+</section>
+<section id="how-em-ensures-convergence">
+<h3>How EM Ensures Convergence<a class="headerlink" href="#how-em-ensures-convergence" title="Link to this heading">#</a></h3>
+<p>The EM algorithm guarantees that the log-likelihood never decreases:</p>
+<ul class="simple">
+<li><p><strong>E-Step</strong>: Computes responsibilities that maximize the expected log-likelihood for the current parameters.</p></li>
+<li><p><strong>M-Step</strong>: Updates parameters to maximize the expected log-likelihood given the responsibilities.</p></li>
+</ul>
+<p>This iterative process increases the log-likelihood until it plateaus, indicating convergence to a <strong>local maximum</strong>. However:</p>
+<ul class="simple">
+<li><p><strong>Local vs. Global Maximum</strong>: The solution depends on the initial parameters. Poor initialization (e.g., random means far from the data) may lead to a suboptimal solution.</p></li>
+<li><p><strong>Multiple Restarts</strong>: Running EM with different initializations and picking the solution with the highest log-likelihood can help.</p></li>
+</ul>
+</section>
+<section id="practical-convergence-criteria">
+<h3>Practical Convergence Criteria<a class="headerlink" href="#practical-convergence-criteria" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Log-Likelihood Difference</strong>: Stop when:
+$<span class="math notranslate nohighlight">\(
+|\log p(X | \theta^{(t)}) - \log p(X | \theta^{(t-1)})| &lt; \text{tol}
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>\text{tol}<span class="math notranslate nohighlight">\( is a small threshold (e.g., \)</span>10^{-4}$).</p></li>
+<li><p><strong>Maximum Iterations</strong>: Stop after a fixed number of iterations (e.g., 100) to avoid infinite loops.</p></li>
+<li><p><strong>Parameter Stability</strong>: Check if parameters (<span class="math notranslate nohighlight">\(\mu_k\)</span>, <span class="math notranslate nohighlight">\(\Sigma_k\)</span>, <span class="math notranslate nohighlight">\(\pi_k\)</span>) change minimally, though log-likelihood is more common.</p></li>
+</ul>
+</section>
+<section id="python-code-for-convergence">
+<h3>Python Code for Convergence<a class="headerlink" href="#python-code-for-convergence" title="Link to this heading">#</a></h3>
+<p>Here’s a snippet showing how convergence is checked in the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_log_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">likelihood</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+        <span class="n">gaussian</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">likelihood</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">gaussian</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">likelihood</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">))</span>  <span class="c1"># Avoid log(0)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">initialize_parameters</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+        <span class="c1"># E-step</span>
+        <span class="n">responsibilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_step</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="c1"># M-step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_step</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">responsibilities</span><span class="p">)</span>
+        <span class="c1"># Compute and check log-likelihood</span>
+        <span class="n">log_likelihood</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_log_likelihood</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_likelihood</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> \
+           <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Converged at iteration </span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p><strong>Log-Likelihood</strong>: Computed by summing the log of the weighted Gaussian densities for each point.</p></li>
+<li><p><strong>Convergence Check</strong>: Stops if the log-likelihood changes by less than <code class="docutils literal notranslate"><span class="pre">tol</span></code>.</p></li>
+<li><p><strong>Numerical Stability</strong>: Adds a small constant (<span class="math notranslate nohighlight">\(10^{-10}\)</span>) to avoid taking the log of zero.</p></li>
+</ul>
+</section>
+</section>
+<section id="visualizing-clusters-with-covariance-ellipses">
+<h2>Visualizing Clusters with Covariance Ellipses<a class="headerlink" href="#visualizing-clusters-with-covariance-ellipses" title="Link to this heading">#</a></h2>
+<p>To illustrate the M-Step and convergence, we’ll plot the clusters with ellipses showing the shape of each Gaussian’s covariance matrix. This helps visualize how the M-Step adjusts the Gaussians to fit the data.</p>
+<section id="complete-python-implementation">
+<h3>Complete Python Implementation<a class="headerlink" href="#complete-python-implementation" title="Link to this heading">#</a></h3>
+<p>Below is a GMM implementation with a plot that includes:</p>
+<ul class="simple">
+<li><p>Data points colored by cluster.</p></li>
+<li><p>Cluster means as red ‘x’ markers.</p></li>
+<li><p>Ellipses representing the 95% confidence interval of each Gaussian’s covariance.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">multivariate_normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ellipse</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GMM</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span> <span class="o">=</span> <span class="n">n_components</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-6</span> 
+                                     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">e_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">responsibilities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="n">gaussian</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">responsibilities</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">gaussian</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">responsibilities</span> <span class="o">/=</span> <span class="n">responsibilities</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">responsibilities</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">m_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">responsibilities</span><span class="p">):</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">Nk</span> <span class="o">=</span> <span class="n">responsibilities</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="n">Nk</span> <span class="o">/</span> <span class="n">n_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">responsibilities</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nk</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">responsibilities</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">diff</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e-6</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_log_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">likelihood</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="n">gaussian</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">likelihood</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">gaussian</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">likelihood</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_parameters</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+            <span class="n">responsibilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_step</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">m_step</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">responsibilities</span><span class="p">)</span>
+            <span class="n">log_likelihood</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_log_likelihood</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_likelihood</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> \
+               <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+                <span class="k">break</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">responsibilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_step</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">responsibilities</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_ellipse</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+    <span class="c1"># Compute eigenvalues and eigenvectors for ellipse</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+    <span class="c1"># Scale for 95% confidence (approx 2 standard deviations)</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">5.991</span><span class="p">)</span>  <span class="c1"># Chi-square value for 2 degrees of freedom</span>
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+    <span class="c1"># Compute angle of rotation</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">eigenvectors</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">eigenvectors</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="c1"># Create ellipse</span>
+    <span class="n">ellipse</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">(</span><span class="n">xy</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
+                     <span class="n">edgecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">ellipse</span><span class="p">)</span>
+
+<span class="c1"># Generate synthetic 2D data</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">])</span>
+
+<span class="c1"># Fit GMM</span>
+<span class="n">gmm</span> <span class="o">=</span> <span class="n">GMM</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">gmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Predict clusters</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Plot clusters with ellipses</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;purple&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+    <span class="c1"># Plot points for each cluster</span>
+    <span class="n">cluster_points</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cluster_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cluster_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Cluster </span><span class="si">{</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># Plot covariance ellipse</span>
+    <span class="n">plot_ellipse</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span> <span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">gmm</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+<span class="c1"># Plot means</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Means&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;GMM Clustering with Covariance Ellipses&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gmm_clusters_ellipses.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/fb9f213cb6ccb07d398ab9f850b0a12e095805673663df7833fbd78a5ea38e85.png" src="_images/fb9f213cb6ccb07d398ab9f850b0a12e095805673663df7833fbd78a5ea38e85.png" />
+</div>
+</div>
+</section>
+<section id="plot-description">
+<h3>Plot Description<a class="headerlink" href="#plot-description" title="Link to this heading">#</a></h3>
+<p>The output plot (<code class="docutils literal notranslate"><span class="pre">gmm_clusters_ellipses.png</span></code>) shows:</p>
+<ul class="simple">
+<li><p><strong>Data Points</strong>: Colored by their assigned cluster (blue, green, purple for three clusters).</p></li>
+<li><p><strong>Cluster Means</strong>: Red ‘x’ markers at the center of each Gaussian.</p></li>
+<li><p><strong>Covariance Ellipses</strong>: Outlines showing the shape and orientation of each Gaussian’s covariance matrix, scaled to represent the 95% confidence region.</p></li>
+<li><p>The ellipses visualize how the M-Step shapes each Gaussian to fit the data, with their size and tilt reflecting the covariance.</p></li>
+</ul>
+</section>
+<section id="code-highlights">
+<h3>Code Highlights<a class="headerlink" href="#code-highlights" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Ellipse Plotting</strong>: The <code class="docutils literal notranslate"><span class="pre">plot_ellipse</span></code> function uses the eigenvalues and eigenvectors of the covariance matrix to draw an ellipse. The scale (based on the chi-square distribution) ensures the ellipse covers ~95% of the Gaussian’s probability mass.</p></li>
+<li><p><strong>Convergence</strong>: The <code class="docutils literal notranslate"><span class="pre">fit</span></code> method tracks log-likelihood and stops when it stabilizes, showing how the algorithm converges.</p></li>
+<li><p><strong>M-Step</strong>: Updates are implemented efficiently with matrix operations, and regularization ensures stable covariances.</p></li>
+</ul>
+</section>
+</section>
+<section id="practical-insights">
+<h2>Practical Insights<a class="headerlink" href="#practical-insights" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>M-Step Challenges</strong>:</p>
+<ul>
+<li><p><strong>Singular Covariances</strong>: If too few points are assigned to a Gaussian, <span class="math notranslate nohighlight">\(\Sigma_k\)</span> may become non-invertible. Regularization (adding a small diagonal term) helps.</p></li>
+<li><p><strong>Sensitivity to Initialization</strong>: The M-Step relies on E-Step responsibilities, which depend on initial parameters. K-means initialization (as used here) improves robustness.</p></li>
+</ul>
+</li>
+<li><p><strong>Convergence Issues</strong>:</p>
+<ul>
+<li><p><strong>Local Maxima</strong>: The algorithm may converge to a suboptimal solution. Multiple runs with different seeds can help.</p></li>
+<li><p><strong>Slow Convergence</strong>: If clusters overlap significantly, convergence may be slow. Increasing <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> or adjusting <code class="docutils literal notranslate"><span class="pre">tol</span></code> can help.</p></li>
+<li><p><strong>Numerical Precision</strong>: Small likelihood values can cause numerical issues, hence the <span class="math notranslate nohighlight">\(10^{-10}\)</span> in log-likelihood.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="visualizing-convergence">
+<h2>Visualizing Convergence<a class="headerlink" href="#visualizing-convergence" title="Link to this heading">#</a></h2>
+<p>To further illustrate convergence, let’s plot the log-likelihood over iterations:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add to the previous code, after fitting the GMM</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Log-Likelihood vs. Iteration&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Iteration&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Log-Likelihood&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gmm_log_likelihood.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b6da50888fc0bcc41694a010d2f6187573a7e2ed18c884efc3c9de79f79b1612.png" src="_images/b6da50888fc0bcc41694a010d2f6187573a7e2ed18c884efc3c9de79f79b1612.png" />
+</div>
+</div>
+<p>This plot (<code class="docutils literal notranslate"><span class="pre">gmm_log_likelihood.png</span></code>) shows the log-likelihood increasing and plateauing, indicating convergence. It helps visualize how the EM algorithm improves the model fit over time.</p>
+</section>
+<section id="key-takeaways">
+<h2>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>M-Step</strong>: Updates the GMM parameters to maximize the expected log-likelihood, using responsibilities as weights to adjust means, covariances, and mixing coefficients.</p></li>
+<li><p><strong>Convergence</strong>: The EM algorithm increases the log-likelihood until it stabilizes, typically at a local maximum. Monitoring the log-likelihood helps ensure the model has converged.</p></li>
+<li><p><strong>Visualization</strong>: Covariance ellipses show how the M-Step shapes Gaussians, and log-likelihood plots confirm convergence.</p></li>
+</ul>
+<p>This implementation and visualization provide a clear view of how the M-Step and convergence work together to fit a GMM to data.</p>
+</section>
+<section id="expectation-maximization-algorithm">
+<h2>Expectation-Maximization Algorithm<a class="headerlink" href="#expectation-maximization-algorithm" title="Link to this heading">#</a></h2>
+<p>The EM algorithm iteratively optimizes the parameters <span class="math notranslate nohighlight">\(\theta = \{\pi_k, \mu_k, \Sigma_k\}_{k=1}^K\)</span> to maximize the likelihood of the data.</p>
+<section id="e-step-expectation">
+<h3>E-Step (Expectation)<a class="headerlink" href="#e-step-expectation" title="Link to this heading">#</a></h3>
+<p>Compute the responsibility (posterior probability) that component <span class="math notranslate nohighlight">\(k\)</span> is responsible for data point <span class="math notranslate nohighlight">\(x_i\)</span>:
+$<span class="math notranslate nohighlight">\(
+\gamma_{ik} = \frac{\pi_k \mathcal{N}(x_i | \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j \mathcal{N}(x_i | \mu_j, \Sigma_j)}
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>\gamma_{ik}<span class="math notranslate nohighlight">\( represents the probability that \)</span>x_i<span class="math notranslate nohighlight">\( belongs to the \)</span>k$-th component.</p>
+</section>
+<section id="m-step-maximization">
+<h3>M-Step (Maximization)<a class="headerlink" href="#m-step-maximization" title="Link to this heading">#</a></h3>
+<p>Update the parameters using the responsibilities:</p>
+<ul class="simple">
+<li><p><strong>Mixing Coefficients</strong>:
+$<span class="math notranslate nohighlight">\(
+\pi_k = \frac{1}{N} \sum_{i=1}^N \gamma_{ik}
+\)</span>$</p></li>
+<li><p><strong>Means</strong>:
+$<span class="math notranslate nohighlight">\(
+\mu_k = \frac{\sum_{i=1}^N \gamma_{ik} x_i}{\sum_{i=1}^N \gamma_{ik}}
+\)</span>$</p></li>
+<li><p><strong>Covariances</strong>:
+$<span class="math notranslate nohighlight">\(
+\Sigma_k = \frac{\sum_{i=1}^N \gamma_{ik} (x_i - \mu_k)(x_i - \mu_k)^T}{\sum_{i=1}^N \gamma_{ik}}
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>N$ is the number of data points.</p></li>
+</ul>
+</section>
+<section id="convergence">
+<h3>Convergence<a class="headerlink" href="#convergence" title="Link to this heading">#</a></h3>
+<p>The algorithm iterates between the E-step and M-step until the log-likelihood converges:
+$<span class="math notranslate nohighlight">\(
+\log p(X | \theta) = \sum_{i=1}^N \log \left( \sum_{k=1}^K \pi_k \mathcal{N}(x_i | \mu_k, \Sigma_k) \right)
+\)</span>$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">multivariate_normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GMM</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span> <span class="o">=</span> <span class="n">n_components</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="c1"># Initialize with K-means for means</span>
+        <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span>
+        <span class="c1"># Initialize weights uniformly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span>
+        <span class="c1"># Initialize covariances as identity matrices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-6</span> 
+                                     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">e_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">responsibilities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="n">gaussian</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">responsibilities</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">gaussian</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">responsibilities</span> <span class="o">/=</span> <span class="n">responsibilities</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">responsibilities</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">m_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">responsibilities</span><span class="p">):</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Update weights</span>
+        <span class="n">Nk</span> <span class="o">=</span> <span class="n">responsibilities</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="n">Nk</span> <span class="o">/</span> <span class="n">n_samples</span>
+        <span class="c1"># Update means</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">responsibilities</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nk</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="c1"># Update covariances</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">responsibilities</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">diff</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e-6</span>  <span class="c1"># Regularization</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_log_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">likelihood</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="n">gaussian</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">likelihood</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">gaussian</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">likelihood</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_parameters</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+            <span class="c1"># E-step</span>
+            <span class="n">responsibilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_step</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="c1"># M-step</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">m_step</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">responsibilities</span><span class="p">)</span>
+            <span class="c1"># Compute log-likelihood</span>
+            <span class="n">log_likelihood</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_log_likelihood</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_likelihood</span><span class="p">)</span>
+            <span class="c1"># Check convergence</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> \
+               <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_likelihoods_</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+                <span class="k">break</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">responsibilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_step</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">responsibilities</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Example usage and visualization</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Generate synthetic 2D data</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">])</span>
+
+<span class="c1"># Fit GMM</span>
+<span class="n">gmm</span> <span class="o">=</span> <span class="n">GMM</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">gmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Predict clusters</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Plot results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Means&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Gaussian Mixture Model Clustering&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gmm_clustering.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a42652d5ed9c16e3a9da61d570057b20ae579403144b3e5a592a7cc5134cbd4c.png" src="_images/a42652d5ed9c16e3a9da61d570057b20ae579403144b3e5a592a7cc5134cbd4c.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="explanation-of-the-code">
+<h2>Explanation of the Code<a class="headerlink" href="#explanation-of-the-code" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Initialization</strong>: The parameters are initialized using K-means for means, uniform weights, and sample covariance for covariances. A small regularization term (<span class="math notranslate nohighlight">\(10^{-6}\)</span>) is added to covariances to ensure they are positive definite.</p></li>
+<li><p><strong>E-Step</strong>: Computes responsibilities <span class="math notranslate nohighlight">\(\gamma_{ik}\)</span> using the current parameters and the multivariate Gaussian PDF.</p></li>
+<li><p><strong>M-Step</strong>: Updates the weights, means, and covariances based on the responsibilities.</p></li>
+<li><p><strong>Log-Likelihood</strong>: Tracks the log-likelihood to monitor convergence.</p></li>
+<li><p><strong>Visualization</strong>: The synthetic data is plotted with cluster assignments and estimated means.</p></li>
+</ul>
+</section>
+<section id="practical-considerations">
+<h2>Practical Considerations<a class="headerlink" href="#practical-considerations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Convergence</strong>: The algorithm stops when the change in log-likelihood is below a threshold (<code class="docutils literal notranslate"><span class="pre">tol</span></code>) or after <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> iterations.</p></li>
+<li><p><strong>Numerical Stability</strong>: Regularization is added to covariances to prevent singularities.</p></li>
+<li><p><strong>Initialization Sensitivity</strong>: K-means initialization helps, but GMM can be sensitive to initial conditions. Multiple restarts may improve results.</p></li>
+<li><p><strong>Choosing <span class="math notranslate nohighlight">\(K\)</span></strong>: The number of components can be selected using criteria like BIC or AIC, though this implementation assumes <span class="math notranslate nohighlight">\(K\)</span> is given.</p></li>
+</ul>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Link to this heading">#</a></h2>
+<p>The code generates a plot (<code class="docutils literal notranslate"><span class="pre">gmm_clustering.png</span></code>) showing the data points colored by cluster assignments and the estimated means marked with red ‘x’ symbols.</p>
+<p>This implementation provides a foundation for clustering and density estimation tasks using GMMs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">multivariate_normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SimpleGMM</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span> <span class="o">=</span> <span class="n">n_components</span>  <span class="c1"># Number of Gaussians</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>  <span class="c1"># Maximum iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>  <span class="c1"># Convergence threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Mixing coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Means of Gaussians</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Covariances of Gaussians</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="c1"># Use K-means to initialize means</span>
+        <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span>
+        <span class="c1"># Initialize weights equally</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span>
+        <span class="c1"># Initialize covariances as sample covariance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-6</span> 
+                                     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">e_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">responsibilities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">))</span>
+        <span class="c1"># Calculate probability of each point under each Gaussian</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="n">gaussian</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">responsibilities</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">gaussian</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="c1"># Normalize to get responsibilities</span>
+        <span class="n">responsibilities</span> <span class="o">/=</span> <span class="n">responsibilities</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">responsibilities</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">m_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">responsibilities</span><span class="p">):</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Update weights</span>
+        <span class="n">Nk</span> <span class="o">=</span> <span class="n">responsibilities</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Sum of responsibilities for each component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="n">Nk</span> <span class="o">/</span> <span class="n">n_samples</span>
+        <span class="c1"># Update means</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">responsibilities</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nk</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="c1"># Update covariances</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">responsibilities</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">diff</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e-6</span>  <span class="c1"># Regularization</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_parameters</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+            <span class="c1"># E-step: Compute responsibilities</span>
+            <span class="n">responsibilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_step</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="c1"># M-step: Update parameters</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">m_step</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">responsibilities</span><span class="p">)</span>
+            <span class="c1"># Check convergence (simplified)</span>
+            <span class="k">if</span> <span class="n">iteration</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">iteration</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s2">, weights: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Stop if max iterations reached</span>
+            <span class="k">if</span> <span class="n">iteration</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">break</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">responsibilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_step</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">responsibilities</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Generate synthetic 2D data</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">])</span>
+
+<span class="c1"># Fit GMM</span>
+<span class="n">gmm</span> <span class="o">=</span> <span class="n">SimpleGMM</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">gmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Predict clusters</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Plot clusters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data Points&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cluster Means&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Gaussian Mixture Model Clustering&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gmm_clusters.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration 10, weights: [0.31781875 0.33321939 0.34896186]
+Iteration 20, weights: [0.32018824 0.3332315  0.34658026]
+Iteration 30, weights: [0.32076021 0.33323353 0.34600626]
+Iteration 40, weights: [0.32090158 0.33323402 0.34586441]
+Iteration 50, weights: [0.32093674 0.33323414 0.34582913]
+Iteration 60, weights: [0.3209455  0.33323417 0.34582034]
+Iteration 70, weights: [0.32094768 0.33323417 0.34581815]
+Iteration 80, weights: [0.32094822 0.33323418 0.3458176 ]
+Iteration 90, weights: [0.32094836 0.33323418 0.34581747]
+</pre></div>
+</div>
+<img alt="_images/46368a76bb599ccf7b206aed0e1826f034ed3f541369cd7eb600681e69466e74.png" src="_images/46368a76bb599ccf7b206aed0e1826f034ed3f541369cd7eb600681e69466e74.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="6_Clustering.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">K-Means and Clustering</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="8_Nearest_Neighbour_Algorithm.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Nearest Neighbour Algorithm</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Gaussian Mixture Models and EM</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hard-clustering-e-g-k-means"><strong>1. Hard Clustering (e.g., K-Means)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soft-clustering-e-g-gaussian-mixture-models-gmm"><strong>2. Soft Clustering (e.g., Gaussian Mixture Models, GMM)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-differences"><strong>Key Differences</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-use-each"><strong>When to Use Each?</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-mixture-models-with-expectation-maximization">Gaussian Mixture Models with Expectation-Maximization</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">Key Concepts</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-gaussian-mixture-models-gmms-for-beginners">Understanding Gaussian Mixture Models (GMMs) for Beginners</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-gaussian-mixture-model">What is a Gaussian Mixture Model?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analogy">Analogy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts-explained">Key Concepts Explained</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-distribution">1. Gaussian Distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mixture-model">2. Mixture Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expectation-maximization-em-algorithm">3. Expectation-Maximization (EM) Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#e-step-assigning-responsibilities">E-Step: Assigning Responsibilities</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-updating-parameters">M-Step: Updating Parameters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-gmms">4. Why Use GMMs?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recap-gaussian-mixture-models-and-em-algorithm">Recap: Gaussian Mixture Models and EM Algorithm</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-maximization-step-m-step">The Maximization Step (M-Step)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-the-m-step">What is the M-Step?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-details">Mathematical Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mixing-coefficients-pi-k">1. Mixing Coefficients (<span class="math notranslate nohighlight">\(\pi_k\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#means-mu-k">2. Means (<span class="math notranslate nohighlight">\(\mu_k\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#covariances-sigma-k">3. Covariances (<span class="math notranslate nohighlight">\(\Sigma_k\)</span>)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-does-this-work">Why Does This Work?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-code-for-m-step">Python Code for M-Step</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence-in-gmms">Convergence in GMMs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-convergence">What is Convergence?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-em-ensures-convergence">How EM Ensures Convergence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-convergence-criteria">Practical Convergence Criteria</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-code-for-convergence">Python Code for Convergence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-clusters-with-covariance-ellipses">Visualizing Clusters with Covariance Ellipses</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-python-implementation">Complete Python Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-description">Plot Description</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-highlights">Code Highlights</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-insights">Practical Insights</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-convergence">Visualizing Convergence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#expectation-maximization-algorithm">Expectation-Maximization Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-step-expectation">E-Step (Expectation)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-maximization">M-Step (Maximization)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence">Convergence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation-of-the-code">Explanation of the Code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-considerations">Practical Considerations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output">Output</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Chandravesh Chaudhari
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
