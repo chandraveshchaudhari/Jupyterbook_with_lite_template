@@ -1,5 +1,3 @@
----
-
 # Welcome to *JupyterBook + JupyterLite integration Template* 🚀📊
 
 This repository is a **template** for building your own interactive **JupyterBook** with:
