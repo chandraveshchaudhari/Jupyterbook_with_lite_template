@@ -33,8 +33,7 @@ jobs:
 
       - name: Clean and prepare docs directory
         run: |
-          # Remove existing docs content but keep the folder structure
-          rm -rf docs/*
+          mkdir -p docs
           # Create jupyterlite subdirectory
           mkdir -p docs/jupyterlite
 
