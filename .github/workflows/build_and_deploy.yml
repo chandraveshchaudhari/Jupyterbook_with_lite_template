@@ -66,10 +66,7 @@ jobs:
           echo '{
             "LiteBuildConfig": {
               "federated_extensions": [
-                {
-                  "extension": "@jupyterlite/pyodide-kernel-extension",
-                  "version": "0.2.3"
-                }
+                "@jupyterlite/pyodide-kernel-extension"
               ],
               "output_dir": "_output",
               "files": [' > jupyterlite_config.json
