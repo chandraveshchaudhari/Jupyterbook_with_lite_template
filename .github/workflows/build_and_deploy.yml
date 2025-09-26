@@ -41,23 +41,39 @@ jobs:
       - name: Build JupyterBook
         run: jupyter-book build notebooks/
 
+      - name: Copy Book HTML into docs
+        run: |
+          cp -r notebooks/_build/html/* docs/
+          echo "Files copied to docs:"
+          ls -la docs/
+
+      - name: Run forced JupyterLite button script
+        run: |
+          python3 forced_jupyterlite_button.py
+          echo "After running forced JupyterLite script:"
+          ls -la docs/
+
       - name: Build JupyterLite
         run: |
           echo "=== Building JupyterLite ==="
-          mkdir -p jupyterlite_things
-          cp -r notebooks/*.ipynb jupyterlite_things/ || echo "No .ipynb files found in notebooks/"
+          mkdir -p jupyterlite_things/files
+          cp -r notebooks/*.ipynb jupyterlite_things/files/ || echo "No .ipynb files found in notebooks/"
           cd jupyterlite_things
-          ls -la *.ipynb || echo "No .ipynb files found in jupyterlite_things/"
+          ls -la files/*.ipynb || echo "No .ipynb files found in jupyterlite_things/files/"
           
           echo "Building JupyterLite..."
           jupyter lite build --debug
           
           echo "JupyterLite build completed. Checking output..."
           ls -la _output/
+          
+          # Check if files directory was created
           echo "Looking for files in JupyterLite output:"
           find _output/ -name "*.ipynb" -type f
           ls -la _output/files/ || echo "No files directory in _output"
           
+          # Copy to final destination
+          echo "Copying JupyterLite to docs..."
           mkdir -p ../docs/jupyterlite
           cp -r _output/* ../docs/jupyterlite/
           
@@ -70,20 +86,6 @@ jobs:
           find docs/jupyterlite/ -name "*.ipynb" -type f
           echo "=== Files directory check ==="
           ls -la docs/jupyterlite/files/ || echo "Still no files directory"
-
-      - name: Copy Book HTML into docs
-        run: |
-          cp -r notebooks/_build/html/* docs/
-          echo "Files copied to docs:"
-          ls -la docs/
-
-      - name: Run forced JupyterLite button script
-        run: |
-          python3 forced_jupyterlite_button.py
-          echo "After running forced JupyterLite script:"
-          ls -la docs/
-          echo "Final docs structure:"
-          find docs/ -type f | head -20
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
