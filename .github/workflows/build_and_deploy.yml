@@ -26,16 +26,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # If you have a requirements.txt, include it; else install needed tools
-          pip install jupyter-book
-          pip install jupyterlite-core jupyterlite-pyodide-kernel
+          pip install jupyter-book==0.15.1
+          pip install jupyterlite-core==0.2.3 jupyterlite-pyodide-kernel==0.2.3
           pip install -r requirements.txt || echo "No requirements.txt"
 
       - name: Clean and prepare docs directory
         run: |
-          # Remove existing docs content but keep the folder structure
           rm -rf docs/*
-          # Create jupyterlite subdirectory
           mkdir -p docs/jupyterlite
 
       - name: Build JupyterBook
@@ -59,14 +56,36 @@ jobs:
           mkdir -p jupyterlite_build
           cd jupyterlite_build
           
-          # Copy notebooks directly to build directory
+          # Copy notebooks to build directory
           echo "Copying notebooks..."
-          cp ../notebooks/*.ipynb .
-          ls -la *.ipynb
+          cp -r ../notebooks/*.ipynb . || echo "No .ipynb files found in notebooks/"
+          ls -la *.ipynb || echo "No .ipynb files found in jupyterlite_build/"
           
-          # Build JupyterLite with files in current directory
+          # Create JupyterLite configuration with dynamic file list
+          echo "Generating JupyterLite config..."
+          echo '{
+            "LiteBuildConfig": {
+              "federated_extensions": [
+                {
+                  "extension": "@jupyterlite/pyodide-kernel-extension",
+                  "version": "0.2.3"
+                }
+              ],
+              "output_dir": "_output",
+              "files": [' > jupyterlite_config.json
+          # Dynamically append all .ipynb files to the files array
+          find ../notebooks -maxdepth 1 -name "*.ipynb" -exec basename {} \; | sed 's/.*/"&",/' | sed '$ s/,$//' >> jupyterlite_config.json
+          echo ']
+            }
+          }' >> jupyterlite_config.json
+          
+          # Verify config file
+          echo "JupyterLite config:"
+          cat jupyterlite_config.json
+          
+          # Build JupyterLite with config
           echo "Building JupyterLite..."
-          jupyter lite build --output-dir _output
+          jupyter lite build --config jupyterlite_config.json --debug
           
           echo "JupyterLite build completed. Checking output..."
           ls -la _output/
