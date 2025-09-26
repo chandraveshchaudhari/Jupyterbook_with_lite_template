@@ -3,7 +3,8 @@ import re
 import yaml
 
 # Get repository info from environment variables (GitHub Actions provides these)
-github_repository = os.environ.get('GITHUB_REPOSITORY', '')  # e.g. "chandraveshchaudhari/BusinessML_web"
+github_repository = os.environ.get('GITHUB_REPOSITORY',
+                                   '')  # e.g. "chandraveshchaudhari/Jupyterbook_with_lite_template"
 
 # Construct URL from repository name
 if github_repository:
@@ -39,7 +40,7 @@ print(f"🚀 JupyterLite URL: {jupyterlite_url}")
 # Paths
 toc_path = "notebooks/_toc.yml"
 notebooks_dir = "notebooks"
-html_dir = "notebooks/_build/html"  # Work on built HTML first
+html_dir = "docs"  # Work on docs/ directory
 docs_dir = "docs"
 
 # Step 1: Read TOC file
