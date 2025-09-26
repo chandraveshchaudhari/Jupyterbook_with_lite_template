@@ -56,36 +56,40 @@ jobs:
       - name: Build JupyterLite
         run: |
           echo "=== Building JupyterLite ==="
-          mkdir -p jupyterlite_things/content
-          echo "Available notebooks:"
-          ls -la notebooks/*.ipynb
-          # Copy notebooks to content directory for JupyterLite
-          cp notebooks/*.ipynb jupyterlite_things/content/
-          # Copy config if it exists
-          cp jupyter-lite.json jupyterlite_things/ || echo "No jupyter-lite.json config found"
-          echo "Copied files to jupyterlite_things:"
-          ls -la jupyterlite_things/
-          ls -la jupyterlite_things/content/
-          cd jupyterlite_things
-          echo "Running jupyter lite build..."
-          jupyter lite build --debug
-          echo "JupyterLite build output:"
+          mkdir -p jupyterlite_build
+          cd jupyterlite_build
+          
+          # Copy notebooks directly to build directory
+          echo "Copying notebooks..."
+          cp ../notebooks/*.ipynb .
+          ls -la *.ipynb
+          
+          # Build JupyterLite with files in current directory
+          echo "Building JupyterLite..."
+          jupyter lite build --output-dir _output
+          
+          echo "JupyterLite build completed. Checking output..."
           ls -la _output/
-          echo "Contents of _output/:"
-          find _output/ -type f | head -20
-          echo "Files directory in _output:"
-          ls -la _output/files/ || echo "No files directory found"
-          echo "Creating docs/jupyterlite directory..."
+          
+          # Check if files directory was created
+          echo "Looking for files in JupyterLite output:"
+          find _output/ -name "*.ipynb" -type f
+          ls -la _output/files/ || echo "No files directory in _output"
+          
+          # Copy to final destination
+          echo "Copying JupyterLite to docs..."
           mkdir -p ../docs/jupyterlite
           cp -r _output/* ../docs/jupyterlite/
+          
           cd ..
-          rm -rf jupyterlite_things
-          echo "=== JupyterLite files in docs/jupyterlite: ==="
+          rm -rf jupyterlite_build
+          
+          echo "=== Final JupyterLite structure ==="
           ls -la docs/jupyterlite/
-          echo "=== Files in docs/jupyterlite/files: ==="
-          ls -la docs/jupyterlite/files/ || echo "files directory not found"
-          echo "=== Complete docs structure: ==="
-          find docs/ -name "*.ipynb" | head -10
+          echo "=== Looking for notebooks in final location ==="
+          find docs/jupyterlite/ -name "*.ipynb" -type f
+          echo "=== Files directory check ==="
+          ls -la docs/jupyterlite/files/ || echo "Still no files directory"
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
