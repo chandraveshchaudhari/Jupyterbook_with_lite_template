@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyter-book==0.15.1
-          pip install jupyterlite-core==0.2.3 jupyterlite-pyodide-kernel==0.2.3
+          pip install jupyterlite-core==0.6.4 jupyterlite-pyodide-kernel==0.6.4
           pip install -r requirements.txt || echo "No requirements.txt"
 
       - name: Clean and prepare docs directory
@@ -52,6 +52,16 @@ jobs:
           python3 forced_jupyterlite_button.py
           echo "After running forced JupyterLite script:"
           ls -la docs/
+          # Check generated URLs
+          echo "Checking for notebook URLs in docs:"
+          grep -r "jupyterlite/lab/index.html?path=" docs/ || echo "No notebook URLs found"
+          # Suggest URLs for testing
+          echo "Suggested URLs to test:"
+          echo "https://chandraveshchaudhari.github.io/Jupyterbook_with_lite_template/jupyterlite/lab/index.html?path=roadmap_prereqs.ipynb"
+          echo "https://chandraveshchaudhari.github.io/Jupyterbook_with_lite_template/jupyterlite/lab/index.html?path=files/roadmap_prereqs.ipynb"
+          echo "https://chandraveshchaudhari.github.io/Jupyterbook_with_lite_template/jupyterlite/lab/index.html?path=/files/roadmap_prereqs.ipynb"
+          echo "https://chandraveshchaudhari.github.io/Jupyterbook_with_lite_template/jupyterlite/lab?path=roadmap_prereqs.ipynb"
+          echo "https://chandraveshchaudhari.github.io/Jupyterbook_with_lite_template/jupyterlite/api/contents/files/roadmap_prereqs.ipynb"
 
       - name: Build JupyterLite
         run: |
@@ -61,13 +71,93 @@ jobs:
           cd jupyterlite_things
           ls -la files/*.ipynb || echo "No .ipynb files found in jupyterlite_things/files/"
           
+          # Create jupyter-lite.json based on local setup
+          echo "Generating jupyter-lite.json..."
+          echo '{
+            "jupyter-config-data": {
+              "appName": "JupyterLite",
+              "appUrl": "./lab",
+              "appVersion": "0.6.4",
+              "baseUrl": "./",
+              "defaultKernelName": "python",
+              "faviconUrl": "./lab/favicon.ico",
+              "federated_extensions": [
+                {
+                  "extension": "./extension",
+                  "load": "static/remoteEntry.7e3d7768845089ad5f5f.js",
+                  "name": "@jupyter-notebook/lab-extension",
+                  "style": "./style"
+                },
+                {
+                  "extension": "./extension",
+                  "load": "static/remoteEntry.3745c44cbbd62cec9a73.js",
+                  "name": "@jupyterlite/pyodide-kernel-extension"
+                },
+                {
+                  "extension": "./extension",
+                  "load": "static/remoteEntry.5cbb9d2323598fbda535.js",
+                  "name": "jupyterlab_pygments",
+                  "style": "./style"
+                },
+                {
+                  "extension": "./extension",
+                  "load": "static/remoteEntry.5e9cf5db83490c7d4a35.js",
+                  "name": "nbdime-jupyterlab",
+                  "style": "./style"
+                }
+              ],
+              "fileTypes": {
+                "ipynb": {
+                  "extensions": [".ipynb"],
+                  "fileFormat": "json",
+                  "mimeTypes": ["application/x-ipynb+json"],
+                  "name": "ipynb"
+                },
+                "md": {
+                  "extensions": [".md", ".markdown"],
+                  "fileFormat": "text",
+                  "mimeTypes": ["text/markdown"],
+                  "name": "md"
+                },
+                "py": {
+                  "extensions": [".py"],
+                  "fileFormat": "text",
+                  "mimeTypes": ["text/x-python", "application/x-python-code"],
+                  "name": "py"
+                },
+                "csv": {
+                  "extensions": [".csv"],
+                  "fileFormat": "text",
+                  "mimeTypes": ["text/csv"],
+                  "name": "csv"
+                },
+                "json": {
+                  "extensions": [".json"],
+                  "fileFormat": "json",
+                  "mimeTypes": ["application/json"],
+                  "name": "json"
+                }
+              },
+              "litePluginSettings": {
+                "@jupyterlite/pyodide-kernel-extension:kernel": {
+                  "pipliteUrls": ["./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json"]
+                }
+              },
+              "fullLabextensionsUrl": "./extensions",
+              "fullStaticUrl": "./build"
+            },
+            "jupyter-lite-schema-version": 0
+          }' > jupyter-lite.json
+          
+          # Verify jupyter-lite.json
+          echo "jupyter-lite.json content:"
+          cat jupyter-lite.json
+          
           echo "Building JupyterLite..."
           jupyter lite build --debug
           
           echo "JupyterLite build completed. Checking output..."
           ls -la _output/
-          
-          # Check if files directory was created
           echo "Looking for files in JupyterLite output:"
           find _output/ -name "*.ipynb" -type f
           ls -la _output/files/ || echo "No files directory in _output"
@@ -85,7 +175,7 @@ jobs:
           echo "=== Looking for notebooks in final location ==="
           find docs/jupyterlite/ -name "*.ipynb" -type f
           echo "=== Files directory check ==="
-          ls -la docs/jupyterlite/files/ || echo "Still no files directory"
+          ls -la docs/jupyterlite/files/ || echo "No files directory in docs/jupyterlite/"
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
