@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyter-book==0.15.1
-          pip install jupyterlite-core==0.6.4 jupyterlite-pyodide-kernel==0.6.1
+          pip install jupyterlite-core==0.6.4 jupyterlite-pyodide-kernel jupyter-server
           pip install -r requirements.txt || echo "No requirements.txt"
 
       - name: Clean and prepare docs directory
