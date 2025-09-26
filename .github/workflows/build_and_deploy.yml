@@ -1,4 +1,4 @@
-name: Build & Deploy Machine Learning for Business Site
+name: Build & Deploy jupyterbooklite Site
 
 on:
   push:
@@ -33,24 +33,18 @@ jobs:
 
       - name: Clean and prepare docs directory
         run: |
-          mkdir -p docs
+          # Remove existing docs content but keep the folder structure
+          rm -rf docs/*
           # Create jupyterlite subdirectory
           mkdir -p docs/jupyterlite
 
       - name: Build JupyterBook
         run: jupyter-book build notebooks/
 
-      - name: Build JupyterLite first
+      - name: Run forced JupyterLite button script (on built HTML)
         run: |
-          mkdir -p jupyterlite_things
-          cp notebooks/*.ipynb jupyterlite_things/
-          cd jupyterlite_things
-          jupyter lite build
-          mkdir -p ../docs/jupyterlite
-          cp -r _output/* ../docs/jupyterlite/
-          cd ..
-          rm -rf jupyterlite_things
-          echo "JupyterLite built and copied to docs/jupyterlite/"
+          python3 forced_jupyterlite_button.py
+          echo "JupyterLite buttons added to built HTML"
 
       - name: Copy Book HTML into docs
         run: |
@@ -58,13 +52,39 @@ jobs:
           echo "Files copied to docs:"
           ls -la docs/
 
-      - name: Run forced JupyterLite button script
+      - name: Build JupyterLite
         run: |
-          python3 forced_jupyterlite_button.py
-          echo "After running forced JupyterLite script:"
-          ls -la docs/
-          echo "Final docs structure:"
-          find docs/ -type f | head -20
+          echo "=== Building JupyterLite ==="
+          mkdir -p jupyterlite_things/content
+          echo "Available notebooks:"
+          ls -la notebooks/*.ipynb
+          # Copy notebooks to content directory for JupyterLite
+          cp notebooks/*.ipynb jupyterlite_things/content/
+          # Copy config if it exists
+          cp jupyter-lite.json jupyterlite_things/ || echo "No jupyter-lite.json config found"
+          echo "Copied files to jupyterlite_things:"
+          ls -la jupyterlite_things/
+          ls -la jupyterlite_things/content/
+          cd jupyterlite_things
+          echo "Running jupyter lite build..."
+          jupyter lite build --debug
+          echo "JupyterLite build output:"
+          ls -la _output/
+          echo "Contents of _output/:"
+          find _output/ -type f | head -20
+          echo "Files directory in _output:"
+          ls -la _output/files/ || echo "No files directory found"
+          echo "Creating docs/jupyterlite directory..."
+          mkdir -p ../docs/jupyterlite
+          cp -r _output/* ../docs/jupyterlite/
+          cd ..
+          rm -rf jupyterlite_things
+          echo "=== JupyterLite files in docs/jupyterlite: ==="
+          ls -la docs/jupyterlite/
+          echo "=== Files in docs/jupyterlite/files: ==="
+          ls -la docs/jupyterlite/files/ || echo "files directory not found"
+          echo "=== Complete docs structure: ==="
+          find docs/ -name "*.ipynb" | head -10
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
