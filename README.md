@@ -118,7 +118,7 @@ You have **three options** to run notebooks:
 
 **Dr. Chandravesh Chaudhari**
 
-📧 [chandravesh.chaudhari@christuniversity.in](mailto:chandravesh.chaudhari@christuniversity.in)  
+📧 [chandraveshchaudhari@gmail.com](mailto:chandraveshchaudhari@gmail.com)  
 🌐 [Personal Website](https://github.com/chandraveshchaudhari/website)  
 🔗 [LinkedIn](https://www.linkedin.com/in/chandraveshchaudhari)
 
