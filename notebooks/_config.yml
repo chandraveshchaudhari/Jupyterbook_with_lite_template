@@ -1,5 +1,5 @@
 # notebooks/_config.yml
-title: Machine Learning for Business
+title: JupyterBook + JupyterLite integration Template
 author: Chandravesh Chaudhari
 logo: logo.png
 
@@ -14,7 +14,7 @@ bibtex_bibfiles:
   - references.bib
 
 repository:
-  url: https://github.com/chandraveshchaudhari/BusinessML_web
+  url: https://github.com/chandraveshchaudhari/Jupyterbook_with_lite_template
   path_to_book: .   # because this _config.yml is inside notebooks/ (use '.' here)
   branch: main/notebooks/
 
