@@ -45,12 +45,28 @@ jobs:
         run: |
           echo "=== Building JupyterLite ==="
           mkdir -p jupyterlite_things
-          cp -r notebooks/*.ipynb jupyterlite_things/
+          cp -r notebooks/*.ipynb jupyterlite_things/ || echo "No .ipynb files found in notebooks/"
           cd jupyterlite_things
           ls -la *.ipynb || echo "No .ipynb files found in jupyterlite_things/"
           
+          # Create JupyterLite configuration with dynamic file list
+          echo "Generating JupyterLite config..."
+          echo '{
+            "LiteBuildConfig": {
+              "output_dir": "_output",
+              "files": [' > jupyterlite_config.json
+          # Dynamically append all .ipynb files to the files array
+          find . -maxdepth 1 -name "*.ipynb" -exec basename {} \; | sed 's/.*/"&",/' | sed '$ s/,$//' >> jupyterlite_config.json
+          echo ']
+            }
+          }' >> jupyterlite_config.json
+          
+          # Verify config file
+          echo "JupyterLite config:"
+          cat jupyterlite_config.json
+          
           echo "Building JupyterLite..."
-          jupyter lite build --debug
+          jupyter lite build --config jupyterlite_config.json --debug
           
           echo "JupyterLite build completed. Checking output..."
           ls -la _output/
