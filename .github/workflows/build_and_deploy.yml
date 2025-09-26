@@ -1,4 +1,4 @@
-name: Build & Deploy jupyterbooklite Site
+name: Build & Deploy Machine Learning for Business Site
 
 on:
   push:
@@ -41,15 +41,16 @@ jobs:
       - name: Build JupyterBook
         run: jupyter-book build notebooks/
 
-      - name: Run forced JupyterLite button script (on built HTML)
-        run: |
-          python3 forced_jupyterlite_button.py
-          echo "JupyterLite buttons added to built HTML"
-
       - name: Copy Book HTML into docs
         run: |
           cp -r notebooks/_build/html/* docs/
           echo "Files copied to docs:"
+          ls -la docs/
+
+      - name: Run forced JupyterLite button script
+        run: |
+          python3 forced_jupyterlite_button.py
+          echo "After running forced JupyterLite script:"
           ls -la docs/
 
       - name: Build JupyterLite
