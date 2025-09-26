@@ -31,24 +31,41 @@ jobs:
           pip install jupyterlite-core jupyterlite-pyodide-kernel
           pip install -r requirements.txt || echo "No requirements.txt"
 
+      - name: Clean and prepare docs directory
+        run: |
+          # Remove existing docs content but keep the folder structure
+          rm -rf docs/*
+          # Create jupyterlite subdirectory
+          mkdir -p docs/jupyterlite
+
       - name: Build JupyterBook
         run: jupyter-book build notebooks/
 
-      - name: Copy Book HTML into docs
-        run: cp -r notebooks/_build/html/* docs/
-
-      - name: Run forced JupyterLite button script
-        run: python3 forced_jupyterlite_button.py
-
-      - name: Build JupyterLite
+      - name: Build JupyterLite first
         run: |
           mkdir -p jupyterlite_things
           cp notebooks/*.ipynb jupyterlite_things/
           cd jupyterlite_things
           jupyter lite build
+          mkdir -p ../docs/jupyterlite
           cp -r _output/* ../docs/jupyterlite/
           cd ..
           rm -rf jupyterlite_things
+          echo "JupyterLite built and copied to docs/jupyterlite/"
+
+      - name: Copy Book HTML into docs
+        run: |
+          cp -r notebooks/_build/html/* docs/
+          echo "Files copied to docs:"
+          ls -la docs/
+
+      - name: Run forced JupyterLite button script
+        run: |
+          python3 forced_jupyterlite_button.py
+          echo "After running forced JupyterLite script:"
+          ls -la docs/
+          echo "Final docs structure:"
+          find docs/ -type f | head -20
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
