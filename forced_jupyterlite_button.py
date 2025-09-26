@@ -2,16 +2,52 @@ import os
 import re
 import yaml
 
+# Get repository info from environment variables (GitHub Actions provides these)
+github_repository = os.environ.get('GITHUB_REPOSITORY', '')  # e.g. "chandraveshchaudhari/BusinessML_web"
+
+# Construct URL from repository name
+if github_repository:
+    username, repo_name = github_repository.split('/')
+    base_url = f"https://{username.lower()}.github.io/{repo_name}"
+    print(f"📦 Repository: {github_repository}")
+else:
+    # Final fallback - extract from git remote (if running locally)
+    import subprocess
+
+    try:
+        result = subprocess.run(['git', 'remote', 'get-url', 'origin'],
+                                capture_output=True, text=True, check=True)
+        remote_url = result.stdout.strip()
+        if 'github.com' in remote_url:
+            # Extract from git URL: git@github.com:user/repo.git or https://github.com/user/repo.git
+            if remote_url.startswith('git@'):
+                repo_part = remote_url.split(':')[1].replace('.git', '')
+            else:
+                repo_part = remote_url.split('github.com/')[1].replace('.git', '')
+            username, repo_name = repo_part.split('/')
+            base_url = f"https://{username.lower()}.github.io/{repo_name}"
+        else:
+            raise Exception("Not a GitHub repository")
+    except:
+        print("❌ Could not determine repository URL. Please set GITHUB_REPOSITORY environment variable.")
+        exit(1)
+
+jupyterlite_url = f"{base_url}/jupyterlite/lab/index.html"
+print(f"🌐 Base URL: {base_url}")
+print(f"🚀 JupyterLite URL: {jupyterlite_url}")
+
 # Paths
 toc_path = "notebooks/_toc.yml"
 notebooks_dir = "notebooks"
-html_dir = "docs"
+html_dir = "notebooks/_build/html"  # Work on built HTML first
+docs_dir = "docs"
 
 # Step 1: Read TOC file
 with open(toc_path, "r", encoding="utf-8") as f:
     toc_data = yaml.safe_load(f)
 
 toc_files = []
+
 
 def extract_files(entries):
     """Extract all 'file' entries from TOC, ignoring extension for now."""
@@ -23,6 +59,7 @@ def extract_files(entries):
                 extract_files(item["sections"])
         elif isinstance(item, list):
             extract_files(item)
+
 
 if "chapters" in toc_data:
     extract_files(toc_data["chapters"])
@@ -40,6 +77,7 @@ for name in toc_files:
         valid_notebooks.append(no_ext)
 
 print(f"📚 Valid notebooks from TOC: {valid_notebooks}")
+print(f"🔍 Looking for HTML files in: {html_dir}")
 
 # Step 3: Regex to find Colab button
 colab_regex = re.compile(
@@ -47,10 +85,10 @@ colab_regex = re.compile(
     re.DOTALL
 )
 
-# Step 4: JupyterLite button template
-jupyterlite_template = """
+# Step 4: Dynamic JupyterLite button template
+jupyterlite_template = f"""
 <li>
-  <a href="https://chandraveshchaudhari.github.io/BusinessML_web/jupyterlite/lab/index.html?path={filename}" target="_blank"
+  <a href="{jupyterlite_url}?path={{filename}}" target="_blank"
      class="btn btn-sm dropdown-item"
      title="Launch on JupyterLite"
      data-bs-placement="left" data-bs-toggle="tooltip">
@@ -68,11 +106,26 @@ jupyterlite_template = """
 </li>
 """
 
-# Step 5: Loop through HTML files and inject buttons
+# Step 5: Check if HTML directory exists
+if not os.path.exists(html_dir):
+    print(f"❌ HTML directory {html_dir} does not exist!")
+    print("Available directories:")
+    for item in os.listdir("."):
+        if os.path.isdir(item):
+            print(f"  - {item}")
+    exit(1)
+
+# Step 6: Loop through HTML files and inject buttons
+files_processed = 0
+buttons_added = 0
+
 for root, _, files in os.walk(html_dir):
     for file in files:
         if file.endswith(".html"):
+            files_processed += 1
             path = os.path.join(root, file)
+            print(f"🔍 Processing: {path}")
+
             with open(path, "r", encoding="utf-8") as f:
                 html = f.read()
 
@@ -80,6 +133,7 @@ for root, _, files in os.walk(html_dir):
             if match:
                 filename = match.group("filename")
                 notebook_name = filename.replace(".ipynb", "")
+                print(f"  📝 Found Colab button for: {filename}")
 
                 if notebook_name in valid_notebooks:
                     jl_button = jupyterlite_template.format(filename=filename)
@@ -87,6 +141,15 @@ for root, _, files in os.walk(html_dir):
 
                     with open(path, "w", encoding="utf-8") as f:
                         f.write(new_html)
-                    print(f"✅ Added JupyterLite button to {file}")
+                    print(f"  ✅ Added JupyterLite button to {file}")
+                    buttons_added += 1
                 else:
-                    print(f"⏭ Skipped {file} (not in TOC notebooks)")
+                    print(f"  ⏭ Skipped {file} (not in TOC notebooks)")
+            else:
+                print(f"  ℹ️ No Colab button found in {file}")
+
+print(f"\n📊 Summary:")
+print(f"  - HTML files processed: {files_processed}")
+print(f"  - JupyterLite buttons added: {buttons_added}")
+print(f"  - Valid notebooks from TOC: {len(valid_notebooks)}")
+print(f"  - Generated JupyterLite URL: {jupyterlite_url}")
