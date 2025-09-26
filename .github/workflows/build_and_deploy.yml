@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyter-book==0.15.1
-          pip install jupyterlite-core==0.6.4 jupyterlite-pyodide-kernel==0.6.4
+          pip install jupyterlite-core==0.6.4 jupyterlite-pyodide-kernel==0.6.1
           pip install -r requirements.txt || echo "No requirements.txt"
 
       - name: Clean and prepare docs directory
@@ -71,7 +71,7 @@ jobs:
           cd jupyterlite_things
           ls -la files/*.ipynb || echo "No .ipynb files found in jupyterlite_things/files/"
           
-          # Create jupyter-lite.json based on local setup
+          # Create jupyter-lite.json matching local setup
           echo "Generating jupyter-lite.json..."
           echo '{
             "jupyter-config-data": {
@@ -140,11 +140,12 @@ jobs:
               },
               "litePluginSettings": {
                 "@jupyterlite/pyodide-kernel-extension:kernel": {
-                  "pipliteUrls": ["./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json"]
+                  "pipliteUrls": ["./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json?sha256=6428e372c283ca4b67a641295c5d9c8abeed5cf341b24ffe41b313fcdcaf9be4"]
                 }
               },
               "fullLabextensionsUrl": "./extensions",
-              "fullStaticUrl": "./build"
+              "fullStaticUrl": "./build",
+              "licensesUrl": "./lab/api/licenses"
             },
             "jupyter-lite-schema-version": 0
           }' > jupyter-lite.json
