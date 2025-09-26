@@ -34,9 +34,42 @@ jobs:
         run: |
           rm -rf docs/*
           mkdir -p docs/jupyterlite
+          # Create .nojekyll file
+          touch docs/.nojekyll
+          echo "Created .nojekyll in docs/"
 
       - name: Build JupyterBook
         run: jupyter-book build notebooks/
+
+      - name: Build JupyterLite
+        run: |
+          echo "=== Building JupyterLite ==="
+          mkdir -p jupyterlite_things
+          cp -r notebooks/*.ipynb jupyterlite_things/
+          cd jupyterlite_things
+          ls -la *.ipynb || echo "No .ipynb files found in jupyterlite_things/"
+          
+          echo "Building JupyterLite..."
+          jupyter lite build --debug
+          
+          echo "JupyterLite build completed. Checking output..."
+          ls -la _output/
+          echo "Looking for files in JupyterLite output:"
+          find _output/ -name "*.ipynb" -type f
+          ls -la _output/files/ || echo "No files directory in _output"
+          
+          mkdir -p ../docs/jupyterlite
+          cp -r _output/* ../docs/jupyterlite/
+          
+          cd ..
+          rm -rf jupyterlite_things
+          
+          echo "=== Final JupyterLite structure ==="
+          ls -la docs/jupyterlite/
+          echo "=== Looking for notebooks in final location ==="
+          find docs/jupyterlite/ -name "*.ipynb" -type f
+          echo "=== Files directory check ==="
+          ls -la docs/jupyterlite/files/ || echo "Still no files directory"
 
       - name: Copy Book HTML into docs
         run: |
@@ -49,63 +82,8 @@ jobs:
           python3 forced_jupyterlite_button.py
           echo "After running forced JupyterLite script:"
           ls -la docs/
-
-      - name: Build JupyterLite
-        run: |
-          echo "=== Building JupyterLite ==="
-          mkdir -p jupyterlite_build
-          cd jupyterlite_build
-          
-          # Copy notebooks to build directory
-          echo "Copying notebooks..."
-          cp -r ../notebooks/*.ipynb . || echo "No .ipynb files found in notebooks/"
-          ls -la *.ipynb || echo "No .ipynb files found in jupyterlite_build/"
-          
-          # Create JupyterLite configuration with dynamic file list
-          echo "Generating JupyterLite config..."
-          echo '{
-            "LiteBuildConfig": {
-              "federated_extensions": [
-                "@jupyterlite/pyodide-kernel-extension"
-              ],
-              "output_dir": "_output",
-              "files": [' > jupyterlite_config.json
-          # Dynamically append all .ipynb files to the files array
-          find ../notebooks -maxdepth 1 -name "*.ipynb" -exec basename {} \; | sed 's/.*/"&",/' | sed '$ s/,$//' >> jupyterlite_config.json
-          echo ']
-            }
-          }' >> jupyterlite_config.json
-          
-          # Verify config file
-          echo "JupyterLite config:"
-          cat jupyterlite_config.json
-          
-          # Build JupyterLite with config
-          echo "Building JupyterLite..."
-          jupyter lite build --config jupyterlite_config.json --debug
-          
-          echo "JupyterLite build completed. Checking output..."
-          ls -la _output/
-          
-          # Check if files directory was created
-          echo "Looking for files in JupyterLite output:"
-          find _output/ -name "*.ipynb" -type f
-          ls -la _output/files/ || echo "No files directory in _output"
-          
-          # Copy to final destination
-          echo "Copying JupyterLite to docs..."
-          mkdir -p ../docs/jupyterlite
-          cp -r _output/* ../docs/jupyterlite/
-          
-          cd ..
-          rm -rf jupyterlite_build
-          
-          echo "=== Final JupyterLite structure ==="
-          ls -la docs/jupyterlite/
-          echo "=== Looking for notebooks in final location ==="
-          find docs/jupyterlite/ -name "*.ipynb" -type f
-          echo "=== Files directory check ==="
-          ls -la docs/jupyterlite/files/ || echo "Still no files directory"
+          echo "Final docs structure:"
+          find docs/ -type f | head -20
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
