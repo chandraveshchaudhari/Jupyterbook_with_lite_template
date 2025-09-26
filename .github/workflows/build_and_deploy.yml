@@ -71,7 +71,7 @@ jobs:
           cd jupyterlite_things
           ls -la files/*.ipynb || echo "No .ipynb files found in jupyterlite_things/files/"
           
-          # Create jupyter-lite.json matching local setup
+          # Create minimal jupyter-lite.json to avoid hardcoded hashes
           echo "Generating jupyter-lite.json..."
           echo '{
             "jupyter-config-data": {
@@ -84,26 +84,7 @@ jobs:
               "federated_extensions": [
                 {
                   "extension": "./extension",
-                  "load": "static/remoteEntry.7e3d7768845089ad5f5f.js",
-                  "name": "@jupyter-notebook/lab-extension",
-                  "style": "./style"
-                },
-                {
-                  "extension": "./extension",
-                  "load": "static/remoteEntry.3745c44cbbd62cec9a73.js",
                   "name": "@jupyterlite/pyodide-kernel-extension"
-                },
-                {
-                  "extension": "./extension",
-                  "load": "static/remoteEntry.5cbb9d2323598fbda535.js",
-                  "name": "jupyterlab_pygments",
-                  "style": "./style"
-                },
-                {
-                  "extension": "./extension",
-                  "load": "static/remoteEntry.5e9cf5db83490c7d4a35.js",
-                  "name": "nbdime-jupyterlab",
-                  "style": "./style"
                 }
               ],
               "fileTypes": {
@@ -140,7 +121,7 @@ jobs:
               },
               "litePluginSettings": {
                 "@jupyterlite/pyodide-kernel-extension:kernel": {
-                  "pipliteUrls": ["./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json?sha256=6428e372c283ca4b67a641295c5d9c8abeed5cf341b24ffe41b313fcdcaf9be4"]
+                  "pipliteUrls": ["./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json"]
                 }
               },
               "fullLabextensionsUrl": "./extensions",
@@ -162,6 +143,8 @@ jobs:
           echo "Looking for files in JupyterLite output:"
           find _output/ -name "*.ipynb" -type f
           ls -la _output/files/ || echo "No files directory in _output"
+          echo "Checking Pyodide kernel extension files:"
+          ls -la _output/extensions/@jupyterlite/pyodide-kernel-extension/static/ || echo "No Pyodide kernel extension files found"
           
           # Copy to final destination
           echo "Copying JupyterLite to docs..."
@@ -177,6 +160,8 @@ jobs:
           find docs/jupyterlite/ -name "*.ipynb" -type f
           echo "=== Files directory check ==="
           ls -la docs/jupyterlite/files/ || echo "No files directory in docs/jupyterlite/"
+          echo "=== Checking Pyodide kernel extension in final location ==="
+          ls -la docs/jupyterlite/extensions/@jupyterlite/pyodide-kernel-extension/static/ || echo "No Pyodide kernel extension files in docs/jupyterlite/"
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
