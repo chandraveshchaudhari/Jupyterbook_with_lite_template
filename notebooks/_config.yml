@@ -1,7 +1,6 @@
 # notebooks/_config.yml
-title: JupyterBook + JupyterLite integration Template
-author: Chandravesh Chaudhari
-logo: logo.png
+title: My JupyterBook Site
+author: Your Name
 
 execute:
   execute_notebooks: off
@@ -14,9 +13,9 @@ bibtex_bibfiles:
   - references.bib
 
 repository:
-  url: https://github.com/chandraveshchaudhari/Jupyterbook_with_lite_template
-  path_to_book: .   # because this _config.yml is inside notebooks/ (use '.' here)
-  branch: main/notebooks/
+  url: https://github.com/your-username/your-repo
+  path_to_book: notebooks
+  branch: main
 
 html:
   use_issues_button: true
@@ -27,8 +26,8 @@ html:
     - https://code.jquery.com/jquery-3.5.1.slim.min.js
     - https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js
     - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js
-  # Do NOT set theme: _templates. Use a real theme name (sphinx-book-theme is default for jupyter-book)
-  theme: sphinx_book_theme
+  # Use the PyData Sphinx theme for a more flexible docs layout.
+  theme: pydata_sphinx_theme
 
 launch_buttons:
   notebook_interface: "jupyterlab"

@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 # --- CONFIG ---
@@ -9,7 +10,12 @@ DOCS_DIR = Path("docs")            # Path to your GitHub Pages docs folder
 TEMP_NOTEBOOKS_DIR = Path("temp_notebooks")  # Temp folder for JupyterLite build
 JUPYTERLITE_BUILD_DIR = Path("jupyterlite_build")  # Temp output from JupyterLite
 JUPYTERLITE_OUTPUT_DIR = DOCS_DIR / "jupyterlite"  # Final location for JupyterLite
-FORCE_BUTTON_SCRIPT = Path("forced_jupyterlite_button.py")  # Custom patch script
+FORCE_BUTTON_SCRIPT = Path("extensions") / "forced_jupyterlite_button.py"  # Custom patch script
+
+PYTHON_EXE = Path(sys.executable)
+BIN_DIR = PYTHON_EXE.parent
+JUPYTER_BOOK_CMD = str(BIN_DIR / "jupyter-book") if (BIN_DIR / "jupyter-book").exists() else "jupyter-book"
+JUPYTER_CMD = str(BIN_DIR / "jupyter") if (BIN_DIR / "jupyter").exists() else "jupyter"
 
 def run_cmd(cmd, cwd=None):
     """Run a shell command with live output."""
@@ -28,12 +34,14 @@ def clean_dir(path):
 def build_jupyterbook():
     """Step 1: Build JupyterBook from notebooks and move HTML to docs/."""
     print("\n=== Building JupyterBook ===")
-    run_cmd(["jupyter-book", "build", str(NOTEBOOKS_DIR)])
+    run_cmd([JUPYTER_BOOK_CMD, "build", str(NOTEBOOKS_DIR)])
 
     html_build_path = NOTEBOOKS_DIR / "_build" / "html"
 
     if not html_build_path.exists():
         raise FileNotFoundError(f"JupyterBook HTML build not found at {html_build_path}")
+
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
 
     # Clean old docs (except jupyterlite folder if exists)
     if DOCS_DIR.exists():
@@ -67,14 +75,14 @@ def build_jupyterlite():
     # Build JupyterLite
     clean_dir(JUPYTERLITE_BUILD_DIR)
     run_cmd([
-        "jupyter", "lite", "build",
+        JUPYTER_CMD, "lite", "build",
         "--contents", str(TEMP_NOTEBOOKS_DIR),
         "--output-dir", str(JUPYTERLITE_BUILD_DIR)
     ])
 
     # Run forced_jupyterlite_button.py
     if FORCE_BUTTON_SCRIPT.exists():
-        run_cmd(["python", str(FORCE_BUTTON_SCRIPT)])
+        run_cmd([os.environ.get("PYTHON", "python"), str(FORCE_BUTTON_SCRIPT)])
     else:
         print("[WARNING] forced_jupyterlite_button.py not found. Skipping patch.")
 

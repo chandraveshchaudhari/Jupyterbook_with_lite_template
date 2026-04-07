@@ -5,14 +5,9 @@ format: jb-book
 root: intro
 
 chapters:
-
-# 1. Course Introduction
+- file: how_to_use
+  title: Add Content and Customize
 - file: course_introduction
-  title: Course Introduction
-  sections:
-    - file: course_goals
-      title: Course Goals & Business Outcomes
-    - file: how_to_use
-      title: How to Use This Book
-    - file: roadmap_prereqs
-      title: Roadmap & Prerequisites
+  title: Feature Showcase and Subsections
+- file: markdown_page
+  title: Markdown Page Example
