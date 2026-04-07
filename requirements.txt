@@ -1,7 +1,7 @@
 # Core packages for JupyterBook + JupyterLite
 jupyter-book==1.0.4.post1
 jupyterlite-core==0.7.4
-jupyterlite-pyodide-kernel==0.7.1
+jupyterlite-pyodide-kernel
 jupyter-server==2.17.0
 
 # Theme
@@ -11,17 +11,15 @@ pydata-sphinx-theme==0.17.0
 pyyaml==6.0.3
 
 # Recommended (stability for builds)
-sphinx==7.4.7
-myst-parser==3.0.1
-sphinx-copybutton==0.5.2
-sphinx-design==0.6.0
+sphinx
+myst-parser
 
 # Notebook support
-ipykernel==6.29.5
-notebook==7.2.1
+ipykernel
+notebook
 
 # JupyterLite extras (recommended)
-jupyterlite-sphinx==0.15.0
+jupyterlite-sphinx
 
 # Optional but useful
 numpy
