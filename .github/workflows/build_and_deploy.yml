@@ -27,7 +27,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
+  
       - name: Update repository metadata for current fork
         run: |
           python - <<'PY'
@@ -53,15 +58,10 @@ jobs:
           print(f"Configured repository.url for {repo}")
           PY
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
       - name: Clean and prepare docs directory
         run: |
           rm -rf docs/*
           mkdir -p docs/jupyterlite
-          # Create .nojekyll file
           touch docs/.nojekyll
           echo "Created .nojekyll in docs/"
 
@@ -79,8 +79,6 @@ jobs:
           python3 extensions/forced_jupyterlite_button.py
           echo "After running forced JupyterLite script:"
           ls -la docs/
-          # Check generated URLs
-          echo "Checking for notebook URLs in docs:"
           grep -r "jupyterlite/lab/index.html?path=" docs/ || echo "No notebook URLs found"
 
       - name: Build JupyterLite
@@ -89,9 +87,7 @@ jobs:
           mkdir -p jupyterlite_things/files
           cp -r notebooks/*.ipynb jupyterlite_things/files/ || echo "No .ipynb files found in notebooks/"
           cd jupyterlite_things
-          ls -la files/*.ipynb || echo "No .ipynb files found in jupyterlite_things/files/"
           
-          # Create minimal jupyter-lite.json to avoid hardcoded hashes
           echo "Generating jupyter-lite.json..."
           echo '{
             "jupyter-config-data": {
@@ -99,89 +95,18 @@ jobs:
               "appUrl": "./lab",
               "appVersion": "0.7.4",
               "baseUrl": "./",
-              "defaultKernelName": "python",
-              "faviconUrl": "./lab/favicon.ico",
-              "federated_extensions": [
-                {
-                  "extension": "./extension",
-                  "name": "@jupyterlite/pyodide-kernel-extension"
-                }
-              ],
-              "fileTypes": {
-                "ipynb": {
-                  "extensions": [".ipynb"],
-                  "fileFormat": "json",
-                  "mimeTypes": ["application/x-ipynb+json"],
-                  "name": "ipynb"
-                },
-                "md": {
-                  "extensions": [".md", ".markdown"],
-                  "fileFormat": "text",
-                  "mimeTypes": ["text/markdown"],
-                  "name": "md"
-                },
-                "py": {
-                  "extensions": [".py"],
-                  "fileFormat": "text",
-                  "mimeTypes": ["text/x-python", "application/x-python-code"],
-                  "name": "py"
-                },
-                "csv": {
-                  "extensions": [".csv"],
-                  "fileFormat": "text",
-                  "mimeTypes": ["text/csv"],
-                  "name": "csv"
-                },
-                "json": {
-                  "extensions": [".json"],
-                  "fileFormat": "json",
-                  "mimeTypes": ["application/json"],
-                  "name": "json"
-                }
-              },
-              "litePluginSettings": {
-                "@jupyterlite/pyodide-kernel-extension:kernel": {
-                  "pipliteUrls": ["./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json"]
-                }
-              },
-              "fullLabextensionsUrl": "./extensions",
-              "fullStaticUrl": "./build",
-              "licensesUrl": "./lab/api/licenses"
+              "defaultKernelName": "python"
             },
             "jupyter-lite-schema-version": 0
           }' > jupyter-lite.json
-          
-          # Verify jupyter-lite.json
-          echo "jupyter-lite.json content:"
-          cat jupyter-lite.json
-          
-          echo "Building JupyterLite..."
+
           jupyter lite build --debug
-          
-          echo "JupyterLite build completed. Checking output..."
-          ls -la _output/
-          echo "Looking for files in JupyterLite output:"
-          find _output/ -name "*.ipynb" -type f
-          ls -la _output/files/ || echo "No files directory in _output"
-          echo "Checking Pyodide kernel extension files:"
-          ls -la _output/extensions/@jupyterlite/pyodide-kernel-extension/static/ || echo "No Pyodide kernel extension files found"
-          
-          # Copy to final destination
-          echo "Copying JupyterLite to docs..."
+
           mkdir -p ../docs/jupyterlite
           cp -r _output/* ../docs/jupyterlite/
-          
+
           cd ..
           rm -rf jupyterlite_things
-          
-          echo "=== Final JupyterLite structure ==="
-          ls -la docs/jupyterlite/
-          echo "=== Looking for notebooks in final location ==="
-          find docs/jupyterlite/ -name "*.ipynb" -type f
-          echo "=== Files directory check ==="
-          ls -la docs/jupyterlite/files/ || echo "No files directory in docs/jupyterlite/"
-          echo "=== Checking Pyodide kernel extension in final location ==="
-          ls -la docs/jupyterlite/extensions/@jupyterlite/pyodide-kernel-extension/static/ || echo "No Pyodide kernel extension files in docs/jupyterlite/"
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
