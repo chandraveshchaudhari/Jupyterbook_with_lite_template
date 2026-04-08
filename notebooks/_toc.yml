@@ -5,9 +5,11 @@ format: jb-book
 root: intro
 
 chapters:
-- file: how_to_use
+- file: adding_contents
   title: Add Content and Customize
-- file: course_introduction
+- file: features
   title: Feature Showcase and Subsections
-- file: markdown_page
-  title: Markdown Page Example
+  sections:
+      - file: section_markdown_page
+        title: Section Markdown Page
+

@@ -1,4 +1,4 @@
-# Markdown Page Example
+# Section Markdown Page
 
 You can use a `.md` file as a regular Jupyter Book page.
 
