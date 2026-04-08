@@ -65,6 +65,10 @@ jobs:
           touch docs/.nojekyll
           echo "Created .nojekyll in docs/"
 
+      - name: Convert Python blocks to Pyodide
+        run: |
+          python tools/markdown_code_to_pyodide.py
+
       - name: Build JupyterBook
         run: jupyter-book build notebooks/
 
