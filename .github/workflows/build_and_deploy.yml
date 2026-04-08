@@ -67,7 +67,7 @@ jobs:
 
       - name: Convert Python blocks to Pyodide
         run: |
-          python tools/markdown_code_to_pyodide.py
+          python extensions/markdown_code_to_pyodide.py
 
       - name: Build JupyterBook
         run: jupyter-book build notebooks/
