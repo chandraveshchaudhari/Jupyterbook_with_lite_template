@@ -1,6 +1,10 @@
 # JupyterBook + JupyterLite Template
 
 <p align="center">
+	<img src="notebooks/_static/images/banner_image.png" alt="Book banner" width="100%" />
+</p>
+
+<p align="center">
 	<a href="https://jupyterbook.org/">
 		<img alt="Jupyter Book" src="https://img.shields.io/badge/Jupyter%20Book-Publishing-F37626?style=for-the-badge&logo=jupyter&logoColor=white" />
 	</a>
