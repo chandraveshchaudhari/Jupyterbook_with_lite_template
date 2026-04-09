@@ -192,6 +192,15 @@ def has_py_cell(cell):
     return "class='py-cell'" in source or 'class="py-cell"' in source
 
 
+def notebook_has_python_code_block(nb):
+    """Return True if the notebook contains at least one python_code_block markdown fenced block."""
+    return any(
+        PY_BLOCK_RE.search(cell.source if isinstance(cell.source, str) else "".join(cell.source))
+        for cell in nb.cells
+        if cell.cell_type == "markdown"
+    )
+
+
 def build_py_cell(code: str, idx: int):
     """Build an interactive Python cell with proper escaping"""
     import html
@@ -434,6 +443,10 @@ print(f"📚 Valid notebooks from TOC: {valid_notebooks}")
 print("\n🚀 Starting Pyodide conversion for TOC notebooks...")
 for nb_name in valid_notebooks:
     nb_path = Path(notebooks_dir) / f"{nb_name}.ipynb"
+    nb = nbformat.read(nb_path, as_version=4)
+    if not notebook_has_python_code_block(nb):
+        print(f"⏭ Skipping {nb_path}: no python_code_block markdown tag found.")
+        continue
     inject(nb_path, nb_path)
 
 print("\n✅ All TOC notebooks processed successfully.")
