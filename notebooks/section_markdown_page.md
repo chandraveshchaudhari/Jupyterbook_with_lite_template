@@ -118,23 +118,24 @@ These features make it ideal for teaching, research, and documentation.
 
 ## Tabs Example
 
-````{tab-set}
-```{tab-item} Python
+::::{tab-set}
+:::{tab-item} Python
 ```python
 print("Hello from Python")
 ```
-```
+:::
 
-```{tab-item} Markdown
+:::{tab-item} Markdown
 ```markdown
 # Hello from Markdown
+This content is rendered as markdown on the built website.
 ```
-```
+:::
 
-```{tab-item} Output
+:::{tab-item} Output
 This tab shows output content.
-```
-````
+:::
+::::
 
 ---
 
@@ -192,7 +193,5 @@ Make sure to enable execution if you want runnable notebooks.
 ```{tip}
 Use dropdowns to keep your content clean and organized.
 ```
-
----
 
 
